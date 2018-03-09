@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.contacts.UserCommonContactsDao">
+    
+	<sql id="userCommonContactsColumns">
+		a.id             AS "id",
+		a.user_id        AS "user.id",
+		a.target_id      AS "target.id",
+		a.target_type    AS "targetType",
+		a.create_by      AS "createBy.id",
+		a.create_date    AS "createDate",
+		a.update_by      AS "updateBy.id",
+		a.update_date    AS "updateDate",
+		a.remarks        AS "remarks",
+		a.del_flag       AS "delFlag",
+		u2.name          AS "user.name",
+		u2.login_name    AS "user.loginName",
+  		u2.phone         AS "user.phone",
+  		u2.email         AS "user.email",
+		u3.name          AS "target.name",
+		u3.login_name    AS "target.loginName",
+  		u3.phone         AS "target.phone",
+  		u3.email         AS "target.email"
+	</sql>
+	
+	<sql id="userCommonContactsJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN sys_user u3 ON u3.id = a.target_id
+	</sql>
+    
+	<select id="get" resultType="UserCommonContacts">
+		SELECT
+			<include refid="userCommonContactsColumns"/>
+		FROM user_common_contacts a
+		<include refid="userCommonContactsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="UserCommonContacts">
+		SELECT 
+			<include refid="userCommonContactsColumns"/>
+		FROM user_common_contacts a
+		<include refid="userCommonContactsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="searchinfo != null and searchinfo != ''">
+                AND (u3.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="target != null and target.id != null and target.id != ''">
+				AND a.target_id = #{target.id}
+			</if>
+			<if test="targetType != null and targetType != ''">
+				AND a.target_type = #{targetType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserCommonContacts">
+		SELECT 
+			<include refid="userCommonContactsColumns"/>
+		FROM user_common_contacts a
+		<include refid="userCommonContactsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_common_contacts(
+
+		<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="target != null and target.id != null and target.id !='' ">
+			target_id,
+		</if>
+		<if test="targetType != null and targetType !='' ">
+			target_type,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="target != null and target.id != null and target.id !='' ">
+			#{target.id},
+		</if>
+		<if test="targetType != null and targetType !='' ">
+			#{targetType},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_common_contacts SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="target != null and target.id != null and target.id !='' ">
+				target_id = #{target.id},
+			</if>
+			<if test="targetType != null and targetType !='' ">
+				target_type = #{targetType},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_common_contacts SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

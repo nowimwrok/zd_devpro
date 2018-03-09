@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.insur.UserInsuranceInfoDao">
+    
+	<sql id="userInsuranceInfoColumns">
+		a.id AS "id",
+		a.insurance_id AS "insurance.id",
+		a.name AS "name",
+		a.insuredamount AS "insuredamount",
+		a.insurancepremium AS "insurancepremium",
+		a.isfranchise AS "isfranchise",
+		a.subtotal AS "subtotal",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="userInsuranceInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="UserInsuranceInfo">
+		SELECT
+			<include refid="userInsuranceInfoColumns"/>
+		FROM user_insurance_info a
+		<include refid="userInsuranceInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="UserInsuranceInfo">
+		SELECT 
+			<include refid="userInsuranceInfoColumns"/>
+		FROM user_insurance_info a
+		<include refid="userInsuranceInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="insurance != null and insurance.id != null and insurance.id != ''">
+				AND a.insurance_id = #{insurance.id}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserInsuranceInfo">
+		SELECT 
+			<include refid="userInsuranceInfoColumns"/>
+		FROM user_insurance_info a
+		<include refid="userInsuranceInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_insurance_info(
+
+		<if test="insurance != null and insurance.id != null and insurance.id !='' ">
+			insurance_id,
+		</if>
+		<if test="name != null and name !='' ">
+			name,
+		</if>
+		<if test="insuredamount != null and insuredamount !='' ">
+			insuredamount,
+		</if>
+		<if test="insurancepremium != null and insurancepremium !='' ">
+			insurancepremium,
+		</if>
+		<if test="isfranchise != null and isfranchise !='' ">
+			isfranchise,
+		</if>
+		<if test="subtotal != null and subtotal !='' ">
+			subtotal,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="insurance != null and insurance.id != null and insurance.id !='' ">
+			#{insurance.id},
+		</if>
+		<if test="name != null and name !='' ">
+			#{name},
+		</if>
+		<if test="insuredamount != null and insuredamount !='' ">
+			#{insuredamount},
+		</if>
+		<if test="insurancepremium != null and insurancepremium !='' ">
+			#{insurancepremium},
+		</if>
+		<if test="isfranchise != null and isfranchise !='' ">
+			#{isfranchise},
+		</if>
+		<if test="subtotal != null and subtotal !='' ">
+			#{subtotal},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_insurance_info SET
+		<if test="insurance != null and insurance.id != null and insurance.id !='' ">
+				insurance_id = #{insurance.id},
+			</if>
+			<if test="name != null and name !='' ">
+				name = #{name},
+			</if>
+			<if test="insuredamount != null and insuredamount !='' ">
+				insuredamount = #{insuredamount},
+			</if>
+			<if test="insurancepremium != null and insurancepremium !='' ">
+				insurancepremium = #{insurancepremium},
+			</if>
+			<if test="isfranchise != null and isfranchise !='' ">
+				isfranchise = #{isfranchise},
+			</if>
+			<if test="subtotal != null and subtotal !='' ">
+				subtotal = #{subtotal},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+
+
+
+
+	<update id="delete">
+		UPDATE user_insurance_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.comment.StatisticsOwnerDao">
+    
+	<sql id="statisticsOwnerColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.companyid AS "company.id",
+		a.loginnum AS "loginnum",
+		a.loginnumweb AS "loginnumweb",
+		a.loginnumapk AS "loginnumapk",
+		a.loginnumapp AS "loginnumapp",
+		a.carsourcenum AS "carsourcenum",
+		a.carsourcenumweb AS "carsourcenumweb",
+		a.carsourcenumapk AS "carsourcenumapk",
+		a.carsourcenumapp AS "carsourcenumapp",
+		a.goodssourcenum AS "goodssourcenum",
+		a.goodssourcenumweb AS "goodssourcenumweb",
+		a.goodssourcenumapk AS "goodssourcenumapk",
+		a.goodssourcenumapp AS "goodssourcenumapp",
+		a.linenum AS "linenum",
+		a.linenumweb AS "linenumweb",
+		a.linenumapk AS "linenumapk",
+		a.linenumapp AS "linenumapp",
+		a.serscannum AS "serscannum",
+		a.serscannumweb AS "serscannumweb",
+		a.serscannumapk AS "serscannumapk",
+		a.serscannumapp AS "serscannumapp",
+		a.serordernum AS "serordernum",
+		a.serordernumweb AS "serordernumweb",
+		a.serordernumapk AS "serordernumapk",
+		a.serordernumapp AS "serordernumapp",
+		a.sertradenum AS "sertradenum",
+		a.sertradenumweb AS "sertradenumweb",
+		a.sertradenumapk AS "sertradenumapk",
+		a.sertradenumapp AS "sertradenumapp",
+		a.beyscannum AS "beyscannum",
+		a.berscannumweb AS "berscannumweb",
+		a.berscannumapk AS "berscannumapk",
+		a.berscannumapp AS "berscannumapp",
+		a.berordernum AS "berordernum",
+		a.berordernumweb AS "berordernumweb",
+		a.berordernumapk AS "berordernumapk",
+		a.berordernumapp AS "berordernumapp",
+		a.bertradenum AS "bertradenum",
+		a.bertradenumweb AS "bertradenumweb",
+		a.bertradenumapk AS "bertradenumapk",
+		a.bertradenumapp AS "bertradenumapp",
+		a.totalratingnumber AS "totalratingnumber",
+		a.serviceattitudepoint AS "serviceattitudepoint",
+		a.transportationcostpoint AS "transportationcostpoint",
+		a.transportlimitationpoint AS "transportlimitationpoint",
+		a.goodssafetypoint AS "goodssafetypoint",
+		a.comprehensivepoint AS "comprehensivepoint",
+		a.complainttimes AS "complainttimes",
+		a.totalcarnumber AS "totalcarnumber",
+		a.certifiedcarnumber AS "certifiedcarnumber",
+		a.uncompletedordernumber AS "uncompletedordernumber",
+		a.pendingvaluationordernumber AS "pendingvaluationordernumber",
+		a.totaltradeorder AS "totaltradeorder"
+	</sql>
+	
+	<sql id="statisticsOwnerJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsOwner">
+		SELECT
+			<include refid="statisticsOwnerColumns"/>
+		FROM statistics_owner a
+		<include refid="statisticsOwnerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsOwner">
+		SELECT 
+			<include refid="statisticsOwnerColumns"/>
+		FROM statistics_owner a
+		<include refid="statisticsOwnerJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+
+			<if test="loginnum != null and loginnum != ''">
+				AND a.loginnum = #{loginnum}
+			</if>
+			<if test="loginnumweb != null and loginnumweb != ''">
+				AND a.loginnumweb = #{loginnumweb}
+			</if>
+			<if test="loginnumapk != null and loginnumapk != ''">
+				AND a.loginnumapk = #{loginnumapk}
+			</if>
+			<if test="loginnumapp != null and loginnumapp != ''">
+				AND a.loginnumapp = #{loginnumapp}
+			</if>
+			<if test="carsourcenum != null and carsourcenum != ''">
+				AND a.carsourcenum = #{carsourcenum}
+			</if>
+			<if test="carsourcenumweb != null and carsourcenumweb != ''">
+				AND a.carsourcenumweb = #{carsourcenumweb}
+			</if>
+			<if test="carsourcenumapk != null and carsourcenumapk != ''">
+				AND a.carsourcenumapk = #{carsourcenumapk}
+			</if>
+			<if test="carsourcenumapp != null and carsourcenumapp != ''">
+				AND a.carsourcenumapp = #{carsourcenumapp}
+			</if>
+			<if test="goodssourcenum != null and goodssourcenum != ''">
+				AND a.goodssourcenum = #{goodssourcenum}
+			</if>
+			<if test="goodssourcenumweb != null and goodssourcenumweb != ''">
+				AND a.goodssourcenumweb = #{goodssourcenumweb}
+			</if>
+			<if test="goodssourcenumapk != null and goodssourcenumapk != ''">
+				AND a.goodssourcenumapk = #{goodssourcenumapk}
+			</if>
+			<if test="goodssourcenumapp != null and goodssourcenumapp != ''">
+				AND a.goodssourcenumapp = #{goodssourcenumapp}
+			</if>
+			<if test="linenum != null and linenum != ''">
+				AND a.linenum = #{linenum}
+			</if>
+			<if test="linenumweb != null and linenumweb != ''">
+				AND a.linenumweb = #{linenumweb}
+			</if>
+			<if test="linenumapk != null and linenumapk != ''">
+				AND a.linenumapk = #{linenumapk}
+			</if>
+			<if test="linenumapp != null and linenumapp != ''">
+				AND a.linenumapp = #{linenumapp}
+			</if>
+			<if test="serscannum != null and serscannum != ''">
+				AND a.serscannum = #{serscannum}
+			</if>
+			<if test="serscannumweb != null and serscannumweb != ''">
+				AND a.serscannumweb = #{serscannumweb}
+			</if>
+			<if test="serscannumapk != null and serscannumapk != ''">
+				AND a.serscannumapk = #{serscannumapk}
+			</if>
+			<if test="serscannumapp != null and serscannumapp != ''">
+				AND a.serscannumapp = #{serscannumapp}
+			</if>
+			<if test="serordernum != null and serordernum != ''">
+				AND a.serordernum = #{serordernum}
+			</if>
+			<if test="serordernumweb != null and serordernumweb != ''">
+				AND a.serordernumweb = #{serordernumweb}
+			</if>
+			<if test="serordernumapk != null and serordernumapk != ''">
+				AND a.serordernumapk = #{serordernumapk}
+			</if>
+			<if test="serordernumapp != null and serordernumapp != ''">
+				AND a.serordernumapp = #{serordernumapp}
+			</if>
+			<if test="sertradenum != null and sertradenum != ''">
+				AND a.sertradenum = #{sertradenum}
+			</if>
+			<if test="sertradenumweb != null and sertradenumweb != ''">
+				AND a.sertradenumweb = #{sertradenumweb}
+			</if>
+			<if test="sertradenumapk != null and sertradenumapk != ''">
+				AND a.sertradenumapk = #{sertradenumapk}
+			</if>
+			<if test="sertradenumapp != null and sertradenumapp != ''">
+				AND a.sertradenumapp = #{sertradenumapp}
+			</if>
+			<if test="beyscannum != null and beyscannum != ''">
+				AND a.beyscannum = #{beyscannum}
+			</if>
+			<if test="berscannumweb != null and berscannumweb != ''">
+				AND a.berscannumweb = #{berscannumweb}
+			</if>
+			<if test="berscannumapk != null and berscannumapk != ''">
+				AND a.berscannumapk = #{berscannumapk}
+			</if>
+			<if test="berscannumapp != null and berscannumapp != ''">
+				AND a.berscannumapp = #{berscannumapp}
+			</if>
+			<if test="berordernum != null and berordernum != ''">
+				AND a.berordernum = #{berordernum}
+			</if>
+			<if test="berordernumweb != null and berordernumweb != ''">
+				AND a.berordernumweb = #{berordernumweb}
+			</if>
+			<if test="berordernumapk != null and berordernumapk != ''">
+				AND a.berordernumapk = #{berordernumapk}
+			</if>
+			<if test="berordernumapp != null and berordernumapp != ''">
+				AND a.berordernumapp = #{berordernumapp}
+			</if>
+			<if test="bertradenum != null and bertradenum != ''">
+				AND a.bertradenum = #{bertradenum}
+			</if>
+			<if test="bertradenumweb != null and bertradenumweb != ''">
+				AND a.bertradenumweb = #{bertradenumweb}
+			</if>
+			<if test="bertradenumapk != null and bertradenumapk != ''">
+				AND a.bertradenumapk = #{bertradenumapk}
+			</if>
+			<if test="bertradenumapp != null and bertradenumapp != ''">
+				AND a.bertradenumapp = #{bertradenumapp}
+			</if>
+			<if test="totalratingnumber != null and totalratingnumber != ''">
+				AND a.totalratingnumber = #{totalratingnumber}
+			</if>
+			<if test="serviceattitudepoint != null and serviceattitudepoint != ''">
+				AND a.serviceattitudepoint = #{serviceattitudepoint}
+			</if>
+			<if test="transportationcostpoint != null and transportationcostpoint != ''">
+				AND a.transportationcostpoint = #{transportationcostpoint}
+			</if>
+			<if test="transportlimitationpoint != null and transportlimitationpoint != ''">
+				AND a.transportlimitationpoint = #{transportlimitationpoint}
+			</if>
+			<if test="goodssafetypoint != null and goodssafetypoint != ''">
+				AND a.goodssafetypoint = #{goodssafetypoint}
+			</if>
+			<if test="comprehensivepoint != null and comprehensivepoint != ''">
+				AND a.comprehensivepoint = #{comprehensivepoint}
+			</if>
+			<if test="complainttimes != null and complainttimes != ''">
+				AND a.complainttimes = #{complainttimes}
+			</if>
+			<if test="totalcarnumber != null and totalcarnumber != ''">
+				AND a.totalcarnumber = #{totalcarnumber}
+			</if>
+			<if test="certifiedcarnumber != null and certifiedcarnumber != ''">
+				AND a.certifiedcarnumber = #{certifiedcarnumber}
+			</if>
+			<if test="uncompletedordernumber != null and uncompletedordernumber != ''">
+				AND a.uncompletedordernumber = #{uncompletedordernumber}
+			</if>
+			<if test="pendingvaluationordernumber != null and pendingvaluationordernumber != ''">
+				AND a.pendingvaluationordernumber = #{pendingvaluationordernumber}
+			</if>
+			<if test="totaltradeorder != null and totaltradeorder != ''">
+				AND a.totaltradeorder = #{totaltradeorder}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsOwner">
+		SELECT 
+			<include refid="statisticsOwnerColumns"/>
+		FROM statistics_owner a
+		<include refid="statisticsOwnerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_owner(
+
+		<if test="user != null and user.id != null and user.id != ''">
+			userid,
+		</if>
+		<if test="company != null and company.id!=null and company.id !='' ">
+			companyid,
+		</if>
+		<if test="loginnum != null and loginnum !='' ">
+			loginnum,
+		</if>
+		<if test="loginnumweb != null and loginnumweb !='' ">
+			loginnumweb,
+		</if>
+		<if test="loginnumapk != null and loginnumapk !='' ">
+			loginnumapk,
+		</if>
+		<if test="loginnumapp != null and loginnumapp !='' ">
+			loginnumapp,
+		</if>
+		<if test="carsourcenum != null and carsourcenum !='' ">
+			carsourcenum,
+		</if>
+		<if test="carsourcenumweb != null and carsourcenumweb !='' ">
+			carsourcenumweb,
+		</if>
+		<if test="carsourcenumapk != null and carsourcenumapk !='' ">
+			carsourcenumapk,
+		</if>
+		<if test="carsourcenumapp != null and carsourcenumapp !='' ">
+			carsourcenumapp,
+		</if>
+		<if test="goodssourcenum != null and goodssourcenum !='' ">
+			goodssourcenum,
+		</if>
+		<if test="goodssourcenumweb != null and goodssourcenumweb !='' ">
+			goodssourcenumweb,
+		</if>
+		<if test="goodssourcenumapk != null and goodssourcenumapk !='' ">
+			goodssourcenumapk,
+		</if>
+		<if test="goodssourcenumapp != null and goodssourcenumapp !='' ">
+			goodssourcenumapp,
+		</if>
+		<if test="linenum != null and linenum !='' ">
+			linenum,
+		</if>
+		<if test="linenumweb != null and linenumweb !='' ">
+			linenumweb,
+		</if>
+		<if test="linenumapk != null and linenumapk !='' ">
+			linenumapk,
+		</if>
+		<if test="linenumapp != null and linenumapp !='' ">
+			linenumapp,
+		</if>
+		<if test="serscannum != null and serscannum !='' ">
+			serscannum,
+		</if>
+		<if test="serscannumweb != null and serscannumweb !='' ">
+			serscannumweb,
+		</if>
+		<if test="serscannumapk != null and serscannumapk !='' ">
+			serscannumapk,
+		</if>
+		<if test="serscannumapp != null and serscannumapp !='' ">
+			serscannumapp,
+		</if>
+		<if test="serordernum != null and serordernum !='' ">
+			serordernum,
+		</if>
+		<if test="serordernumweb != null and serordernumweb !='' ">
+			serordernumweb,
+		</if>
+		<if test="serordernumapk != null and serordernumapk !='' ">
+			serordernumapk,
+		</if>
+		<if test="serordernumapp != null and serordernumapp !='' ">
+			serordernumapp,
+		</if>
+		<if test="sertradenum != null and sertradenum !='' ">
+			sertradenum,
+		</if>
+		<if test="sertradenumweb != null and sertradenumweb !='' ">
+			sertradenumweb,
+		</if>
+		<if test="sertradenumapk != null and sertradenumapk !='' ">
+			sertradenumapk,
+		</if>
+		<if test="sertradenumapp != null and sertradenumapp !='' ">
+			sertradenumapp,
+		</if>
+		<if test="beyscannum != null and beyscannum !='' ">
+			beyscannum,
+		</if>
+		<if test="berscannumweb != null and berscannumweb !='' ">
+			berscannumweb,
+		</if>
+		<if test="berscannumapk != null and berscannumapk !='' ">
+			berscannumapk,
+		</if>
+		<if test="berscannumapp != null and berscannumapp !='' ">
+			berscannumapp,
+		</if>
+		<if test="berordernum != null and berordernum !='' ">
+			berordernum,
+		</if>
+		<if test="berordernumweb != null and berordernumweb !='' ">
+			berordernumweb,
+		</if>
+		<if test="berordernumapk != null and berordernumapk !='' ">
+			berordernumapk,
+		</if>
+		<if test="berordernumapp != null and berordernumapp !='' ">
+			berordernumapp,
+		</if>
+		<if test="bertradenum != null and bertradenum !='' ">
+			bertradenum,
+		</if>
+		<if test="bertradenumweb != null and bertradenumweb !='' ">
+			bertradenumweb,
+		</if>
+		<if test="bertradenumapk != null and bertradenumapk !='' ">
+			bertradenumapk,
+		</if>
+		<if test="bertradenumapp != null and bertradenumapp !='' ">
+			bertradenumapp,
+		</if>
+		<if test="totalratingnumber != null and totalratingnumber !='' ">
+			totalratingnumber,
+		</if>
+		<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+			serviceattitudepoint,
+		</if>
+		<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+			transportationcostpoint,
+		</if>
+		<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+			transportlimitationpoint,
+		</if>
+		<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+			goodssafetypoint,
+		</if>
+		<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+			comprehensivepoint,
+		</if>
+		<if test="complainttimes != null and complainttimes !='' ">
+			complainttimes,
+		</if>
+		<if test="totalcarnumber != null and totalcarnumber !='' ">
+			totalcarnumber,
+		</if>
+		<if test="certifiedcarnumber != null and certifiedcarnumber !='' ">
+			certifiedcarnumber,
+		</if>
+		<if test="uncompletedordernumber != null and uncompletedordernumber !='' ">
+			uncompletedordernumber,
+		</if>
+		<if test="pendingvaluationordernumber != null and pendingvaluationordernumber !='' ">
+			pendingvaluationordernumber,
+		</if>
+		<if test="totaltradeorder != null and totaltradeorder !='' ">
+			totaltradeorder,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id != ''">
+			#{user.id},
+		</if>
+		<if test="company != null and company.id!=null and company.id !='' ">
+			#{company.id},
+		</if>
+		<if test="loginnum != null and loginnum !='' ">
+			#{loginnum},
+		</if>
+		<if test="loginnumweb != null and loginnumweb !='' ">
+			#{loginnumweb},
+		</if>
+		<if test="loginnumapk != null and loginnumapk !='' ">
+			#{loginnumapk},
+		</if>
+		<if test="loginnumapp != null and loginnumapp !='' ">
+			#{loginnumapp},
+		</if>
+		<if test="carsourcenum != null and carsourcenum !='' ">
+			#{carsourcenum},
+		</if>
+		<if test="carsourcenumweb != null and carsourcenumweb !='' ">
+			#{carsourcenumweb},
+		</if>
+		<if test="carsourcenumapk != null and carsourcenumapk !='' ">
+			#{carsourcenumapk},
+		</if>
+		<if test="carsourcenumapp != null and carsourcenumapp !='' ">
+			#{carsourcenumapp},
+		</if>
+		<if test="goodssourcenum != null and goodssourcenum !='' ">
+			#{goodssourcenum},
+		</if>
+		<if test="goodssourcenumweb != null and goodssourcenumweb !='' ">
+			#{goodssourcenumweb},
+		</if>
+		<if test="goodssourcenumapk != null and goodssourcenumapk !='' ">
+			#{goodssourcenumapk},
+		</if>
+		<if test="goodssourcenumapp != null and goodssourcenumapp !='' ">
+			#{goodssourcenumapp},
+		</if>
+		<if test="linenum != null and linenum !='' ">
+			#{linenum},
+		</if>
+		<if test="linenumweb != null and linenumweb !='' ">
+			#{linenumweb},
+		</if>
+		<if test="linenumapk != null and linenumapk !='' ">
+			#{linenumapk},
+		</if>
+		<if test="linenumapp != null and linenumapp !='' ">
+			#{linenumapp},
+		</if>
+		<if test="serscannum != null and serscannum !='' ">
+			#{serscannum},
+		</if>
+		<if test="serscannumweb != null and serscannumweb !='' ">
+			#{serscannumweb},
+		</if>
+		<if test="serscannumapk != null and serscannumapk !='' ">
+			#{serscannumapk},
+		</if>
+		<if test="serscannumapp != null and serscannumapp !='' ">
+			#{serscannumapp},
+		</if>
+		<if test="serordernum != null and serordernum !='' ">
+			#{serordernum},
+		</if>
+		<if test="serordernumweb != null and serordernumweb !='' ">
+			#{serordernumweb},
+		</if>
+		<if test="serordernumapk != null and serordernumapk !='' ">
+			#{serordernumapk},
+		</if>
+		<if test="serordernumapp != null and serordernumapp !='' ">
+			#{serordernumapp},
+		</if>
+		<if test="sertradenum != null and sertradenum !='' ">
+			#{sertradenum},
+		</if>
+		<if test="sertradenumweb != null and sertradenumweb !='' ">
+			#{sertradenumweb},
+		</if>
+		<if test="sertradenumapk != null and sertradenumapk !='' ">
+			#{sertradenumapk},
+		</if>
+		<if test="sertradenumapp != null and sertradenumapp !='' ">
+			#{sertradenumapp},
+		</if>
+		<if test="beyscannum != null and beyscannum !='' ">
+			#{beyscannum},
+		</if>
+		<if test="berscannumweb != null and berscannumweb !='' ">
+			#{berscannumweb},
+		</if>
+		<if test="berscannumapk != null and berscannumapk !='' ">
+			#{berscannumapk},
+		</if>
+		<if test="berscannumapp != null and berscannumapp !='' ">
+			#{berscannumapp},
+		</if>
+		<if test="berordernum != null and berordernum !='' ">
+			#{berordernum},
+		</if>
+		<if test="berordernumweb != null and berordernumweb !='' ">
+			#{berordernumweb},
+		</if>
+		<if test="berordernumapk != null and berordernumapk !='' ">
+			#{berordernumapk},
+		</if>
+		<if test="berordernumapp != null and berordernumapp !='' ">
+			#{berordernumapp},
+		</if>
+		<if test="bertradenum != null and bertradenum !='' ">
+			#{bertradenum},
+		</if>
+		<if test="bertradenumweb != null and bertradenumweb !='' ">
+			#{bertradenumweb},
+		</if>
+		<if test="bertradenumapk != null and bertradenumapk !='' ">
+			#{bertradenumapk},
+		</if>
+		<if test="bertradenumapp != null and bertradenumapp !='' ">
+			#{bertradenumapp},
+		</if>
+		<if test="totalratingnumber != null and totalratingnumber !='' ">
+			#{totalratingnumber},
+		</if>
+		<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+			#{serviceattitudepoint},
+		</if>
+		<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+			#{transportationcostpoint},
+		</if>
+		<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+			#{transportlimitationpoint},
+		</if>
+		<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+			#{goodssafetypoint},
+		</if>
+		<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+			#{comprehensivepoint},
+		</if>
+		<if test="complainttimes != null and complainttimes !='' ">
+			#{complainttimes},
+		</if>
+		<if test="totalcarnumber != null and totalcarnumber !='' ">
+			#{totalcarnumber},
+		</if>
+		<if test="certifiedcarnumber != null and certifiedcarnumber !='' ">
+			#{certifiedcarnumber},
+		</if>
+		<if test="uncompletedordernumber != null and uncompletedordernumber !='' ">
+			#{uncompletedordernumber},
+		</if>
+		<if test="pendingvaluationordernumber != null and pendingvaluationordernumber !='' ">
+			#{pendingvaluationordernumber},
+		</if>
+		<if test="totaltradeorder != null and totaltradeorder !='' ">
+			#{totaltradeorder},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_owner SET 	
+			<if test="user != null and user.id != null and user.id != ''">
+				userid = #{user.id},
+			</if>
+			<if test="company != null and company.id!=null and company.id !='' ">
+				companyid = #{company.id},
+			</if>
+			<if test="loginnum != null and loginnum !='' ">
+				loginnum = #{loginnum},
+			</if>
+			<if test="loginnumweb != null and loginnumweb !='' ">
+				loginnumweb = #{loginnumweb},
+			</if>
+			<if test="loginnumapk != null and loginnumapk !='' ">
+				loginnumapk = #{loginnumapk},
+			</if>
+			<if test="loginnumapp != null and loginnumapp !='' ">
+				loginnumapp = #{loginnumapp},
+			</if>
+			<if test="carsourcenum != null and carsourcenum !='' ">
+				carsourcenum = #{carsourcenum},
+			</if>
+			<if test="carsourcenumweb != null and carsourcenumweb !='' ">
+				carsourcenumweb = #{carsourcenumweb},
+			</if>
+			<if test="carsourcenumapk != null and carsourcenumapk !='' ">
+				carsourcenumapk = #{carsourcenumapk},
+			</if>
+			<if test="carsourcenumapp != null and carsourcenumapp !='' ">
+				carsourcenumapp = #{carsourcenumapp},
+			</if>
+			<if test="goodssourcenum != null and goodssourcenum !='' ">
+				goodssourcenum = #{goodssourcenum},
+			</if>
+			<if test="goodssourcenumweb != null and goodssourcenumweb !='' ">
+				goodssourcenumweb = #{goodssourcenumweb},
+			</if>
+			<if test="goodssourcenumapk != null and goodssourcenumapk !='' ">
+				goodssourcenumapk = #{goodssourcenumapk},
+			</if>
+			<if test="goodssourcenumapp != null and goodssourcenumapp !='' ">
+				goodssourcenumapp = #{goodssourcenumapp},
+			</if>
+			<if test="linenum != null and linenum !='' ">
+				linenum = #{linenum},
+			</if>
+			<if test="linenumweb != null and linenumweb !='' ">
+				linenumweb = #{linenumweb},
+			</if>
+			<if test="linenumapk != null and linenumapk !='' ">
+				linenumapk = #{linenumapk},
+			</if>
+			<if test="linenumapp != null and linenumapp !='' ">
+				linenumapp = #{linenumapp},
+			</if>
+			<if test="serscannum != null and serscannum !='' ">
+				serscannum = #{serscannum},
+			</if>
+			<if test="serscannumweb != null and serscannumweb !='' ">
+				serscannumweb = #{serscannumweb},
+			</if>
+			<if test="serscannumapk != null and serscannumapk !='' ">
+				serscannumapk = #{serscannumapk},
+			</if>
+			<if test="serscannumapp != null and serscannumapp !='' ">
+				serscannumapp = #{serscannumapp},
+			</if>
+			<if test="serordernum != null and serordernum !='' ">
+				serordernum = #{serordernum},
+			</if>
+			<if test="serordernumweb != null and serordernumweb !='' ">
+				serordernumweb = #{serordernumweb},
+			</if>
+			<if test="serordernumapk != null and serordernumapk !='' ">
+				serordernumapk = #{serordernumapk},
+			</if>
+			<if test="serordernumapp != null and serordernumapp !='' ">
+				serordernumapp = #{serordernumapp},
+			</if>
+			<if test="sertradenum != null and sertradenum !='' ">
+				sertradenum = #{sertradenum},
+			</if>
+			<if test="sertradenumweb != null and sertradenumweb !='' ">
+				sertradenumweb = #{sertradenumweb},
+			</if>
+			<if test="sertradenumapk != null and sertradenumapk !='' ">
+				sertradenumapk = #{sertradenumapk},
+			</if>
+			<if test="sertradenumapp != null and sertradenumapp !='' ">
+				sertradenumapp = #{sertradenumapp},
+			</if>
+			<if test="beyscannum != null and beyscannum !='' ">
+				beyscannum = #{beyscannum},
+			</if>
+			<if test="berscannumweb != null and berscannumweb !='' ">
+				berscannumweb = #{berscannumweb},
+			</if>
+			<if test="berscannumapk != null and berscannumapk !='' ">
+				berscannumapk = #{berscannumapk},
+			</if>
+			<if test="berscannumapp != null and berscannumapp !='' ">
+				berscannumapp = #{berscannumapp},
+			</if>
+			<if test="berordernum != null and berordernum !='' ">
+				berordernum = #{berordernum},
+			</if>
+			<if test="berordernumweb != null and berordernumweb !='' ">
+				berordernumweb = #{berordernumweb},
+			</if>
+			<if test="berordernumapk != null and berordernumapk !='' ">
+				berordernumapk = #{berordernumapk},
+			</if>
+			<if test="berordernumapp != null and berordernumapp !='' ">
+				berordernumapp = #{berordernumapp},
+			</if>
+			<if test="bertradenum != null and bertradenum !='' ">
+				bertradenum = #{bertradenum},
+			</if>
+			<if test="bertradenumweb != null and bertradenumweb !='' ">
+				bertradenumweb = #{bertradenumweb},
+			</if>
+			<if test="bertradenumapk != null and bertradenumapk !='' ">
+				bertradenumapk = #{bertradenumapk},
+			</if>
+			<if test="bertradenumapp != null and bertradenumapp !='' ">
+				bertradenumapp = #{bertradenumapp},
+			</if>
+			<if test="totalratingnumber != null and totalratingnumber !='' ">
+				totalratingnumber = #{totalratingnumber},
+			</if>
+			<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+				serviceattitudepoint = #{serviceattitudepoint},
+			</if>
+			<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+				transportationcostpoint = #{transportationcostpoint},
+			</if>
+			<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+				transportlimitationpoint = #{transportlimitationpoint},
+			</if>
+			<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+				goodssafetypoint = #{goodssafetypoint},
+			</if>
+			<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+				comprehensivepoint = #{comprehensivepoint},
+			</if>
+			<if test="complainttimes != null and complainttimes !='' ">
+				complainttimes = #{complainttimes},
+			</if>
+			<if test="totalcarnumber != null and totalcarnumber !='' ">
+				totalcarnumber = #{totalcarnumber},
+			</if>
+			<if test="certifiedcarnumber != null and certifiedcarnumber !='' ">
+				certifiedcarnumber = #{certifiedcarnumber},
+			</if>
+			<if test="uncompletedordernumber != null and uncompletedordernumber !='' ">
+				uncompletedordernumber = #{uncompletedordernumber},
+			</if>
+			<if test="pendingvaluationordernumber != null and pendingvaluationordernumber !='' ">
+				pendingvaluationordernumber = #{pendingvaluationordernumber},
+			</if>
+			<if test="totaltradeorder != null and totaltradeorder !='' ">
+				totaltradeorder = #{totaltradeorder},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_owner
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

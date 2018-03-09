@@ -1,0 +1,217 @@
+/*������ʽ*/
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    font-family: "΢���ź�";
+    font-size: 15px;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+/*ͷ����ʽ*/
+.ban-pur {
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.banner-wrap {
+    background-color: #E8EBED;
+    width: 100%;
+    clear: both;
+}
+
+.ban-title {
+    font-size: 27px;
+}
+
+.countDown-l {
+    float: left;
+    width: 50%;
+}
+
+.count {
+    margin-right: 5px;
+}
+
+.countDown-l span, .countDown-r span {
+    font-size: 20px;
+}
+
+.countDown-r {
+    float: right;
+    text-align: right;
+    width: 50%;
+}
+
+.purchase {
+    float: right;
+    width: 63%;
+    margin-top: 2%;
+    margin-bottom: 1%;
+}
+
+.countDown {
+    color: #fff;
+    background-color: #ffc332;
+    width: 95%;
+    padding-left: 2%;
+    padding-right: 1.5%;
+    margin-top: 2%;
+    margin-bottom: 3%;
+    overflow: hidden;
+    height: 45px;
+    line-height: 45px;
+}
+
+#price {
+    font-size: 25px;
+    color: red;
+    font-weight: bold;
+}
+
+.cD-price {
+    font-size: 16px;
+}
+
+.btn-blue {
+    width: 150px;
+    background-color: #02a0e9;
+    height: 45px;
+    line-height: 45px;
+    border: none;
+    margin-top: 5%;
+    text-align: center;
+}
+
+.btn-blue a {
+    color: #fff;
+    font-size: 15px;
+}
+
+.redwat {
+    margin-top: 9%;
+}
+
+.banner-img {
+    width: 27%;
+    display: block;
+    margin-top: 1.5%;
+    margin-bottom: 3%;
+    padding-left: 4%;
+    float: left;
+}
+
+/*��Ʒ���鼰������ʽ*/
+.p-all {
+    margin-top: 25px;
+    padding-left: 8px;
+    font-size: 1rem;
+}
+
+.de-all {
+    padding-left: 2em;
+}
+
+td, th {
+    padding: 5px 8px;
+    text-align: center;
+}
+
+.td_bold {
+    font-weight: bold;
+}
+
+table {
+    line-height: 18px;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+td, th {
+    border: solid 1px #000;
+}
+
+.list-detail {
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-top: none;
+    line-height: 28px;
+    margin-bottom: 40px;
+}
+
+.list-title {
+    display: block;
+    width: 10%;
+    text-align: center;
+    border-top: 3px solid #02a0e9;
+
+}
+
+/*������--��ʽ*/
+.dialog-content p span {
+    color: #00A2E9;
+}
+
+.dialog-content {
+    padding: 5px;
+    text-align: center;
+}
+
+#dialog {
+    background-color: #fff;
+    border: none;
+    height: 175px;
+    margin: -200px 0 0 -200px;
+    padding: 0px;
+    position: fixed !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 37%;
+    z-index: 5;
+    border-radius: 5px;
+    display: none;
+}
+
+#dialog p {
+    margin: 0 0 12px;
+    height: 24px;
+    line-height: 24px;
+}
+
+#fullbg {
+    background-color: gray;
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    z-index: 3;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+}
+
+#dialog p.close a {
+    text-decoration: none;
+}
+
+#dialog p.close {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.close_content p.close a {
+    text-align: center;
+}
+

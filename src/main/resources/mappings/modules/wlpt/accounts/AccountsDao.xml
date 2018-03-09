@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.accounts.AccountsDao">
+
+    <select id="findAccountWebBalance" resultType="double">
+		SELECT (
+         (
+           SELECT IFNULL(SUM(uc.CONSUMEMONY),0)
+           FROM user_consumerecod uc
+           WHERE uc.CONSUMEMONY  IS NOT NULL AND uc.ConsumeType IN (0001) AND uc.CONSUMESTATUS =1
+         )
+         -
+         (
+           SELECT IFNULL(SUM(uc.CONSUMEMONY),0)
+           FROM user_consumerecod uc
+           WHERE uc.CONSUMEMONY  IS NOT NULL AND uc.ConsumeType IN (0401) AND uc.CONSUMESTATUS =1
+         )
+         -
+         (
+           SELECT IFNULL(SUM(up.AVAILABLEBALANCE+up.FREEZEMONEY),0)
+           FROM user_purse up
+             INNER JOIN sys_user_role sur ON up.USER_ID = sur.user_id
+             INNER JOIN sys_role sr
+             ON sur.role_id = sr.id AND sr.enname IN ('enterprise', 'carowner', 'goodsowner','systemAccount')
+         )
+        )  WEBBALANCE
+	</select>
+
+</mapper>

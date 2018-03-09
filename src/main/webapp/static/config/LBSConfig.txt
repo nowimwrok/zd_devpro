@@ -1,0 +1,1 @@
+pin.shujudu.cn,/api/pin,9111c59501,882d9c7fc71ccfd6ec32aedc8ee6e2bf

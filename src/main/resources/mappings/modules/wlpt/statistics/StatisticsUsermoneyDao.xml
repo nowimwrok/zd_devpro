@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsUsermoneyDao">
+    
+	<sql id="statisticsUsermoneyColumns">
+		a.um_id AS "umId",
+		a.webbalance AS "webbalance",
+		a.credit AS "credit",
+		a.webchu AS "webchu",
+		a.webru AS "webru",
+		a.creditru AS "creditru",
+		a.creditchu AS "creditchu",
+		a.createtime AS "createtime",
+		a.petrolebalance AS "petrolebalance",
+		a.returnmoney AS "returnmoney",
+		a.returnfreight AS "returnfreight",
+		a.creditfreightrebates AS "creditfreightrebates",
+		a.creditgasrebate AS "creditgasrebate",
+		a.refunddisputes AS "refunddisputes"
+	</sql>
+	
+	<sql id="statisticsUsermoneyJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsUsermoney">
+		SELECT
+			<include refid="statisticsUsermoneyColumns"/>
+		FROM statistics_usermoney a
+		<include refid="statisticsUsermoneyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsUsermoney">
+		SELECT 
+			<include refid="statisticsUsermoneyColumns"/>
+		FROM statistics_usermoney a
+		<include refid="statisticsUsermoneyJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsUsermoney">
+		SELECT 
+			<include refid="statisticsUsermoneyColumns"/>
+		FROM statistics_usermoney a
+		<include refid="statisticsUsermoneyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_usermoney(
+
+		<if test="umId != null and umId !='' ">
+			um_id,
+		</if>
+		<if test="webbalance != null and webbalance !='' ">
+			webbalance,
+		</if>
+		<if test="credit != null and credit !='' ">
+			credit,
+		</if>
+		<if test="webchu != null and webchu !='' ">
+			webchu,
+		</if>
+		<if test="webru != null and webru !='' ">
+			webru,
+		</if>
+		<if test="creditru != null and creditru !='' ">
+			creditru,
+		</if>
+		<if test="creditchu != null and creditchu !='' ">
+			creditchu,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="petrolebalance != null and petrolebalance !='' ">
+			petrolebalance,
+		</if>
+		<if test="returnmoney != null and returnmoney !='' ">
+			returnmoney,
+		</if>
+		<if test="returnfreight != null and returnfreight !='' ">
+			returnfreight,
+		</if>
+		<if test="creditfreightrebates != null and creditfreightrebates !='' ">
+			creditfreightrebates,
+		</if>
+		<if test="creditgasrebate != null and creditgasrebate !='' ">
+			creditgasrebate,
+		</if>
+		<if test="refunddisputes != null and refunddisputes !='' ">
+			refunddisputes,
+		</if>
+			id
+		) VALUES (
+		<if test="umId != null and umId !='' ">
+			#{umId},
+		</if>
+		<if test="webbalance != null and webbalance !='' ">
+			#{webbalance},
+		</if>
+		<if test="credit != null and credit !='' ">
+			#{credit},
+		</if>
+		<if test="webchu != null and webchu !='' ">
+			#{webchu},
+		</if>
+		<if test="webru != null and webru !='' ">
+			#{webru},
+		</if>
+		<if test="creditru != null and creditru !='' ">
+			#{creditru},
+		</if>
+		<if test="creditchu != null and creditchu !='' ">
+			#{creditchu},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="petrolebalance != null and petrolebalance !='' ">
+			#{petrolebalance},
+		</if>
+		<if test="returnmoney != null and returnmoney !='' ">
+			#{returnmoney},
+		</if>
+		<if test="returnfreight != null and returnfreight !='' ">
+			#{returnfreight},
+		</if>
+		<if test="creditfreightrebates != null and creditfreightrebates !='' ">
+			#{creditfreightrebates},
+		</if>
+		<if test="creditgasrebate != null and creditgasrebate !='' ">
+			#{creditgasrebate},
+		</if>
+		<if test="refunddisputes != null and refunddisputes !='' ">
+			#{refunddisputes},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_usermoney SET 	
+			<if test="umId != null and umId !='' ">
+				um_id = #{umId},
+			</if>
+			<if test="webbalance != null and webbalance !='' ">
+				webbalance = #{webbalance},
+			</if>
+			<if test="credit != null and credit !='' ">
+				credit = #{credit},
+			</if>
+			<if test="webchu != null and webchu !='' ">
+				webchu = #{webchu},
+			</if>
+			<if test="webru != null and webru !='' ">
+				webru = #{webru},
+			</if>
+			<if test="creditru != null and creditru !='' ">
+				creditru = #{creditru},
+			</if>
+			<if test="creditchu != null and creditchu !='' ">
+				creditchu = #{creditchu},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="petrolebalance != null and petrolebalance !='' ">
+				petrolebalance = #{petrolebalance},
+			</if>
+			<if test="returnmoney != null and returnmoney !='' ">
+				returnmoney = #{returnmoney},
+			</if>
+			<if test="returnfreight != null and returnfreight !='' ">
+				returnfreight = #{returnfreight},
+			</if>
+			<if test="creditfreightrebates != null and creditfreightrebates !='' ">
+				creditfreightrebates = #{creditfreightrebates},
+			</if>
+			<if test="creditgasrebate != null and creditgasrebate !='' ">
+				creditgasrebate = #{creditgasrebate},
+			</if>
+			<if test="refunddisputes != null and refunddisputes !='' ">
+				refunddisputes = #{refunddisputes},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_usermoney
+		WHERE id = #{id}
+	</update>
+	<select id="editUsermoney" statementType="CALLABLE">
+			{call SP_Statistics_Usermoney()}
+	</select>
+</mapper>

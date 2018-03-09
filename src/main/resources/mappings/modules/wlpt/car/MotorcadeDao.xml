@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.MotorcadeDao">
+
+    <sql id="motorcadeColumns">
+		a.id AS "id",
+		a.no AS "no",
+		a.name AS "name",
+		a.fromcity AS "fromCity",
+		a.tocity AS "toCity",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.remark AS "remark"
+	</sql>
+
+    <sql id="motorcadeOtherColumns">
+		a.id AS "id",
+		a.no AS "no",
+		a.name AS "name",
+		a.fromcity AS "fromCity",
+		a.tocity AS "toCity",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.remark AS "remark",
+        c.ID AS "car.id",
+		c.CarNumber AS "car.carnumber",
+		c.CarType AS "car.cartype",
+		c.IsSocialCar AS "car.issocialCar",
+		c.CarLength AS "car.carlength",
+		c.LoadWeight AS "car.loadweight",
+		c.Status AS "car.status"
+    </sql>
+
+    <sql id="motorcadeJoins">
+        RIGHT JOIN cs_motorcade_car b ON b.motorcadeId = a.id
+        RIGHT JOIN cs_car c ON c.id = b.carId
+    </sql>
+
+    <select id="get" resultType="Motorcade">
+        SELECT
+        <include refid="motorcadeColumns"/>
+        FROM cs_motorcade a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Motorcade">
+        SELECT
+        <include refid="motorcadeOtherColumns"/>
+        FROM cs_motorcade a
+        <include refid="motorcadeJoins"/>
+        <where>
+            <if test="createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="id != null and id != ''">
+                AND a.ID= #{id}
+            </if>
+            <if test="carType != null and carType != ''">
+                AND c.CarType = #{carType}
+            </if>
+            <if test="isSocialCar != null and isSocialCar != ''">
+                AND c.IsSocialCar = #{isSocialCar}
+            </if>
+            <if test="searchinfo != null and searchinfo != ''">
+                OR c.CarNumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findMotorcadeList" resultType="Motorcade">
+        SELECT
+        <include refid="motorcadeColumns"/>
+        FROM cs_motorcade a
+        <where>
+            <if test="createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Motorcade">
+        SELECT
+        <include refid="motorcadeColumns"/>
+        FROM cs_motorcade a
+        <include refid="motorcadeJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO cs_motorcade(
+
+        <if test="no != null and no !='' ">
+            no,
+        </if>
+        <if test="name != null and name !='' ">
+            name,
+        </if>
+        <if test="fromCity != null and fromCity !='' ">
+            fromcity,
+        </if>
+        <if test="toCity != null and toCity !='' ">
+            tocity,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="remark != null and remark !='' ">
+            remark,
+        </if>
+        id
+        ) VALUES (
+        <if test="no != null and no !='' ">
+            #{no},
+        </if>
+        <if test="name != null and name !='' ">
+            #{name},
+        </if>
+        <if test="fromCity != null and fromCity !='' ">
+            #{fromCity},
+        </if>
+        <if test="toCity != null and toCity !='' ">
+            #{toCity},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="remark != null and remark !='' ">
+            #{remark},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE cs_motorcade SET
+        <if test="no != null and no !='' ">
+            no = #{no},
+        </if>
+        <if test="name != null and name !='' ">
+            name = #{name},
+        </if>
+        <if test="fromCity != null and fromCity !='' ">
+            fromcity = #{fromCity},
+        </if>
+        <if test="toCity != null and toCity !='' ">
+            tocity = #{toCity},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="remark != null and remark !='' ">
+            remark = #{remark},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		DELETE FROM cs_motorcade
+		WHERE id = #{id}
+	</update>
+
+</mapper>

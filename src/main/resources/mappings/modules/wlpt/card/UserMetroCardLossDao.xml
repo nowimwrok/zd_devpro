@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.thinkgem.jeesite.modules.wlpt.dao.card.UserMetroCardLossDao">
+
+	<sql id="userMetroCardLossColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.addressid AS
+		"addressid",
+		a.cardid AS "cardid",
+		a.status AS "status",
+		a.create_by AS
+		"createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS
+		"updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.useraccount AS "useraccount",
+		a.truename AS
+		"truename",
+		a.mobile AS "mobile",
+		a.ispayment   AS "ispayment",
+		a.newcardid   AS "newcardid"
+	</sql>
+
+	<sql id="userRoleColumns">
+		,
+		srole.name AS "user.role.name",
+		suser.login_name AS
+		"user.loginName",
+		suser.name AS "user.name",
+		suser.phone
+		AS "user.phone",
+		csuser.login_name AS "updateBy.loginName",
+		ship.PROVINCE AS
+		'address.province',
+		ship.CITY AS 'address.city',
+		ship.DISTRICT AS
+		'address.district',
+		ship.ADDRESS AS 'address.address',
+		ship.LINKMAN AS
+		'address.linkman',
+		ship.LINKCOMPANY AS 'address.linkcompany',
+		ship.LINKMOBILE AS 'address.linkmobile',
+		ship.LINKTELPHONE AS
+		'address.linktelphone',
+		ship.LINKEMAIL AS 'address.linkemail',
+		ship.POSTCODE AS 'address.postcode'
+	</sql>
+
+	<sql id="userMetroCardLossJoins">
+	</sql>
+
+	<sql id="userMetroCardJoinsUser">
+		INNER JOIN sys_user suser ON suser.id=a.userid
+		INNER
+		JOIN
+		sys_user_role
+		surole ON surole.user_id=suser.id
+		INNER JOIN
+		sys_role srole
+		ON
+		srole.id=surole.role_id
+		INNER JOIN sys_userinfo
+		sysuinfo ON
+		sysuinfo.user_id=suser.id
+		LEFT JOIN sys_user csuser ON
+		csuser.id=a.update_by
+		LEFT JOIN user_address ship ON a.addressid =
+		ship.ID
+	</sql>
+
+	<select id="get" resultType="UserMetroCardLoss">
+		SELECT
+
+		<include refid="userMetroCardLossColumns" />
+		<include refid="userRoleColumns" />
+		FROM user_metro_card_loss a
+		<include refid="userMetroCardLossJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			 a.id = #{id}
+		</where>
+		limit 0,1
+	</select>
+	
+		<select id="getByUserMetroCardLoss" resultType="UserMetroCardLoss" useCache="false" flushCache="false">
+		SELECT
+
+		<include refid="userMetroCardLossColumns" />
+		<include refid="userRoleColumns" />
+		FROM user_metro_card_loss a
+		<include refid="userMetroCardLossJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user!=null and user.id != null and user.id !='' ">
+				AND a.userid =#{user.id}
+			</if>
+			<if test="cardid != null and cardid !='' ">
+				AND a.cardid =#{cardid}
+			</if>
+		</where>
+		ORDER BY a.update_date DESC
+		limit 0,1
+	</select>
+
+	<select id="findList" resultType="UserMetroCardLoss">
+		SELECT
+		<include refid="userMetroCardLossColumns" />
+		<include refid="userRoleColumns" />
+		FROM user_metro_card_loss a
+		<include refid="userMetroCardLossJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginCreateDate !=null and beginCreateDate !=''">
+				and a.CREATE_DATE &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate !=null and endCreateDate !=''">
+				and a.CREATE_DATE &lt;= #{endCreateDate}
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (suser.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.cardid LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+				)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="UserMetroCardLoss">
+		SELECT
+		<include refid="userMetroCardLossColumns" />
+		<include refid="userRoleColumns" />
+		FROM user_metro_card_loss a
+		<include refid="userMetroCardLossJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO user_metro_card_loss(
+
+		<if test="user!=null and user.id != null and user.id !='' ">
+			userid,
+		</if>
+		<if test="address!=null and address.id != null and address.id !='' ">
+			addressid,
+		</if>
+		<if test="cardid != null and cardid !='' ">
+			cardid,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			useraccount,
+		</if>
+		<if test="truename != null and truename !='' ">
+			truename,
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			mobile,
+		</if>
+		<if test="ispayment != null and ispayment !='' ">
+			ispayment,
+		</if>
+		<if test="newcardid != null and newcardid !='' ">
+			newcardid,
+		</if>
+		id
+		) VALUES (
+		<if test="user!=null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="address!=null and address.id != null and address.id !='' ">
+			#{address.id},
+		</if>
+		<if test="cardid != null and cardid !='' ">
+			#{cardid},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			#{useraccount},
+		</if>
+		<if test="truename != null and truename !='' ">
+			#{truename},
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			#{mobile},
+		</if>
+		<if test="ispayment != null and ispayment !='' ">
+			#{ispayment},
+		</if>
+		<if test="newcardid != null and newcardid !='' ">
+			#{newcardid},
+		</if>
+		#{id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE user_metro_card_loss SET
+		<if test="user!=null and user.id != null and user.id !='' ">
+			userid = #{user.id},
+		</if>
+		<if test="address!=null and address.id != null and address.id !='' ">
+			addressid = #{address.id},
+		</if>
+		<if test="cardid != null and cardid !='' ">
+			cardid = #{cardid},
+		</if>
+		<if test="status != null and status !='' ">
+			status = #{status},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_by = #{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date = #{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			useraccount = #{useraccount},
+		</if>
+		<if test="truename != null and truename !='' ">
+			truename = #{truename},
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			mobile = #{mobile},
+		</if>
+		<if test="ispayment != null and ispayment !='' ">
+			ispayment = #{ispayment},
+		</if>
+		<if test="newcardid != null and newcardid !='' ">
+			newcardid = #{newcardid},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE user_metro_card_loss SET
+		del_flag =
+		#{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

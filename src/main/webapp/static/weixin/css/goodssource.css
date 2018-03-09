@@ -1,0 +1,166 @@
+@charset "utf-8";
+
+* {
+	margin: 0 0;
+	padding: 0 0;
+}
+
+body {
+	margin: 0 auto;
+	min-width: 320px;
+	background-color: #EBEBEB;
+	font-family: Helvetica, STHeiti STXihei, Microsoft JhengHei, Microsoft YaHei, Arial;
+}
+
+/*货物详细信息样式*/
+.goodsinfo {
+	background: #fff;
+	height: 70px;
+	font-size: 0.8em;
+	margin: 0 2%;
+	margin-top: 10px;
+}
+
+.goodsinfo .site {
+	width: 10%;
+	height: 67px;
+	float: left;
+	text-align: right;
+	padding-top: 3px;
+}
+
+.site img {
+	width: 28px;
+	height: auto;
+}
+
+.imgFlag {
+	width: 26px;
+	height: auto;
+	margin-bottom: -2px
+}
+
+.imgCall {
+	width: 35px;
+	height: auto;
+	margin-top: 2px;
+}
+
+.imgMore {
+	width: 10px;
+	height: auto;
+}
+
+.goodsinfo .detail {
+	width: 8%;
+	text-align: center;
+	float: right;
+	padding: 27px 0;
+}
+
+.content {
+	float: left;
+	width: 90%; /*82%*/
+	height: 70px;
+}
+
+.address {
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+}
+
+.startaddr {
+	margin-right: 10px;
+	width: 35%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	float: left;
+	overflow: hidden;
+}
+
+.startaddr,.endaddr {
+	vertical-align: text-bottom;
+}
+
+.addrSpan {
+	margin-right: 5px;
+}
+
+.address .endaddr,.address .flag {
+	margin-left: 6px;
+}
+
+.arrow {
+	height: 16px;
+	margin-top: 7px;
+	vertical-align: top;
+}
+
+.infos {
+	height: 40px;
+}
+
+.infos .toinfos {
+	width: 80%;
+	height: 40px;
+	float: left;
+}
+
+.carintro,.times {
+	height: 20px;
+	overflow: hidden;
+	line-height: 20px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.goodstype,.carlength,.quality {
+	margin-left: 5px;
+}
+
+.datetime {
+	margin-right: 35px;
+}
+
+.infos .phone {
+	width: 20%;
+	height: 40px;
+	float: right;
+	text-align: center;
+}
+
+.phonelink {
+	display: block;
+}
+
+@media only screen and (min-width: 360px) {
+	.goodsinfo {
+		margin: 0 5%;
+		margin-top: 10px;
+	}
+	
+	.datetime {
+		margin-right: 30px;
+	}
+}
+
+/*分页样式*/
+#page {
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-top: 10px;
+	text-align: center;
+	margin-bottom: 10px;
+	font-size: 0.8em;
+	color: #747474;
+}
+
+#first,#pre,#next,#end,#pageInfo {
+	margin-right: 5px;
+}
+
+#curPage,#pageCount {
+	color: #464646;
+}

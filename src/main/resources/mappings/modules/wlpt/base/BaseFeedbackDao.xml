@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseFeedbackDao">
+    
+	<sql id="baseFeedbackColumns">
+		a.feedback_id AS "feedbackId",
+		a.content AS "content",
+		a.phone AS "phone",
+		a.createtime AS "createtime",
+		a.scantype AS "scantype",
+		a.responsecontent AS "responsecontent",
+		a.responsetime AS "responsetime",
+		a.responseuserid AS "responseuserid"
+	</sql>
+	
+	<sql id="baseFeedbackJoins">
+	</sql>
+    
+	<select id="get" resultType="BaseFeedback">
+		SELECT
+			<include refid="baseFeedbackColumns"/>
+		FROM base_feedback a
+		<include refid="baseFeedbackJoins"/>
+		WHERE a.feedback_id = #{feedbackId}
+	</select>
+
+	<select id="findList" resultType="BaseFeedback">
+		SELECT 
+			<include refid="baseFeedbackColumns"/>
+		FROM base_feedback a
+		<include refid="baseFeedbackJoins"/>
+		<where>
+			
+			<if test="scantype != null and scantype != ''">
+				AND a.scantype = #{scantype}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BaseFeedback">
+		SELECT 
+			<include refid="baseFeedbackColumns"/>
+		FROM base_feedback a
+		<include refid="baseFeedbackJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_feedback(
+
+		<if test="content != null and content !='' ">
+			content,
+		</if>
+		<if test="phone != null and phone !='' ">
+			phone,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="scantype != null and scantype !='' ">
+			scantype,
+		</if>
+		<if test="responsecontent != null and responsecontent !='' ">
+			responsecontent,
+		</if>
+		<if test="responsetime != null and responsetime !='' ">
+			responsetime,
+		</if>
+		<if test="responseuserid != null and responseuserid !='' ">
+			responseuserid,
+		</if>
+		<if test="feedbackId != null and feedbackId !='' ">
+			feedback_id
+		</if>
+		) VALUES (
+
+		<if test="content != null and content !='' ">
+			#{content},
+		</if>
+		<if test="phone != null and phone !='' ">
+			#{phone},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="scantype != null and scantype !='' ">
+			#{scantype},
+		</if>
+		<if test="responsecontent != null and responsecontent !='' ">
+			#{responsecontent},
+		</if>
+		<if test="responsetime != null and responsetime !='' ">
+			#{responsetime},
+		</if>
+		<if test="responseuserid != null and responseuserid !='' ">
+			#{responseuserid},
+		</if>
+		<if test="feedbackId != null and feedbackId !='' ">
+			#{feedbackId}
+		</if>
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_feedback SET 	
+			<if test="content != null and content !='' ">
+				content = #{content},
+			</if>
+			<if test="phone != null and phone !='' ">
+				phone = #{phone},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="scantype != null and scantype !='' ">
+				scantype = #{scantype},
+			</if>
+			<if test="responsecontent != null and responsecontent !='' ">
+				responsecontent = #{responsecontent},
+			</if>
+			<if test="responsetime != null and responsetime !='' ">
+				responsetime = #{responsetime},
+			</if>
+			<if test="responseuserid != null and responseuserid !='' ">
+				responseuserid = #{responseuserid},
+			</if>			
+			feedback_id = #{feedbackId}
+		WHERE feedback_id = #{feedbackId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_feedback
+		WHERE feedback_id = #{feedbackId}
+	</update>
+			<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from base_feedback
+		where 
+		feedback_id in  ${delteArrayStr}
+	</delete>
+</mapper>

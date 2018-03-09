@@ -1,0 +1,289 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0 0;
+	padding: 0 0;
+}
+
+body {
+	margin: 0 auto;
+	min-width: 320px;
+	background-color: #EBEBEB;
+	font-family: Helvetica, STHeiti STXihei, Microsoft JhengHei, Microsoft YaHei, Arial;
+}
+
+#carInfo {
+	width: 96%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-top: 10px;
+	height: 84px;
+	background: #fff;
+}
+
+table {
+	width: 100%;
+}
+
+.left {
+	width: 40%;
+	height: 100%;
+	text-align: left;
+	font-size: 0.8em;
+	line-height: 20px;
+}
+
+.leftWidth {
+	width: 120px;
+}
+
+#startCity,#endCity {
+	width: 90px;
+	height: 20px;
+	overflow: hidden;
+	float: left;
+	margin-top: 4px;
+}
+
+.endAddress {
+	height: 24px;
+	overflow: hidden;
+}
+
+.center {
+	width: 45%;/*38%*/
+	height: 100%;
+	text-align: center;
+}
+
+#center {
+	text-align: left;
+	margin-bottom: 0px;
+}
+
+#credit {
+	line-height: 16px;
+}
+
+p {
+	font-size: 0.7em;
+	margin-top: 3px;
+	height: 16px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.typeSpan {
+	width: auto;
+	margin-right: 5px;
+	height: 20px;
+	overflow: hidden;
+	float: left;
+}
+
+.carLength {
+	width: auto;
+	margin-right: 5px;
+	height: 20px;
+	overflow: hidden;
+	float: left;
+}
+
+.elli {
+	width: 130px;/*116px*/
+}
+
+.visable {
+	width: 116px;
+	overflow: visible;
+}
+
+.nameSpan {
+	margin-right: 5px;
+}
+
+.orderSpan {
+	width: auto;
+	height: 16px;
+	line-height: 16px;
+	margin-right: 5px;
+}
+
+.right {
+	width: 15%;/*22%*/
+	height: 100%;
+	text-align: center;
+}
+
+.addSpan {
+	width: 40px;
+	margin-right: 5px;
+	height: 20px;
+	overflow: hidden;
+	float: left;
+}
+
+.phonenumber {
+	width: 35px;
+	height: 35px;
+	padding-top: 23px;
+	padding-bottom: 23px;
+	display: block;
+	float: left;
+}
+
+#imgStartCity {
+	width: 28px;
+	height: auto;
+	margin-bottom: -12px;
+	float: left;
+}
+
+#imgArrow {
+	width: auto;
+	height: 20px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	padding-left: 60px;
+}
+
+#imgEndCity {
+	width: 26px;
+	height: auto;
+	margin-bottom: -10px;
+	float: left;
+}
+
+#imgLicensePlate {
+	width: 30px;
+	height: auto;
+	margin-left: 3px;
+	margin-bottom: -2px;
+}
+
+#imgCredit {
+	width: auto;
+	height: 14px;
+	margin-bottom: -3px;
+	margin-left: 3px;
+}
+
+#imgCall {
+	width: 35px;
+	height: auto;
+}
+
+#imgMore {
+	width: 10px;
+	height: auto;
+	padding: 30px 0 30px 0;
+}
+
+strong {
+	font-size: 1em;
+	color: #F26522;
+}
+
+/* 分页样式 */
+#page {
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-top: 10px;
+	text-align: center;
+	margin-bottom: 10px;
+	font-size: 0.8em;
+	color: #747474;
+}
+
+#first,#pre,#next,#end,#pageInfo {
+	margin-right: 5px;
+}
+
+#curPage,#pageCount {
+	color: #464646;
+}
+
+/* 屏幕宽度大于=360 */
+@media only screen and (min-width: 360px) and (max-width: 500px) {
+	#carInfo {
+		width: 90%;
+		margin-left: 5%;
+		margin-right: 5%;
+		margin-top: 10px;
+		height: 84px;
+		background: #fff;
+	}
+	/**限制联系人姓名长度**/
+	.elli {
+		width: 140px;/*120px*/
+	}
+
+	/**始发地、目的地**/
+	.leftWidth {
+		width: 140px;
+	}
+	#startCity,#endCity {
+		width: 110px;
+		height: 20px;
+		overflow: hidden;
+		float: left;
+		margin-top: 4px;
+	}
+	.addSpan {
+		width: 52px;
+		margin-right: 5px;
+		height: 20px;
+		overflow: hidden;
+		float: left;
+	}
+	#imgArrow {
+		width: auto;
+		height: 20px;
+		margin-top: 6px;
+		margin-bottom: 6px;
+		padding-left: 65px;
+	}
+}
+
+@media only screen and (min-width: 500px) {
+	#carInfo {
+		width: 90%;
+		margin-left: 5%;
+		margin-right: 5%;
+		margin-top: 10px;
+		height: 84px;
+		background: #fff;
+	}
+
+	/**限制联系人姓名长度**/
+	.elli {
+		width: 200px;
+	}
+
+	/**始发地、目的地**/
+	.leftWidth {
+		width: 140px;
+	}
+	#startCity,#endCity {
+		width: 110px;
+		height: 20px;
+		overflow: hidden;
+		float: left;
+		margin-top: 4px;
+	}
+	.addSpan {
+		width: 52px;
+		margin-right: 5px;
+		height: 20px;
+		overflow: hidden;
+		float: left;
+	}
+	#imgArrow {
+		width: auto;
+		height: 20px;
+		margin-top: 6px;
+		margin-bottom: 6px;
+		padding-left: 65px;
+	}
+}

@@ -1,0 +1,261 @@
+@charset "utf-8";
+*{
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	font-family: "微软雅黑" !important;
+}
+body{
+	font-family: "微软雅黑"
+}
+ul{
+	list-style: none;
+}
+input[type="text"]{
+	padding-left: 5px;
+}
+a{
+	text-decoration: none;
+}
+a:hover,a:active,a:focus{
+	text-decoration: none;
+}
+label{
+	margin-bottom: 0px;
+}
+
+
+input[type="text"]{
+	color: #000;
+}
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px white inset;
+	border: 1px solid #CCC!important;
+}
+/*input[type="text"]:focus{
+	border: none;
+}*/
+.login_role_wrap{
+	width:100%;
+	height:400px;
+	background:url("../../../../images/wlptfront/index_banner.png");
+	background-repeat: no-repeat;
+	background-size:100% 100%;
+}
+.login_content{
+	width: 298px;
+    height: 303px;
+    background: #676863;
+    padding: 1% 0%;
+    margin: 37px auto;
+    padding-top: 14px;
+    position: absolute;
+    z-index: 300;
+    left: 60%;
+    color: #fff;
+}
+
+.login_content h4{
+	text-align: center;
+}
+.change-id{
+	-moz-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+.change-id:hover{
+	color:#00a2e9;
+	font-size:18px;
+}
+#reg_change{
+	background-color:red !important;
+	display:none;
+}
+.login-in{
+	width: 219px;
+	margin: 0px auto;
+	text-align: center;
+}
+.img-wrap{
+	width: 40px;
+	height: 40px;
+	background: #ACA9A4;
+	padding: 4%;
+	float: left;
+}
+.login-img{
+	width: 20px;
+	height: 20px;
+}
+.login-col1{
+	margin-bottom: 10px;
+    overflow: hidden;
+}
+.login-col1 input,.login-col2 input{
+	height: 40px;
+	float: left;
+	width: 178px;
+}
+.forget:hover,.forget:focus,.forget:active{
+    color: #fff;
+	text-decoration: none;
+}
+.forget{
+	color: #fff;
+	text-decoration: none;
+	display: block;
+	float: right;
+}
+.btn-success{
+	background: #00A2E9 !important;
+	border: #00A2E9 !important;
+	width: 219px !important;
+	height: 40px !important;
+	line-height: 2em !important;
+	margin-top: 20px !important;
+}
+.btn-success:hover,.btn-success:active,.btn-success:focus{
+	background: #00A2E9 !important;
+	border: #00A2E9 !important;
+	text-decoration: none;
+}
+.free-register:hover,.free-register:active,.free-register:focus{
+	color: #00A2E9 !important;
+}
+.free-register{
+	display: block;
+	text-align: center;
+	margin-top: 5px;
+	color: #00A2E9;
+	text-decoration: none;
+}
+.change-id{
+	cursor: pointer;
+}
+/*.change-id img{
+	position: absolute;
+	left: 50%;
+}*/
+.change-id-wrap{
+	margin: 0 auto;
+	padding-bottom: 25px;
+    padding-top: 8px;
+    height:118px;
+}
+.ensure-creat{
+	margin-top: 0px;
+}
+
+
+
+
+
+.user-infor tr{
+	line-height: 45px;
+}
+.user-infor{
+	width: 43%;
+	text-align: center;
+	margin: 0 auto;
+	margin-top: 3%;
+	line-height: 35px;
+	margin-bottom: 40px;
+}
+.user_infor_left{
+    width: 40%;
+	text-align: right;
+}
+.user_infor_right label{
+	margin-bottom: 0px;
+}
+.user_infor_right{
+	width: 70%;
+	text-align: left;
+	padding-left: 10px;
+}
+.star_red{/*红色小星星--公共样式*/
+	color: red;
+}
+.user_infor_right input{
+    height: 35px;
+	border: 1px solid #ccc;
+	background: #fff;
+}
+.user_data span{
+	font-size: 20px;
+}
+
+#tel_addr{
+	width: 15%;
+	margin-right: 8px;
+}
+.title_blue{
+	color: #00A1E8;
+	padding-left: 25px;
+}
+.title_orange{
+	color: #FFC52E;
+	padding-right: 25px;
+}
+.user_data span{
+	font-size: 20px;
+}
+.user_data{
+	width:100%;
+	margin:20px auto;
+}
+
+.countdown_time {
+    background-color: #FF8E00;
+    border: none;
+    color: #fff;
+    line-height: 25px;
+    height: 35px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.countdown_time:active,.countdown_time:focus{
+	border: none;
+}
+.register_wrap{
+	margin: 0 auto;
+	text-align: center;
+}
+
+/* .login_role_wrap{
+	width: 100%;
+	height: 400px;
+	background: url("../../images/wlpt_img/index_banner.png");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+} */
+.bot_con span{
+	padding-right: 8px;
+}
+.bot_con{
+	width: 30%;
+	text-align: center;
+	float: left;
+	margin-right: 3%;
+}
+.bottom_wrap{
+	width: 80%;
+	margin: 0 auto;
+	text-align: center;
+}
+/* #sub_form{
+	-moz-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+#sub_form:hover{
+   background-color:#ffffff;	
+}
+ */
+.login_bottom{
+	width: 100%;
+	padding: 30px 0;
+	overflow: hidden;
+}

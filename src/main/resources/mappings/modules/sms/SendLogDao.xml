@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sms.dao.SendLogDao">
+    
+	<sql id="smssendlogColumns">
+		a.id AS "id",
+		a.user_id AS "user.user_id",
+		a.module AS "module",
+		a.function AS "function",
+		a.mobiles AS "mobiles",
+		a.sms_content AS "smsContent",
+		a.cost AS "cost",
+		a.send_time AS "sendTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="smssendlogJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="SendLog">
+		SELECT 
+			<include refid="smssendlogColumns"/>
+		FROM sys_smssendlog a
+		<include refid="smssendlogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SendLog">
+		SELECT 
+			<include refid="smssendlogColumns"/>
+		FROM sys_smssendlog a
+		<include refid="smssendlogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="mobiles != null and mobiles != ''">
+				AND a.mobiles LIKE
+	                <if test="dbName == 'oracle'">'%'||#{mobiles}||'%'</if>
+	                <if test="dbName == 'mssql'">'%'+#{mobiles}+'%'</if>
+	                <if test="dbName == 'mysql'">concat('%',#{mobiles},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SendLog">
+		SELECT 
+			<include refid="smssendlogColumns"/>
+		FROM sys_smssendlog a
+		<include refid="smssendlogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_smssendlog(
+			<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+			</if>
+			<if test="module != null and module !='' ">
+			module,
+			</if>
+			<if test="function != null and function !='' ">
+			function,
+			</if>
+			<if test="mobiles != null and mobiles !='' ">
+			mobiles,
+			</if>
+			<if test="smsContent != null and smsContent !='' ">
+			sms_content,
+			</if>
+			<if test="cost != null and cost !='' ">
+			cost,
+			</if>
+			<if test="sendTime != null and sendTime !='' ">
+			send_time,
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+			</if>
+			<if test="createDate != null and createDate !='' ">
+			create_date,
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+			update_date,
+			</if>
+			<if test="remarks != null and remarks !='' ">
+			remarks,
+			</if>
+			<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+			</if>
+			id
+		) VALUES (
+			<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+			</if>
+			<if test="module != null and module !='' ">
+			#{module},
+			</if>
+			<if test="function != null and function !='' ">
+			#{function},
+			</if>
+			<if test="mobiles != null and mobiles !='' ">
+			#{mobiles},
+			</if>
+			<if test="smsContent != null and smsContent !='' ">
+			#{smsContent},
+			</if>
+			<if test="cost != null and cost !='' ">
+			#{cost},
+			</if>
+			<if test="sendTime != null and sendTime !='' ">
+			#{sendTime},
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+			</if>
+			<if test="createDate != null and createDate !='' ">
+			#{createDate},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+			#{remarks},
+			</if>
+			<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+			</if>
+			#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_smssendlog SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="module != null and module !='' ">
+				module = #{module},
+			</if>
+			<if test="function != null and function !='' ">
+				function = #{function},
+			</if>
+			<if test="mobiles != null and mobiles !='' ">
+				mobiles = #{mobiles},
+			</if>
+			<if test="smsContent != null and smsContent !='' ">
+				sms_content = #{smsContent},
+			</if>
+			<if test="cost != null and cost !='' ">
+				cost = #{cost},
+			</if>
+			<if test="sendTime != null and sendTime !='' ">
+				send_time = #{sendTime},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 通过手机号码获取最后短信数据 -->
+	<select id="findByPhoneVerCodeAndFun" parameterType="SendLog" resultType="SendLog">
+		select
+		id,
+		MODULE,
+		FUNCTION,
+		MOBILES,
+		SMS_CONTENT,
+		COST,
+		SEND_TIME,
+		ID
+		from
+		sys_smssendlog where MOBILES=#{mobiles}
+		<if test=" smsContent != null and smsContent !='' ">
+			and SMS_CONTENT like CONCAT(CONCAT('%', #{smsContent}),'%')
+		</if>
+		<if test=" function != null and function !='' ">
+			and function like CONCAT(CONCAT('%', #{function}),'%')
+		</if>
+		order by SEND_TIME desc LIMIT 0,1
+	</select>
+	
+	<update id="delete">
+		UPDATE sys_smssendlog SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

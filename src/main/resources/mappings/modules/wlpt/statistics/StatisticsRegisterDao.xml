@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsRegisterDao">
+    
+	<sql id="statisticsRegisterColumns">
+		a.careverycount AS "careverycount",
+		a.goodeverycount AS "goodeverycount",
+		a.compeverycount AS "compeverycount",
+		a.createtime AS "createtime",
+		a.allcount AS "allcount",
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="statisticsRegisterJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsRegister">
+		SELECT
+			<include refid="statisticsRegisterColumns"/>
+		FROM statistics_register a
+		<include refid="statisticsRegisterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsRegister">
+		SELECT 
+			<include refid="statisticsRegisterColumns"/>
+		FROM statistics_register a
+		<include refid="statisticsRegisterJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsRegister">
+		SELECT 
+			<include refid="statisticsRegisterColumns"/>
+		FROM statistics_register a
+		<include refid="statisticsRegisterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_register(
+
+		<if test="careverycount != null and careverycount !='' ">
+			careverycount,
+		</if>
+		<if test="goodeverycount != null and goodeverycount !='' ">
+			goodeverycount,
+		</if>
+		<if test="compeverycount != null and compeverycount !='' ">
+			compeverycount,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="allcount != null and allcount !='' ">
+			allcount,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="careverycount != null and careverycount !='' ">
+			#{careverycount},
+		</if>
+		<if test="goodeverycount != null and goodeverycount !='' ">
+			#{goodeverycount},
+		</if>
+		<if test="compeverycount != null and compeverycount !='' ">
+			#{compeverycount},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="allcount != null and allcount !='' ">
+			#{allcount},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_register SET 	
+			<if test="careverycount != null and careverycount !='' ">
+				careverycount = #{careverycount},
+			</if>
+			<if test="goodeverycount != null and goodeverycount !='' ">
+				goodeverycount = #{goodeverycount},
+			</if>
+			<if test="compeverycount != null and compeverycount !='' ">
+				compeverycount = #{compeverycount},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="allcount != null and allcount !='' ">
+				allcount = #{allcount},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE statistics_register SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="editRegister" statementType="CALLABLE">
+			{call SP_Statistics_Register()}
+	</select>
+	
+	<select id="getRoleCount" resultType="StatisticsRegister">
+	SELECT
+        count(0) AS "count",
+        sl.enname AS "enname",
+        sl.`name` AS "name"
+    FROM sys_user sy
+    INNER JOIN sys_user_role sur ON sur.user_id=sy.id
+    INNER JOIN sys_role sl ON sl.id=sur.role_id
+    WHERE sl.enname IN ('carowner', 'goodsowner', 'enterprise')
+    GROUP BY sl.id
+	</select>
+</mapper>

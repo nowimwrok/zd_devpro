@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsCarDao">
+    
+	<sql id="statisticsCarColumns">
+		a.id AS "id",
+		a.everycount AS "everycount",
+		a.allcount AS "allcount",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="statisticsCarJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsCar">
+		SELECT
+			<include refid="statisticsCarColumns"/>
+		FROM statistics_car a
+		<include refid="statisticsCarJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsCar">
+		SELECT 
+			<include refid="statisticsCarColumns"/>
+		FROM statistics_car a
+		<include refid="statisticsCarJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsCar">
+		SELECT 
+			<include refid="statisticsCarColumns"/>
+		FROM statistics_car a
+		<include refid="statisticsCarJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_car(
+
+		<if test="everycount != null and everycount !='' ">
+			everycount,
+		</if>
+		<if test="allcount != null and allcount !='' ">
+			allcount,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+			id
+		) VALUES (
+		<if test="everycount != null and everycount !='' ">
+			#{everycount},
+		</if>
+		<if test="allcount != null and allcount !='' ">
+			#{allcount},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_car SET 	
+			<if test="everycount != null and everycount !='' ">
+				everycount = #{everycount},
+			</if>
+			<if test="allcount != null and allcount !='' ">
+				allcount = #{allcount},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_car
+		WHERE id = #{id}
+	</update>
+	<select id="editCar" statementType="CALLABLE">
+			{call SP_Statistics_Car()}
+	</select>
+	
+	<select id="getCarMonthData" resultType="StatisticsCar">
+	    SELECT
+          cs.EVERYCOUNT   AS "everycount",
+          month(cs.CREATETIME)   AS "timeflg",
+          date_format(cs.CREATETIME, '%Y-%m月') AS "cretime"
+        FROM statistics_car cs
+        GROUP BY timeflg
+        ORDER BY cs.CREATETIME ASC
+	</select>
+	
+	<select id="getCarTypeCount" resultType="StatisticsCar">
+	    SELECT 
+           count(0) AS "everycount",
+           cs.CARTYPE AS "carType"
+           FROM cs_car cs
+           GROUP BY cs.CarType;
+	</select>
+</mapper>

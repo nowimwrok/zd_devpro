@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.CarDao">
+
+    <sql id="carColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.ismembercar AS "ismembercar",
+		a.carnumber AS "carnumber",
+		a.cartype AS "cartype",
+		a.carlength AS "carlength",
+		a.lengthunit AS "lengthunit",
+		a.loadweight AS "loadweight",
+		a.weightunit AS "weightunit",
+		a.mainroad AS "mainroad",
+		a.ownername AS "ownername",
+		a.ownermobile AS "ownermobile",
+		a.status AS "status",
+		a.del_flag AS "delFlag",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		date_format(a.update_date, '%Y年%m月%d日') AS "ymdDate",
+		a.oftenparkedposition AS "oftenparkedposition",
+		a.issocialcar AS "issocialcar",
+		a.locationmobile AS "locationmobile",
+		a.tradecount AS "tradecount",
+		a.travellicimg AS "travellicimg",
+		a.carsurfaceimg AS "carsurfaceimg",
+		a.owneridcardnum AS "owneridcardnum",
+		a.owneridcardimg AS "owneridcardimg",
+		a.transportcardimg AS "transportcardimg",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		u2.login_name AS "user.loginName",
+		u2.phone AS  "user.phone",
+		u2.name AS "user.name",
+		u2.photo As "user.photo",
+		uinfo.POINTLEVLE 	   AS "user.userinfo.pointlevle",
+		c.id AS "motorcade.id",
+		c.no AS "motorcade.no",
+		c.name AS "motorcade.name",
+		c.fromcity AS "motorcade.fromCity",
+		c.tocity AS "motorcade.toCity",
+		b.id AS "motorcadeCar.id",
+		a.checkareastatus AS "checkareastatus",
+		a.checkownerstatus AS "checkownerstatus",
+		a.checktruckstatus AS "checktruckstatus",
+		a.transportcard AS "transportcard",
+		a.validityterm AS "validityterm"
+	</sql>
+
+    <sql id="carsourceColumns">
+		,cs.id AS "carsourceid",
+		cs.MAINROAD AS "carsourcemainroad",
+		cs.CONTACTNAME AS "contactname",
+		cs.CONTACTMOBILE AS "contactmobile",
+		cs.DEPARTURETIME AS "departuretime",
+		cs.`STATUS` AS "carsourcestatus"
+	</sql>
+    <sql id="carJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = u2.id
+        LEFT JOIN cs_motorcade_car b ON b.carId = a.id
+        LEFT JOIN cs_motorcade c ON c.id = b.motorcadeId
+	</sql>
+
+    <sql id="carsourceJoins">
+		LEFT JOIN cs_car_source cs on a.id=cs.CAR_ID and cs.DEL_FLAG= 0 
+	</sql>
+
+    <select id="get" resultType="Car">
+        SELECT
+        <include refid="carColumns"/>
+        FROM cs_car a
+        <include refid="carJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Car">
+        SELECT
+        <include refid="carColumns"/>
+        FROM cs_car a
+        <include refid="carJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (a.carnumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                a.ownermobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u2.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="user != null and user.loginName != null and user.loginName != ''">
+                AND u2.login_name = #{user.loginName}
+            </if>
+            <if test="ismembercar != null and ismembercar != ''">
+                AND a.ismembercar = #{ismembercar}
+            </if>
+            <if test="carnumber != null and carnumber != ''">
+                AND a.carnumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{carnumber}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{carnumber}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{carnumber},'%')</if>
+            </if>
+            <if test="cartype != null and cartype != ''">
+                AND a.cartype = #{cartype}
+            </if>
+            <if test="carlength != null and carlength != ''">
+                AND a.carlength = #{carlength}
+            </if>
+            <if test="beginCarlength != null and beginCarlength != ''">
+                AND a.carlength &gt;= #{beginCarlength}
+            </if>
+            <if test="endCarlength != null and endCarlength != ''">
+                AND a.carlength &lt;= #{endCarlength}
+            </if>
+            <!--<if test="beginCarlength != null and endCarlength != null and beginCarlength != '' and endCarlength != ''">
+                AND a.carlength BETWEEN #{beginCarlength} AND #{endCarlength}
+            </if>-->
+            <if test="lengthunit != null and lengthunit != ''">
+                AND a.lengthunit = #{lengthunit}
+            </if>
+            <if test="loadweight != null and loadweight != ''">
+                AND a.loadweight = #{loadweight}
+            </if>
+            <if test="beginLoadWeight != null and beginLoadWeight != ''">
+                AND a.loadweight &gt;= #{beginLoadWeight}
+            </if>
+            <if test="endLoadWeight != null and endLoadWeight != ''">
+                AND a.loadweight &lt;= #{endLoadWeight}
+            </if>
+            <if test="weightunit != null and weightunit != ''">
+                AND a.weightunit = #{weightunit}
+            </if>
+            <if test="addressStart !=null and addressStart !='' ">
+                and SUBSTRING_INDEX(a.MAINROAD, '-', 1) LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressStart}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressStart}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressStart},'%')</if>
+            </if>
+            <if test="addressEnd !=null and addressEnd !='' ">
+                and SUBSTRING_INDEX(a.MAINROAD, '-', -1) LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressEnd}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressEnd}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressEnd},'%')</if>
+            </if>
+            <if test="mainroad != null and mainroad != ''">
+                AND a.mainroad LIKE
+                <if test="dbName == 'oracle'">'%'||#{mainroad}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{mainroad}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{mainroad},'%')</if>
+            </if>
+            <if test="ownername != null and ownername != ''">
+                AND a.ownername LIKE
+                <if test="dbName == 'oracle'">'%'||#{ownername}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{ownername}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{ownername},'%')</if>
+            </if>
+            <if test="ownermobile != null and ownermobile != ''">
+                AND a.ownermobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{ownermobile}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{ownermobile}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{ownermobile},'%')</if>
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="beginUpdateDate != null and endUpdateDate != null and beginUpdateDate != '' and endUpdateDate != ''">
+                AND a.update_date BETWEEN #{beginUpdateDate} AND #{endUpdateDate}
+            </if>
+            <if test="oftenparkedposition != null and oftenparkedposition != ''">
+                AND a.oftenparkedposition = #{oftenparkedposition}
+            </if>
+            <if test="issocialcar != null and issocialcar != ''">
+                AND a.issocialcar = #{issocialcar}
+            </if>
+            <if test="locationmobile != null and locationmobile != ''">
+                AND a.locationmobile = #{locationmobile}
+            </if>
+            <if test="owneridcardnum != null and owneridcardnum != ''">
+                AND a.owneridcardnum = #{owneridcardnum}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+
+            <if test=" fromcity !=null and  fromcity != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', 1)
+                LIKE
+                CONCAT(CONCAT('%', #{fromcity}),'%')
+            </if>
+            <if test=" fromprovince !=null and  fromprovince != ''">
+                and SUBSTRING_INDEX(a.mainroad, '-', 1)
+                LIKE
+                CONCAT(CONCAT('%', #{fromprovince}),'%')
+            </if>
+            <if test=" toprovince !=null and  toprovince != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', -1) LIKE
+                CONCAT(CONCAT('%',
+                #{toprovince}),'%')
+            </if>
+            <if test=" tocity !=null and  tocity != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', -1) LIKE
+                CONCAT(CONCAT('%',
+                #{tocity}),'%')
+            </if>
+            <if test=" travellicimg !=null and  travellicimg != ''">
+                AND a.travellicimg = #{travellicimg}
+            </if>
+            <if test=" carsurfaceimg !=null and  carsurfaceimg != ''">
+                AND a.carsurfaceimg = #{carsurfaceimg}
+            </if>
+            <if test=" motorcadeId !=null and  motorcadeId != ''">
+                AND c.id = #{motorcadeId}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="gethallinfo" resultType="Car">
+        SELECT
+        <include refid="carColumns"/>
+        <include refid="carsourceColumns"/>
+        FROM cs_car a
+        <include refid="carJoins"/>
+        <include refid="carsourceJoins"/>
+        WHERE a.id = #{id}
+        <if test="carsourceid != null and carsourceid != ''">
+            AND cs.id = #{carsourceid}
+        </if>
+        limit 1
+    </select>
+    <select id="findHallList" resultType="Car">
+        SELECT
+        <include refid="carColumns"/>
+        <include refid="carsourceColumns"/>
+        FROM cs_car a
+        <include refid="carJoins"/>
+        <include refid="carsourceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (a.carnumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                a.ownermobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u2.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="user != null and user.loginName != null and user.loginName != ''">
+                AND u2.login_name = #{user.loginName}
+            </if>
+            <if test="ismembercar != null and ismembercar != ''">
+                AND a.ismembercar = #{ismembercar}
+            </if>
+            <if test="carnumber != null and carnumber != ''">
+                AND a.carnumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{carnumber}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{carnumber}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{carnumber},'%')</if>
+            </if>
+            <if test="cartype != null and cartype != ''">
+                AND a.cartype = #{cartype}
+            </if>
+            <if test="carlength != null and carlength != ''">
+                AND a.carlength = #{carlength}
+            </if>
+            <if test="beginCarlength != null and beginCarlength != ''">
+                AND a.carlength &gt;= #{beginCarlength}
+            </if>
+            <if test="endCarlength != null and endCarlength != ''">
+                AND a.carlength &lt;= #{endCarlength}
+            </if>
+            <!--<if test="beginCarlength != null and endCarlength != null and beginCarlength != '' and endCarlength != ''">
+                AND a.carlength BETWEEN #{beginCarlength} AND #{endCarlength}
+            </if>-->
+            <if test="lengthunit != null and lengthunit != ''">
+                AND a.lengthunit = #{lengthunit}
+            </if>
+            <if test="loadweight != null and loadweight != ''">
+                AND a.loadweight = #{loadweight}
+            </if>
+            <if test="beginLoadWeight != null and beginLoadWeight != ''">
+                AND a.loadweight &gt;= #{beginLoadWeight}
+            </if>
+            <if test="endLoadWeight != null and endLoadWeight != ''">
+                AND a.loadweight &lt;= #{endLoadWeight}
+            </if>
+            <if test="weightunit != null and weightunit != ''">
+                AND a.weightunit = #{weightunit}
+            </if>
+            <if test="addressStart !=null and addressStart !='' ">
+                AND (SUBSTRING_INDEX(a.MAINROAD, '-', 1) LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressStart}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressStart}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressStart},'%')</if>
+                OR
+                SUBSTRING_INDEX(cs.MAINROAD, '-', 1) LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressStart}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressStart}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressStart},'%')</if>
+                )
+            </if>
+            <if test="addressEnd !=null and addressEnd !='' ">
+                AND (and SUBSTRING_INDEX(a.MAINROAD, '-', -1) LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressEnd}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressEnd}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressEnd},'%')</if>
+                OR
+                and SUBSTRING_INDEX(cs.MAINROAD, '-', -1) LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressEnd}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressEnd}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressEnd},'%')</if>
+                )
+            </if>
+            <if test="mainroad != null and mainroad != ''">
+                AND a.mainroad LIKE
+                <if test="dbName == 'oracle'">'%'||#{mainroad}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{mainroad}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{mainroad},'%')</if>
+            </if>
+            <if test="ownername != null and ownername != ''">
+                AND a.ownername LIKE
+                <if test="dbName == 'oracle'">'%'||#{ownername}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{ownername}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{ownername},'%')</if>
+            </if>
+            <if test="ownermobile != null and ownermobile != ''">
+                AND a.ownermobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{ownermobile}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{ownermobile}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{ownermobile},'%')</if>
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="beginUpdateDate != null and endUpdateDate != null and beginUpdateDate != '' and endUpdateDate != ''">
+                AND a.update_date BETWEEN #{beginUpdateDate} AND #{endUpdateDate}
+            </if>
+            <if test="oftenparkedposition != null and oftenparkedposition != ''">
+                AND a.oftenparkedposition = #{oftenparkedposition}
+            </if>
+            <if test="issocialcar != null and issocialcar != ''">
+                AND a.issocialcar = #{issocialcar}
+            </if>
+            <if test="locationmobile != null and locationmobile != ''">
+                AND a.locationmobile = #{locationmobile}
+            </if>
+            <if test="owneridcardnum != null and owneridcardnum != ''">
+                AND a.owneridcardnum = #{owneridcardnum}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+
+            <if test=" fromcity !=null and  fromcity != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', 1)
+                LIKE
+                CONCAT(CONCAT('%', #{fromcity}),'%')
+            </if>
+            <if test=" fromprovince !=null and  fromprovince != ''">
+                and SUBSTRING_INDEX(a.mainroad, '-', 1)
+                LIKE
+                CONCAT(CONCAT('%', #{fromprovince}),'%')
+            </if>
+            <if test=" toprovince !=null and  toprovince != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', -1) LIKE
+                CONCAT(CONCAT('%',
+                #{toprovince}),'%')
+            </if>
+            <if test=" tocity !=null and  tocity != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', -1) LIKE
+                CONCAT(CONCAT('%',
+                #{tocity}),'%')
+            </if>
+            <if test=" travellicimg !=null and  travellicimg != ''">
+                AND a.travellicimg = #{travellicimg}
+            </if>
+            <if test=" carsurfaceimg !=null and  carsurfaceimg != ''">
+                AND a.carsurfaceimg = #{carsurfaceimg}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                order by cs.UPDATE_DATE desc ,a.Update_Date desc
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <!-- 查询车队并进行车队车辆统计 -->
+    <select id="findGroupList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.car.CarGroup">
+        SELECT
+        a.id AS "car.id",
+        a.user_id AS "car.user.id",
+        a.ownername AS "car.ownername",
+        a.ownermobile AS "car.ownermobile",
+        a.status AS "car.status",
+        a.del_flag AS "car.delFlag",
+        a.create_date AS "car.createDate",
+        a.update_date AS "car.updateDate",
+        a.tradecount AS "car.tradecount",
+        a.owneridcardnum AS "car.owneridcardnum",
+        u2.login_name AS "car.user.loginName",
+        u2.phone AS "car.user.phone",
+        u2.name AS "car.user.name",
+        ulr.name AS "car.user.role.name",
+        count(*) AS "groupsize",
+        uc.CompanyName AS "car.user.company.name"
+        FROM cs_car a
+        <include refid="carJoins"/>
+        Left JOIN user_company uc on uc.UserId=u2.id
+        LEFT JOIN sys_userinfo uif ON u2.id = uif.user_id
+        LEFT JOIN sys_user_role ur ON ur.user_id = u2.id
+        LEFT JOIN sys_role ulr ON ulr.id = ur.role_id
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+
+            <if test="car !=null and car.user != null and car.user.id != null and car.user.id != ''">
+                AND a.user_id = #{car.user.id}
+            </if>
+            <if test=" car !=null and car.ownername != null and car.ownername != ''">
+                AND a.ownername LIKE
+                <if test="dbName == 'oracle'">'%'||#{car.ownername}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{car.ownername}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{car.ownername},'%')</if>
+            </if>
+            <if test=" car !=null and car.ownermobile != null and car.ownermobile != ''">
+                AND a.ownermobile LIKE
+                <if test="dbName == 'oracle'">'%'||#{car.ownermobile}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{car.ownermobile}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{car.ownermobile},'%')</if>
+            </if>
+            <if test="car !=null and car.delFlag != null and car.delFlag != ''">
+                AND a.del_flag = #{car.delFlag}
+            </if>
+            <if test="car !=null and car.user !=null and car.user.loginName != null and car.user.loginName != ''">
+                AND u2.login_name = #{car.user.loginName}
+            </if>
+        </where>
+        group by a.user_id
+        HAVING COUNT(*)>1
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="findAllList" resultType="Car">
+        SELECT
+        <include refid="carColumns"/>
+        FROM cs_car a
+        <include refid="carJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test=" fromcity !=null and  fromcity != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', 1)
+                LIKE
+                CONCAT(CONCAT('%', #{fromcity}),'%')
+            </if>
+            <if test=" fromprovince !=null and  fromprovince != ''">
+                and SUBSTRING_INDEX(a.mainroad, '-', 1)
+                LIKE
+                CONCAT(CONCAT('%', #{fromprovince}),'%')
+            </if>
+            <if test=" toprovince !=null and  toprovince != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', -1) LIKE
+                CONCAT(CONCAT('%',
+                #{toprovince}),'%')
+            </if>
+            <if test=" tocity !=null and  tocity != ''">
+                AND SUBSTRING_INDEX(a.mainroad, '-', -1) LIKE
+                CONCAT(CONCAT('%',
+                #{tocity}),'%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO cs_car(
+
+        <if test="user != null and user.id != null and user.id !='' ">
+            user_id,
+        </if>
+        <if test="ismembercar != null and ismembercar !='' ">
+            ismembercar,
+        </if>
+        <if test="carnumber != null and carnumber !='' ">
+            carnumber,
+        </if>
+        <if test="cartype != null and cartype !='' ">
+            cartype,
+        </if>
+        <if test="carlength != null and carlength !='' ">
+            carlength,
+        </if>
+        <if test="lengthunit != null and lengthunit !='' ">
+            lengthunit,
+        </if>
+        <if test="loadweight != null and loadweight !='' ">
+            loadweight,
+        </if>
+        <if test="weightunit != null and weightunit !='' ">
+            weightunit,
+        </if>
+        <if test="mainroad != null and mainroad !='' ">
+            mainroad,
+        </if>
+        <if test="ownername != null and ownername !='' ">
+            ownername,
+        </if>
+        <if test="ownermobile != null and ownermobile !='' ">
+            ownermobile,
+        </if>
+        <if test="status != null and status !='' ">
+            status,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="oftenparkedposition != null and oftenparkedposition !='' ">
+            oftenparkedposition,
+        </if>
+        <if test="issocialcar != null and issocialcar !='' ">
+            issocialcar,
+        </if>
+        <if test="locationmobile != null and locationmobile !='' ">
+            locationmobile,
+        </if>
+        <if test="tradecount != null and tradecount !='' ">
+            tradecount,
+        </if>
+        <if test="travellicimg != null and travellicimg !='' ">
+            travellicimg,
+        </if>
+        <if test="carsurfaceimg != null and carsurfaceimg !='' ">
+            carsurfaceimg,
+        </if>
+        <if test="owneridcardnum != null and owneridcardnum !='' ">
+            owneridcardnum,
+        </if>
+        <if test="owneridcardimg != null and owneridcardimg !='' ">
+            owneridcardimg,
+        </if>
+        <if test="transportcardimg != null and transportcardimg !='' ">
+            transportcardimg,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        id
+        ) VALUES (
+        <if test="user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="ismembercar != null and ismembercar !='' ">
+            #{ismembercar},
+        </if>
+        <if test="carnumber != null and carnumber !='' ">
+            #{carnumber},
+        </if>
+        <if test="cartype != null and cartype !='' ">
+            #{cartype},
+        </if>
+        <if test="carlength != null and carlength !='' ">
+            #{carlength},
+        </if>
+        <if test="lengthunit != null and lengthunit !='' ">
+            #{lengthunit},
+        </if>
+        <if test="loadweight != null and loadweight !='' ">
+            #{loadweight},
+        </if>
+        <if test="weightunit != null and weightunit !='' ">
+            #{weightunit},
+        </if>
+        <if test="mainroad != null and mainroad !='' ">
+            #{mainroad},
+        </if>
+        <if test="ownername != null and ownername !='' ">
+            #{ownername},
+        </if>
+        <if test="ownermobile != null and ownermobile !='' ">
+            #{ownermobile},
+        </if>
+        <if test="status != null and status !='' ">
+            #{status},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="oftenparkedposition != null and oftenparkedposition !='' ">
+            #{oftenparkedposition},
+        </if>
+        <if test="issocialcar != null and issocialcar !='' ">
+            #{issocialcar},
+        </if>
+        <if test="locationmobile != null and locationmobile !='' ">
+            #{locationmobile},
+        </if>
+        <if test="tradecount != null and tradecount !='' ">
+            #{tradecount},
+        </if>
+        <if test="travellicimg != null and travellicimg !='' ">
+            #{travellicimg},
+        </if>
+        <if test="carsurfaceimg != null and carsurfaceimg !='' ">
+            #{carsurfaceimg},
+        </if>
+        <if test="owneridcardnum != null and owneridcardnum !='' ">
+            #{owneridcardnum},
+        </if>
+        <if test="owneridcardimg != null and owneridcardimg !='' ">
+            #{owneridcardimg},
+        </if>
+        <if test="transportcardimg != null and transportcardimg !='' ">
+            #{transportcardimg},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE cs_car SET
+        <if test="user.id != null and user.id !='' ">
+            user_id = #{user.id},
+        </if>
+        <if test="ismembercar != null and ismembercar !='' ">
+            ismembercar = #{ismembercar},
+        </if>
+        <if test="carnumber != null and carnumber !='' ">
+            carnumber = #{carnumber},
+        </if>
+        <if test="cartype != null and cartype !='' ">
+            cartype = #{cartype},
+        </if>
+        <if test="carlength != null and carlength !='' ">
+            carlength = #{carlength},
+        </if>
+        <if test="lengthunit != null and lengthunit !='' ">
+            lengthunit = #{lengthunit},
+        </if>
+        <if test="loadweight != null and loadweight !='' ">
+            loadweight = #{loadweight},
+        </if>
+        <if test="weightunit != null and weightunit !='' ">
+            weightunit = #{weightunit},
+        </if>
+        <if test="mainroad != null and mainroad !='' ">
+            mainroad = #{mainroad},
+        </if>
+        <if test="ownername != null and ownername !='' ">
+            ownername = #{ownername},
+        </if>
+        <if test="ownermobile != null and ownermobile !='' ">
+            ownermobile = #{ownermobile},
+        </if>
+        <if test="status != null and status !='' ">
+            status = #{status},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="oftenparkedposition != null and oftenparkedposition !='' ">
+            oftenparkedposition = #{oftenparkedposition},
+        </if>
+        <if test="issocialcar != null and issocialcar !='' ">
+            issocialcar = #{issocialcar},
+        </if>
+        <if test="locationmobile != null and locationmobile !='' ">
+            locationmobile = #{locationmobile},
+        </if>
+        <if test="tradecount != null and tradecount !='' ">
+            tradecount = #{tradecount},
+        </if>
+        <if test="travellicimg != null and travellicimg !='' ">
+            travellicimg = #{travellicimg},
+        </if>
+        <if test="carsurfaceimg != null and carsurfaceimg !='' ">
+            carsurfaceimg = #{carsurfaceimg},
+        </if>
+        <if test="owneridcardnum != null and owneridcardnum !='' ">
+            owneridcardnum = #{owneridcardnum},
+        </if>
+        <if test="owneridcardimg != null and owneridcardimg !='' ">
+            owneridcardimg = #{owneridcardimg},
+        </if>
+        <if test="transportcardimg != null and transportcardimg !='' ">
+            transportcardimg = #{transportcardimg},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE cs_car SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+    <!-- 更新成功交易数 -->
+    <update id="updateTradeNum" parameterType="car">
+        update
+        cs_car
+        SET
+        TradeCount=IFNULL(TradeCount,0)+1
+        where
+        id = #{id}
+    </update>
+    
+     <!-- 通过车辆表ID 更新查询验证信息 -->
+	<update id="updateValidation" parameterType="car">
+	    UPDATE
+	    cs_car
+	    SET
+	    
+	         <if test="transportcard != null and transportcard !='' ">
+            	transportcard = #{transportcard},
+	        </if>
+	         <if test="validityterm != null and validityterm !='' ">
+	            validityterm = #{validityterm},
+	        </if>
+	        <if test="checkareastatus != null and checkareastatus !='' ">
+	        	checkareastatus = #{checkareastatus},
+	        </if>
+	        <if test="checkownerstatus != null and checkownerstatus !='' ">
+	        	checkownerstatus = #{checkownerstatus},
+	        </if>
+	        <if test="checktruckstatus != null and checktruckstatus !='' ">
+	        	checktruckstatus = #{checktruckstatus},
+	        </if>
+	    id = #{id}
+        WHERE id = #{id}
+	</update>
+    
+
+    <select id="getUserCarNum" resultType="Integer">
+
+        SELECT
+        count(a.id)
+        FROM cs_car a
+        LEFT JOIN sys_user u2 ON u2.id = a.user_id
+        LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = u2.id
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="user != null and user.loginName != null and user.loginName != ''">
+                AND u2.login_name = #{user.loginName}
+            </if>
+        </where>
+
+    </select>
+    
+    <select id="findByCarnumber" resultType="int">
+        SELECT
+       	 	COUNT(0)
+        FROM cs_car a
+       		 <include refid="carJoins"/>
+        WHERE a.carnumber = #{carnumber}
+    </select>
+    
+    
+    <select id="findIdByCarnumber" resultType="String">
+          SELECT
+        a.id
+        FROM cs_car a
+        WHERE a.carnumber = #{carnumber}
+    </select>
+    
+</mapper>

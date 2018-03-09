@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseChinaAreaDao">
+
+    <sql id="chinaareaColumns">
+		a.areaid AS "areaid",
+		a.code AS "code",
+		a.parentcode AS "parentcode",
+		a.name AS "name",
+		a.shortname AS "shortname",
+		a.mininame AS "mininame",
+		a.level AS "level",
+		a.spell AS "spell",
+		a.bigdistrict AS "bigdistrict",
+		a.ishotcity AS "ishotcity",
+		a.ordernumber AS "ordernumber"
+	</sql>
+
+    <sql id="chinaareaJoins">
+
+    </sql>
+
+    <select id="get" resultType="Chinaarea">
+        SELECT
+        <include refid="chinaareaColumns"/>
+        FROM base_chinaarea a
+        <include refid="chinaareaJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getAreaByCondition" resultType="Chinaarea">
+        SELECT
+        <include refid="chinaareaColumns"/>
+        FROM base_chinaarea a
+        <include refid="chinaareaJoins"/>
+        <where>
+            <if test="id !=null and id != ''">
+              AND  a.id = #{id}
+            </if>
+            <if test="code !=null and code != ''">
+                AND   a.code = #{code}
+            </if>
+            <if test="parentcode !=null and parentcode != ''">
+                AND  a.parentcode = #{parentcode}
+            </if>
+            <if test="name !=null and name != ''">
+                AND   a.name = #{name}
+            </if>
+            <if test="shortname !=null and shortname != ''">
+                AND   a.shortname = #{shortname}
+            </if>
+            <if test="mininame !=null and mininame != ''">
+                AND  a.mininame = #{mininame}
+            </if>
+            <if test="level !=null and level != ''">
+                AND  a.level = #{level}
+            </if>
+            <if test="spell !=null and spell != ''">
+                AND  a.mininame = #{mininame}
+            </if>
+            <if test="bigdistrict !=null and bigdistrict != ''">
+                AND  a.bigdistrict = #{bigdistrict}
+            </if>
+            <if test="ishotcity !=null and ishotcity != ''">
+                AND  a.ishotcity = #{ishotcity}
+            </if>
+        </where>
+        order by ORDERNUMBER,AREAID
+    </select>
+
+    <select id="findList" resultType="Chinaarea">
+        SELECT
+        <include refid="chinaareaColumns"/>
+        FROM base_chinaarea a
+        <include refid="chinaareaJoins"/>
+        <where>
+
+            <if test="name != null and name != ''">
+                AND a.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Chinaarea">
+        SELECT
+        <include refid="chinaareaColumns"/>
+        FROM base_chinaarea a
+        <include refid="chinaareaJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO base_chinaarea(
+
+        <if test="areaid != null and areaid !='' ">
+            areaid,
+        </if>
+        <if test="code != null and code !='' ">
+            code,
+        </if>
+        <if test="parentcode != null and parentcode !='' ">
+            parentcode,
+        </if>
+        <if test="name != null and name !='' ">
+            name,
+        </if>
+        <if test="shortname != null and shortname !='' ">
+            shortname,
+        </if>
+        <if test="mininame != null and mininame !='' ">
+            mininame,
+        </if>
+        <if test="level != null and level !='' ">
+            level,
+        </if>
+        <if test="spell != null and spell !='' ">
+            spell,
+        </if>
+        <if test="bigdistrict != null and bigdistrict !='' ">
+            bigdistrict,
+        </if>
+        <if test="ishotcity != null and ishotcity !='' ">
+            ishotcity,
+        </if>
+        <if test="ordernumber != null and ordernumber !='' ">
+            ordernumber,
+        </if>
+        id
+        ) VALUES (
+        <if test="areaid != null and areaid !='' ">
+            #{areaid},
+        </if>
+        <if test="code != null and code !='' ">
+            #{code},
+        </if>
+        <if test="parentcode != null and parentcode !='' ">
+            #{parentcode},
+        </if>
+        <if test="name != null and name !='' ">
+            #{name},
+        </if>
+        <if test="shortname != null and shortname !='' ">
+            #{shortname},
+        </if>
+        <if test="mininame != null and mininame !='' ">
+            #{mininame},
+        </if>
+        <if test="level != null and level !='' ">
+            #{level},
+        </if>
+        <if test="spell != null and spell !='' ">
+            #{spell},
+        </if>
+        <if test="bigdistrict != null and bigdistrict !='' ">
+            #{bigdistrict},
+        </if>
+        <if test="ishotcity != null and ishotcity !='' ">
+            #{ishotcity},
+        </if>
+        <if test="ordernumber != null and ordernumber !='' ">
+            #{ordernumber},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE base_chinaarea SET
+        <if test="areaid != null and areaid !='' ">
+            areaid = #{areaid},
+        </if>
+        <if test="code != null and code !='' ">
+            code = #{code},
+        </if>
+        <if test="parentcode != null and parentcode !='' ">
+            parentcode = #{parentcode},
+        </if>
+        <if test="name != null and name !='' ">
+            name = #{name},
+        </if>
+        <if test="shortname != null and shortname !='' ">
+            shortname = #{shortname},
+        </if>
+        <if test="mininame != null and mininame !='' ">
+            mininame = #{mininame},
+        </if>
+        <if test="level != null and level !='' ">
+            level = #{level},
+        </if>
+        <if test="spell != null and spell !='' ">
+            spell = #{spell},
+        </if>
+        <if test="bigdistrict != null and bigdistrict !='' ">
+            bigdistrict = #{bigdistrict},
+        </if>
+        <if test="ishotcity != null and ishotcity !='' ">
+            ishotcity = #{ishotcity},
+        </if>
+        <if test="ordernumber != null and ordernumber !='' ">
+            ordernumber = #{ordernumber},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		DELETE FROM base_chinaarea
+		WHERE id = #{id}
+	</update>
+
+</mapper>

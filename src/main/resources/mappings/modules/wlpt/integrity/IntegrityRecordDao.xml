@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.integrity.IntegrityRecordDao">
+    
+	<sql id="integrityRecordColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.standarditemsid AS "standarditems.id",
+		a.integral AS "integral",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		suser.login_name AS "user.loginName",
+		suser.name AS "user.name",
+		suser.phone AS "user.phone",
+		sItmes.scoreitem AS "standarditems.scoreitem"
+	</sql>
+	
+	<sql id="integrityRecordJoins">
+		INNER JOIN sys_user suser ON a.userid=suser.id
+		INNER JOIN integrity_standarditems sItmes ON a.standarditemsid=sItmes.id
+	</sql>
+    
+	<select id="get" resultType="IntegrityRecord">
+		SELECT
+			<include refid="integrityRecordColumns"/>
+		FROM integrity_record a
+		<include refid="integrityRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="IntegrityRecord">
+		SELECT 
+			<include refid="integrityRecordColumns"/>
+		FROM integrity_record a
+		<include refid="integrityRecordJoins"/>
+		<where>
+			<if test="standarditems != null and standarditems.id != null and standarditems.id != ''">
+				AND a.standarditemsid = #{standarditems.id}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntegrityRecord">
+		SELECT 
+			<include refid="integrityRecordColumns"/>
+		FROM integrity_record a
+		<include refid="integrityRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO integrity_record(
+
+		<if test="user != null and user.id != null and user.id !='' ">
+			userid,
+		</if>
+		<if test="standarditems != null and standarditems.id != null and standarditems.id !='' ">
+			standarditemsid,
+		</if>
+		<if test="integral != null and integral !='' ">
+			integral,
+		</if>
+		<!-- <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if> -->
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<!-- <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if> -->
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="standarditems != null and standarditems.id != null and standarditems.id !='' ">
+			#{standarditems.id},
+		</if>
+		<if test="integral != null and integral !='' ">
+			#{integral},
+		</if>
+		<!-- <if test="createBy!= null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if> -->
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<!-- <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if> -->
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE integrity_record SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				userid = #{user.id},
+			</if>
+			<if test="standarditems != null and standarditems.id != null and standarditems.id !='' ">
+				standarditemsid = #{standarditems.id},
+			</if>
+			<if test="integral != null and integral !='' ">
+				integral = #{integral},
+			</if>
+			<!-- <if test="updateBy!= null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if> -->
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE integrity_record SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

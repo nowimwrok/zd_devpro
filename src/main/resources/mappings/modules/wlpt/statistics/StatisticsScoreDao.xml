@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsScoreDao">
+    
+	<sql id="statisticsScoreColumns">
+		a.id AS "id",
+		a.zeroth_custnum AS "zerothCustnum",
+		a.zeroth_allcredit AS "zerothAllcredit",
+		a.zeroth_docredit AS "zerothDocredit",
+		a.zeroth_deposit AS "zerothDeposit",
+		a.zeroth_proportion AS "zerothProportion",
+		a.first_custnum AS "firstCustnum",
+		a.first_allcredit AS "firstAllcredit",
+		a.first_docredit AS "firstDocredit",
+		a.first_deposit AS "firstDeposit",
+		a.first_proportion AS "firstProportion",
+		a.second_custnum AS "secondCustnum",
+		a.second_allcredit AS "secondAllcredit",
+		a.second_docredit AS "secondDocredit",
+		a.second_deposit AS "secondDeposit",
+		a.second_proportion AS "secondProportion",
+		a.third_custnum AS "thirdCustnum",
+		a.third_allcredit AS "thirdAllcredit",
+		a.third_docredit AS "thirdDocredit",
+		a.third_deposit AS "thirdDeposit",
+		a.third_proportion AS "thirdProportion",
+		a.fourth_custnum AS "fourthCustnum",
+		a.fourth_allcredit AS "fourthAllcredit",
+		a.fourth_docredit AS "fourthDocredit",
+		a.fourth_deposit AS "fourthDeposit",
+		a.fourth_proportion AS "fourthProportion",
+		a.fifth_custnum AS "fifthCustnum",
+		a.fifth_allcredit AS "fifthAllcredit",
+		a.fifth_docredit AS "fifthDocredit",
+		a.fifth_deposit AS "fifthDeposit",
+		a.fifth_proportion AS "fifthProportion",
+		a.totla_custnum AS "totlaCustnum",
+		a.totla_allcredit AS "totlaAllcredit",
+		a.totla_docredit AS "totlaDocredit",
+		a.totla_deposit AS "totlaDeposit",
+		a.totla_proportion AS "totlaProportion",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="statisticsScoreJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsScore">
+		SELECT
+			<include refid="statisticsScoreColumns"/>
+		FROM statistics_score a
+		<include refid="statisticsScoreJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsScore">
+		SELECT 
+			<include refid="statisticsScoreColumns"/>
+		FROM statistics_score a
+		<include refid="statisticsScoreJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsScore">
+		SELECT 
+			<include refid="statisticsScoreColumns"/>
+		FROM statistics_score a
+		<include refid="statisticsScoreJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_score(
+
+		<if test="zerothCustnum != null and zerothCustnum !='' ">
+			zeroth_custnum,
+		</if>
+		<if test="zerothAllcredit != null and zerothAllcredit !='' ">
+			zeroth_allcredit,
+		</if>
+		<if test="zerothDocredit != null and zerothDocredit !='' ">
+			zeroth_docredit,
+		</if>
+		<if test="zerothDeposit != null and zerothDeposit !='' ">
+			zeroth_deposit,
+		</if>
+		<if test="zerothProportion != null and zerothProportion !='' ">
+			zeroth_proportion,
+		</if>
+		<if test="firstCustnum != null and firstCustnum !='' ">
+			first_custnum,
+		</if>
+		<if test="firstAllcredit != null and firstAllcredit !='' ">
+			first_allcredit,
+		</if>
+		<if test="firstDocredit != null and firstDocredit !='' ">
+			first_docredit,
+		</if>
+		<if test="firstDeposit != null and firstDeposit !='' ">
+			first_deposit,
+		</if>
+		<if test="firstProportion != null and firstProportion !='' ">
+			first_proportion,
+		</if>
+		<if test="secondCustnum != null and secondCustnum !='' ">
+			second_custnum,
+		</if>
+		<if test="secondAllcredit != null and secondAllcredit !='' ">
+			second_allcredit,
+		</if>
+		<if test="secondDocredit != null and secondDocredit !='' ">
+			second_docredit,
+		</if>
+		<if test="secondDeposit != null and secondDeposit !='' ">
+			second_deposit,
+		</if>
+		<if test="secondProportion != null and secondProportion !='' ">
+			second_proportion,
+		</if>
+		<if test="thirdCustnum != null and thirdCustnum !='' ">
+			third_custnum,
+		</if>
+		<if test="thirdAllcredit != null and thirdAllcredit !='' ">
+			third_allcredit,
+		</if>
+		<if test="thirdDocredit != null and thirdDocredit !='' ">
+			third_docredit,
+		</if>
+		<if test="thirdDeposit != null and thirdDeposit !='' ">
+			third_deposit,
+		</if>
+		<if test="thirdProportion != null and thirdProportion !='' ">
+			third_proportion,
+		</if>
+		<if test="fourthCustnum != null and fourthCustnum !='' ">
+			fourth_custnum,
+		</if>
+		<if test="fourthAllcredit != null and fourthAllcredit !='' ">
+			fourth_allcredit,
+		</if>
+		<if test="fourthDocredit != null and fourthDocredit !='' ">
+			fourth_docredit,
+		</if>
+		<if test="fourthDeposit != null and fourthDeposit !='' ">
+			fourth_deposit,
+		</if>
+		<if test="fourthProportion != null and fourthProportion !='' ">
+			fourth_proportion,
+		</if>
+		<if test="fifthCustnum != null and fifthCustnum !='' ">
+			fifth_custnum,
+		</if>
+		<if test="fifthAllcredit != null and fifthAllcredit !='' ">
+			fifth_allcredit,
+		</if>
+		<if test="fifthDocredit != null and fifthDocredit !='' ">
+			fifth_docredit,
+		</if>
+		<if test="fifthDeposit != null and fifthDeposit !='' ">
+			fifth_deposit,
+		</if>
+		<if test="fifthProportion != null and fifthProportion !='' ">
+			fifth_proportion,
+		</if>
+		<if test="totlaCustnum != null and totlaCustnum !='' ">
+			totla_custnum,
+		</if>
+		<if test="totlaAllcredit != null and totlaAllcredit !='' ">
+			totla_allcredit,
+		</if>
+		<if test="totlaDocredit != null and totlaDocredit !='' ">
+			totla_docredit,
+		</if>
+		<if test="totlaDeposit != null and totlaDeposit !='' ">
+			totla_deposit,
+		</if>
+		<if test="totlaProportion != null and totlaProportion !='' ">
+			totla_proportion,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+			id
+		) VALUES (
+		<if test="zerothCustnum != null and zerothCustnum !='' ">
+			#{zerothCustnum},
+		</if>
+		<if test="zerothAllcredit != null and zerothAllcredit !='' ">
+			#{zerothAllcredit},
+		</if>
+		<if test="zerothDocredit != null and zerothDocredit !='' ">
+			#{zerothDocredit},
+		</if>
+		<if test="zerothDeposit != null and zerothDeposit !='' ">
+			#{zerothDeposit},
+		</if>
+		<if test="zerothProportion != null and zerothProportion !='' ">
+			#{zerothProportion},
+		</if>
+		<if test="firstCustnum != null and firstCustnum !='' ">
+			#{firstCustnum},
+		</if>
+		<if test="firstAllcredit != null and firstAllcredit !='' ">
+			#{firstAllcredit},
+		</if>
+		<if test="firstDocredit != null and firstDocredit !='' ">
+			#{firstDocredit},
+		</if>
+		<if test="firstDeposit != null and firstDeposit !='' ">
+			#{firstDeposit},
+		</if>
+		<if test="firstProportion != null and firstProportion !='' ">
+			#{firstProportion},
+		</if>
+		<if test="secondCustnum != null and secondCustnum !='' ">
+			#{secondCustnum},
+		</if>
+		<if test="secondAllcredit != null and secondAllcredit !='' ">
+			#{secondAllcredit},
+		</if>
+		<if test="secondDocredit != null and secondDocredit !='' ">
+			#{secondDocredit},
+		</if>
+		<if test="secondDeposit != null and secondDeposit !='' ">
+			#{secondDeposit},
+		</if>
+		<if test="secondProportion != null and secondProportion !='' ">
+			#{secondProportion},
+		</if>
+		<if test="thirdCustnum != null and thirdCustnum !='' ">
+			#{thirdCustnum},
+		</if>
+		<if test="thirdAllcredit != null and thirdAllcredit !='' ">
+			#{thirdAllcredit},
+		</if>
+		<if test="thirdDocredit != null and thirdDocredit !='' ">
+			#{thirdDocredit},
+		</if>
+		<if test="thirdDeposit != null and thirdDeposit !='' ">
+			#{thirdDeposit},
+		</if>
+		<if test="thirdProportion != null and thirdProportion !='' ">
+			#{thirdProportion},
+		</if>
+		<if test="fourthCustnum != null and fourthCustnum !='' ">
+			#{fourthCustnum},
+		</if>
+		<if test="fourthAllcredit != null and fourthAllcredit !='' ">
+			#{fourthAllcredit},
+		</if>
+		<if test="fourthDocredit != null and fourthDocredit !='' ">
+			#{fourthDocredit},
+		</if>
+		<if test="fourthDeposit != null and fourthDeposit !='' ">
+			#{fourthDeposit},
+		</if>
+		<if test="fourthProportion != null and fourthProportion !='' ">
+			#{fourthProportion},
+		</if>
+		<if test="fifthCustnum != null and fifthCustnum !='' ">
+			#{fifthCustnum},
+		</if>
+		<if test="fifthAllcredit != null and fifthAllcredit !='' ">
+			#{fifthAllcredit},
+		</if>
+		<if test="fifthDocredit != null and fifthDocredit !='' ">
+			#{fifthDocredit},
+		</if>
+		<if test="fifthDeposit != null and fifthDeposit !='' ">
+			#{fifthDeposit},
+		</if>
+		<if test="fifthProportion != null and fifthProportion !='' ">
+			#{fifthProportion},
+		</if>
+		<if test="totlaCustnum != null and totlaCustnum !='' ">
+			#{totlaCustnum},
+		</if>
+		<if test="totlaAllcredit != null and totlaAllcredit !='' ">
+			#{totlaAllcredit},
+		</if>
+		<if test="totlaDocredit != null and totlaDocredit !='' ">
+			#{totlaDocredit},
+		</if>
+		<if test="totlaDeposit != null and totlaDeposit !='' ">
+			#{totlaDeposit},
+		</if>
+		<if test="totlaProportion != null and totlaProportion !='' ">
+			#{totlaProportion},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_score SET 	
+			<if test="zerothCustnum != null and zerothCustnum !='' ">
+				zeroth_custnum = #{zerothCustnum},
+			</if>
+			<if test="zerothAllcredit != null and zerothAllcredit !='' ">
+				zeroth_allcredit = #{zerothAllcredit},
+			</if>
+			<if test="zerothDocredit != null and zerothDocredit !='' ">
+				zeroth_docredit = #{zerothDocredit},
+			</if>
+			<if test="zerothDeposit != null and zerothDeposit !='' ">
+				zeroth_deposit = #{zerothDeposit},
+			</if>
+			<if test="zerothProportion != null and zerothProportion !='' ">
+				zeroth_proportion = #{zerothProportion},
+			</if>
+			<if test="firstCustnum != null and firstCustnum !='' ">
+				first_custnum = #{firstCustnum},
+			</if>
+			<if test="firstAllcredit != null and firstAllcredit !='' ">
+				first_allcredit = #{firstAllcredit},
+			</if>
+			<if test="firstDocredit != null and firstDocredit !='' ">
+				first_docredit = #{firstDocredit},
+			</if>
+			<if test="firstDeposit != null and firstDeposit !='' ">
+				first_deposit = #{firstDeposit},
+			</if>
+			<if test="firstProportion != null and firstProportion !='' ">
+				first_proportion = #{firstProportion},
+			</if>
+			<if test="secondCustnum != null and secondCustnum !='' ">
+				second_custnum = #{secondCustnum},
+			</if>
+			<if test="secondAllcredit != null and secondAllcredit !='' ">
+				second_allcredit = #{secondAllcredit},
+			</if>
+			<if test="secondDocredit != null and secondDocredit !='' ">
+				second_docredit = #{secondDocredit},
+			</if>
+			<if test="secondDeposit != null and secondDeposit !='' ">
+				second_deposit = #{secondDeposit},
+			</if>
+			<if test="secondProportion != null and secondProportion !='' ">
+				second_proportion = #{secondProportion},
+			</if>
+			<if test="thirdCustnum != null and thirdCustnum !='' ">
+				third_custnum = #{thirdCustnum},
+			</if>
+			<if test="thirdAllcredit != null and thirdAllcredit !='' ">
+				third_allcredit = #{thirdAllcredit},
+			</if>
+			<if test="thirdDocredit != null and thirdDocredit !='' ">
+				third_docredit = #{thirdDocredit},
+			</if>
+			<if test="thirdDeposit != null and thirdDeposit !='' ">
+				third_deposit = #{thirdDeposit},
+			</if>
+			<if test="thirdProportion != null and thirdProportion !='' ">
+				third_proportion = #{thirdProportion},
+			</if>
+			<if test="fourthCustnum != null and fourthCustnum !='' ">
+				fourth_custnum = #{fourthCustnum},
+			</if>
+			<if test="fourthAllcredit != null and fourthAllcredit !='' ">
+				fourth_allcredit = #{fourthAllcredit},
+			</if>
+			<if test="fourthDocredit != null and fourthDocredit !='' ">
+				fourth_docredit = #{fourthDocredit},
+			</if>
+			<if test="fourthDeposit != null and fourthDeposit !='' ">
+				fourth_deposit = #{fourthDeposit},
+			</if>
+			<if test="fourthProportion != null and fourthProportion !='' ">
+				fourth_proportion = #{fourthProportion},
+			</if>
+			<if test="fifthCustnum != null and fifthCustnum !='' ">
+				fifth_custnum = #{fifthCustnum},
+			</if>
+			<if test="fifthAllcredit != null and fifthAllcredit !='' ">
+				fifth_allcredit = #{fifthAllcredit},
+			</if>
+			<if test="fifthDocredit != null and fifthDocredit !='' ">
+				fifth_docredit = #{fifthDocredit},
+			</if>
+			<if test="fifthDeposit != null and fifthDeposit !='' ">
+				fifth_deposit = #{fifthDeposit},
+			</if>
+			<if test="fifthProportion != null and fifthProportion !='' ">
+				fifth_proportion = #{fifthProportion},
+			</if>
+			<if test="totlaCustnum != null and totlaCustnum !='' ">
+				totla_custnum = #{totlaCustnum},
+			</if>
+			<if test="totlaAllcredit != null and totlaAllcredit !='' ">
+				totla_allcredit = #{totlaAllcredit},
+			</if>
+			<if test="totlaDocredit != null and totlaDocredit !='' ">
+				totla_docredit = #{totlaDocredit},
+			</if>
+			<if test="totlaDeposit != null and totlaDeposit !='' ">
+				totla_deposit = #{totlaDeposit},
+			</if>
+			<if test="totlaProportion != null and totlaProportion !='' ">
+				totla_proportion = #{totlaProportion},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_score
+		WHERE id = #{id}
+	</update>
+	<select id="editScore" statementType="CALLABLE">
+			{call SP_Statistics_Score()}
+	</select>
+</mapper>

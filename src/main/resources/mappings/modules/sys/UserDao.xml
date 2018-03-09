@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.UserDao">
+
+    <!-- <resultMap id="userResult" type="User">
+        <id property="id" column="id" />
+        <result property="company.id" column="company.id" />
+        <result property="office.id" column="office.id" />
+        <result property="loginName" column="login_name" />
+        <result property="password" column="password" />
+        <result property="no" column="no" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
+        <result property="phone" column="phone" />
+        <result property="mobile" column="mobile" />
+        <result property="userType" column="user_type" />
+        <result property="loginIp" column="login_ip" />
+        <result property="loginDate" column="login_date" />
+        <result property="remarks" column="remarks" />
+        <result property="loginFlag" column="loginFlag" />
+        <result property="photo" column="photo" />
+        <result property="createBy.id" column="createBy.id" />
+        <result property="createDate" column="create_date" />
+        <result property="updateBy.id" column="updateBy.id" />
+        <result property="updateDate" column="update_date" />
+        <result property="company.name" column="company.name" />
+        <result property="company.parentId" column="company.parentId" />
+        <result property="company.parentIds" column="company.parentIds" />
+        <result property="company.area.id" column="company.area.id" />
+        <result property="company.area.name" column="company.area.name" />
+        <result property="company.area.parentId" column="company.area.parentId" />
+        <result property="company.area.parentIds" column="company.area.parentIds" />
+        <result property="company.primaryPerson.id" column="company.primaryPerson.id" />
+        <result property="company.primaryPerson.name" column="company.primaryPerson.name" />
+        <result property="company.deputyPerson.id" column="company.deputyPerson.id" />
+        <result property="company.deputyPerson.name" column="company.deputyPerson.name" />
+        <result property="office.name" column="office.name" />
+        <result property="office.parentId" column="office.parentId" />
+        <result property="office.parentIds" column="office.parentIds" />
+        <result property="office.area.id" column="office.area.id" />
+        <result property="office.area.name" column="office.area.name" />
+        <result property="office.area.parentId" column="office.area.parentId" />
+        <result property="office.area.parentIds" column="office.area.parentIds" />
+        <result property="office.primaryPerson.id" column="office.primaryPerson.id" />
+        <result property="office.primaryPerson.name" column="office.primaryPerson.name" />
+        <result property="office.deputyPerson.id" column="office.deputyPerson.id" />
+        <result property="office.deputyPerson.name" column="office.deputyPerson.name" />
+        <collection property="roleList" ofType="Role">
+            <id property="id" column="roleList.id" />
+            <result property="office.id" column="roleList.office.id" />
+            <result property="name" column="roleList.name" />
+            <result property="enname" column="roleList.enname" />
+            <result property="roleType" column="roleList.roleType" />
+            <result property="dataScope" column="roleList.dataScope" />
+            <collection property="officeList" ofType="Office">
+                <id property="id" column="roleList.officeList.id" />
+            </collection>
+        </collection>
+    </resultMap> -->
+
+    <sql id="userColumns">
+        a.id,
+        a.company_id AS "company.id",
+        a.office_id AS "office.id",
+        a.login_name AS "loginName",
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date AS "loginDate",
+        a.remarks,
+        a.login_flag,
+        a.photo,
+        a.create_by AS "createBy.id",
+        a.create_date,
+        a.update_by AS "updateBy.id",
+        a.update_date,
+        a.del_flag,
+        a.isposuser As "isposuser",
+        a.member_id  AS  "memberId",
+        r.ID AS "rule.id",
+        r.TYPE AS "rule.type",
+        r.TRADE_QUOTA AS "rule.tradeQuota",
+        r.TRADE_COMMISSION AS "rule.tradeCommission",
+        r.CASH_QUOTA AS "rule.cashQuota",
+        r.CASH_QUOTA_UNIT AS "rule.cashQuotaUnit",
+        r.LOWEST_AMOUNT AS "rule.lowestAmount",
+        r.TRADE_QUOTA_DAY AS "rule.tradeQuotaDay",
+        c.name AS "company.name",
+        c.parent_id AS "company.parent.id",
+        c.parent_ids AS "company.parentIds",
+        ca.id AS "company.area.id",
+        ca.name AS "company.area.name",
+        ca.parent_id AS "company.area.parent.id",
+        ca.parent_ids AS "company.area.parentIds",
+        o.name AS "office.name",
+        o.parent_id AS "office.parent.id",
+        o.parent_ids AS "office.parentIds",
+        oa.id AS "office.area.id",
+        oa.name AS "office.area.name",
+        oa.parent_id AS "office.area.parent.id",
+        oa.parent_ids AS "office.area.parentIds",
+        cu.id AS "company.primaryPerson.id",
+        cu.name AS "company.primaryPerson.name",
+        cu2.id AS "company.deputyPerson.id",
+        cu2.name AS "company.deputyPerson.name",
+        ou.id AS "office.primaryPerson.id",
+        ou.name AS "office.primaryPerson.name",
+        ou2.id AS "office.deputyPerson.id",
+        ou2.name AS "office.deputyPerson.name",
+        uif.ID AS "userinfo.id",
+        uif.QQ AS "userinfo.qq",
+        uif.TELPHONE AS "userinfo.telphone",
+        uif.OPENID AS "userinfo.openid",
+        uif.SEX AS "userinfo.sex",
+        uif.USER_ID AS "userinfo.user.id",
+        uif.CASHPASSWORD AS "userinfo.cashpassword",
+        uif.STATUS AS "userinfo.status",
+        uif.COMPANYNAME AS "userinfo.companyname",
+        uif.COMPANY_ID AS "userinfo.userCompany.id",
+        uif.COMPANY_ID AS "userCompany.id",
+        uif.COMPANYNAME AS "userCompany.companyname",
+        uif.ASSOCIATED_ID AS "userinfo.associatedId",
+        uif.POINT AS "userinfo.point",
+        uif.POINTLEVLE AS "userinfo.pointlevle",
+        uif.MEMBERLEVLE AS "userinfo.memberlevle",
+        uif.COUNT_DATE AS "userinfo.countdate",
+        uif.iscompleteinfo AS "userinfo.iscompleteinfo",
+        uif.identitycard AS "userinfo.identitycard",
+        uif.contactaddress AS "userinfo.contactaddress",
+        upur.ID AS "userPurse.id",
+        upur.USER_ID AS "userPurse.user.id",
+        upur.WEBBALANCE AS "userPurse.webbalance",
+        upur.AVAILABLEBALANCE AS "userPurse.availablebalance",
+        upur.FREEZEMONEY AS "userPurse.freezemoney",
+        upur.BIDDINGMONEY AS "userPurse.biddingmoney",
+        upur.GUARANTEEMONE AS "userPurse.guaranteemone",
+        upur.PETROLBALANCE AS "userPurse.petrolbalance",
+        upur.REDPACKET AS "userPurse.redpacket",
+        upur.SETTLEMONEY AS "userPurse.settlemoney",
+        upur.SETTLESTATUS AS "userPurse.settlestatus",
+        upur.INSURANCE AS "userPurse.insurance",
+        upur.CREDITMONEY AS "userPurse.creditmoney",
+        upur.WEBCOIN AS "userPurse.webcoin",
+        upur.AVAILABLECOIN AS "userPurse.availablecoin",
+        upur.FREEZECOIN AS "userPurse.freezecoin"
+
+        <!-- ,
+        r.id AS "roleList.id",
+        r.office_id AS "roleList.office.id",
+        r.name AS "roleList.name",
+        r.enname AS "roleList.enname",
+        r.role_type AS "roleList.roleType",
+        r.data_scope AS "roleList.dataScope" -->
+    </sql>
+    
+    <sql id="userinfoColumns">
+        a.id,
+        a.company_id AS "company.id",
+        a.office_id AS "office.id",
+        a.login_name AS "loginName",
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date AS "loginDate",
+        a.remarks,
+        a.login_flag,
+        a.photo,
+        a.create_by AS "createBy.id",
+        a.create_date,
+        a.update_by AS "updateBy.id",
+        a.update_date,
+        a.del_flag,
+        a.isposuser AS "isposuser",
+        a.member_id  AS  "memberId",
+        r.ID AS "rule.id",
+        r.TYPE AS "rule.type",
+        r.TRADE_QUOTA AS "rule.tradeQuota",
+        r.TRADE_COMMISSION AS "rule.tradeCommission",
+        r.CASH_QUOTA AS "rule.cashQuota",
+        r.CASH_QUOTA_UNIT AS "rule.cashQuotaUnit",
+        r.LOWEST_AMOUNT AS "rule.lowestAmount",
+        r.TRADE_QUOTA_DAY AS "rule.tradeQuotaDay",
+        uif.ID AS "userinfo.id",
+        uif.QQ AS "userinfo.qq",
+        uif.TELPHONE AS "userinfo.telphone",
+        uif.OPENID AS "userinfo.openid",
+        uif.SEX AS "userinfo.sex",
+        uif.USER_ID AS "userinfo.user.id",
+        uif.CASHPASSWORD AS "userinfo.cashpassword",
+        uif.STATUS AS "userinfo.status",
+        uif.COMPANYNAME AS "userinfo.companyname",
+        uif.COMPANY_ID AS "userinfo.userCompany.id",
+        uif.COMPANY_ID AS "userCompany.id",
+        uif.COMPANYNAME AS "userCompany.companyname",
+        uif.ASSOCIATED_ID AS "userinfo.associatedId",
+        uif.POINT AS "userinfo.point",
+        uif.POINTLEVLE AS "userinfo.pointlevle",
+        uif.MEMBERLEVLE AS "userinfo.memberlevle",
+        uif.COUNT_DATE AS "userinfo.countdate",
+        upur.ID AS "userPurse.id",
+        upur.USER_ID AS "userPurse.user.id",
+        upur.WEBBALANCE AS "userPurse.webbalance",
+        upur.AVAILABLEBALANCE AS "userPurse.availablebalance",
+        upur.FREEZEMONEY AS "userPurse.freezemoney",
+        upur.BIDDINGMONEY AS "userPurse.biddingmoney",
+        upur.GUARANTEEMONE AS "userPurse.guaranteemone",
+        upur.PETROLBALANCE AS "userPurse.petrolbalance",
+        upur.REDPACKET AS "userPurse.redpacket",
+        upur.SETTLEMONEY AS "userPurse.settlemoney",
+        upur.SETTLESTATUS AS "userPurse.settlestatus",
+        upur.INSURANCE AS "userPurse.insurance",
+        upur.CREDITMONEY AS "userPurse.creditmoney",
+        upur.WEBCOIN AS "userPurse.webcoin",
+        upur.AVAILABLECOIN AS "userPurse.availablecoin",
+        upur.FREEZECOIN AS "userPurse.freezecoin"
+
+       
+    </sql>
+    <sql id="userinfoJoins">
+      LEFT JOIN sys_userinfo uif ON a.id = uif.user_id
+      LEFT JOIN user_purse upur ON a.id = upur.USER_ID
+      LEFT JOIN sys_trade_rule r ON a.rule_type = r.id
+    </sql>
+
+    <sql id="userJoins">
+      LEFT JOIN sys_office c ON c.id = a.company_id
+      LEFT JOIN sys_area ca ON ca.id = c.area_id
+      LEFT JOIN sys_office o ON o.id = a.office_id
+      LEFT JOIN sys_area oa ON oa.id = o.area_id
+      LEFT JOIN sys_user cu ON cu.id = c.primary_person
+      LEFT JOIN sys_user cu2 ON cu2.id = c.deputy_person
+      LEFT JOIN sys_user ou ON ou.id = o.primary_person
+      LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person
+      LEFT JOIN sys_userinfo uif ON a.id = uif.user_id
+      LEFT JOIN user_purse upur ON a.id = upur.USER_ID
+      LEFT JOIN sys_trade_rule r ON a.rule_type = r.id
+    </sql>
+
+    <!-- 钱包列表 -->
+    <sql id="UserAccountColumns">
+        a.company_id          AS "user.company.id",
+        a.office_id           AS "user.office.id",
+        a.login_name          AS "user.loginName",
+        a.password,
+        a.no,
+        a.name                AS "user.name",
+        a.email,
+        a.phone               AS "user.phone",
+        a.mobile              AS "user.mobile",
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo,
+        a.create_by           AS "createBy.id",
+        a.create_date,
+        a.update_by           AS "updateBy.id",
+        a.update_date,
+        a.del_flag,
+        a.isposuser           AS "isposuser",
+        a.member_id           AS "memberId",
+        c.name                AS "user.company.name",
+        c.parent_id           AS "user.company.parent.id",
+        c.parent_ids          AS "company.parentIds",
+        ca.id                 AS "company.area.id",
+        ca.name               AS "company.area.name",
+        ca.parent_id          AS "company.area.parent.id",
+        ca.parent_ids         AS "company.area.parentIds",
+        o.name                AS "office.name",
+        o.parent_id           AS "office.parent.id",
+        o.parent_ids          AS "office.parentIds",
+        oa.id                 AS "office.area.id",
+        oa.name               AS "office.area.name",
+        oa.parent_id          AS "office.area.parent.id",
+        oa.parent_ids         AS "office.area.parentIds",
+        cu.id                 AS "company.primaryPerson.id",
+        cu.name               AS "company.primaryPerson.name",
+        cu2.id                AS "company.deputyPerson.id",
+        cu2.name              AS "company.deputyPerson.name",
+        ou.id                 AS "office.primaryPerson.id",
+        ou.name               AS "office.primaryPerson.name",
+        ou2.id                AS "office.deputyPerson.id",
+        ou2.name              AS "office.deputyPerson.name",
+        uif.ID                AS "user.userinfo.id",
+        uif.QQ                AS "user.userinfo.qq",
+        uif.TELPHONE          AS "user.userinfo.telphone",
+        uif.OPENID            AS "user.userinfo.openid",
+        uif.SEX               AS "user.userinfo.sex",
+        uif.USER_ID           AS "user.userinfo.user.id",
+        uif.CASHPASSWORD      AS "user.userinfo.cashpassword",
+        uif.STATUS            AS "user.userinfo.status",
+        uif.COMPANYNAME       AS "user.userinfo.companyname",
+        uif.COMPANY_ID        AS "user.userinfo.userCompany.id",
+        uif.POINT 			  AS "user.userinfo.point",
+        uif.POINTLEVLE 		  AS "user.userinfo.pointlevle",
+        uif.MEMBERLEVLE		  AS "user.userinfo.memberlevle",
+        uif.COUNT_DATE 		  AS "userinfo.countdate",
+        uif.COMPANY_ID        AS "user.userCompany.id",
+        uif.COMPANYNAME       AS "user.userCompany.companyname",
+        uif.ASSOCIATED_ID     AS "user.userinfo.associatedId",
+        upur.ID               AS "user.userPurse.id",
+        upur.USER_ID          AS "user.userPurse.user.id",
+        upur.WEBBALANCE       AS "user.userPurse.webbalance",
+        upur.AVAILABLEBALANCE AS "user.userPurse.availablebalance",
+        upur.FREEZEMONEY      AS "user.userPurse.freezemoney",
+        upur.BIDDINGMONEY     AS "user.userPurse.biddingmoney",
+        upur.GUARANTEEMONE    AS "user.userPurse.guaranteemone",
+        upur.PETROLBALANCE    AS "user.userPurse.petrolbalance",
+        upur.REDPACKET        AS "user.userPurse.redpacket",
+        upur.SETTLEMONEY      AS "user.userPurse.settlemoney",
+        upur.SETTLESTATUS     AS "user.userPurse.settlestatus",
+        upur.INSURANCE        AS "user.userPurse.insurance",
+        upur.CREDITMONEY      AS "user.userPurse.creditmoney",
+        upur.WEBCOIN     AS "user.userPurse.webcoin",
+        upur.AVAILABLECOIN        AS "user.userPurse.availablecoin",
+        upur.FREEZECOIN      AS "user.userPurse.freezecoin",
+        ulr.name        AS "user.role.name",
+    </sql>
+
+
+    <!-- 根据编号获得用户 -->
+    <select id="get" resultType="User">
+        SELECT
+        <include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+        FROM sys_user a
+        <include refid="userJoins"/><!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+        WHERE a.id = #{id}
+    </select>
+
+    <!-- 根据登录名查询用户 -->
+    <select id="getByLoginName" resultType="User" parameterType="User">
+        SELECT
+        <include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+        FROM sys_user a
+        <include refid="userJoins"/><!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.login_name = #{loginName}
+    </select>
+    
+    <!-- 根据登录名查询用户(导入) -->
+    <select id="getImportUserByLoginName" resultType="User" parameterType="User">
+        SELECT
+        a.id,
+        a.company_id AS "company.id",
+        a.office_id AS "office.id",
+        a.login_name AS "loginName",
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date AS "loginDate",
+        a.remarks,
+        a.login_flag,
+        a.photo,
+        a.create_by AS "createBy.id",
+        a.create_date,
+        a.update_by AS "updateBy.id",
+        a.update_date,
+        a.del_flag,
+        a.member_id
+        FROM sys_user a
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.login_name = #{loginName}
+    </select>
+
+    <select id="getByUser" resultType="User" parameterType="User">
+        SELECT
+        <include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+        FROM sys_user a
+        <include refid="userJoins"/><!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		LEFT JOIN user_metro_card card  ON a.id = card.USERID
+        WHERE
+        a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="id != null and id !='' ">
+            AND a.id = #{id}
+        </if>
+        <if test="name != null and name !='' ">
+            AND a.name = #{name}
+        </if>
+        <if test="loginName != null and loginName !='' ">
+            AND a.login_name = #{loginName}
+        </if>
+        <if test="searchinfo != null and searchinfo!='' ">
+            and (a.login_name = #{searchinfo} OR a.phone = #{searchinfo} OR uif.openid = #{searchinfo} OR card.CARDID = #{searchinfo})
+        </if>
+        <if test="phone != null and phone !='' ">
+            AND a.phone = #{phone}
+        </if>
+        <if test="password != null and password !='' ">
+            AND a.password = #{password}
+        </if>
+        <if test="email != null and email !='' ">
+            and a.email = #{email }
+        </if>
+
+    </select>
+
+	
+<select id="getByCondition" resultType="User" parameterType="User">
+        SELECT
+        <include refid="userinfoColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+        FROM sys_user a
+        <include refid="userinfoJoins"/>
+        WHERE
+        a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="id != null and id !='' ">
+            AND a.id = #{id}
+        </if>
+        <if test="userinfo!=null and userinfo.status != null and userinfo.status !='' ">
+            AND uif.status = #{userinfo.status}
+        </if>
+        <if test="name != null and name !='' ">
+            AND a.name = #{name}
+        </if>
+        <if test="loginName != null and loginName !='' ">
+            AND a.login_name = #{loginName}
+        </if>
+        <if test="searchinfo != null and searchinfo!='' ">
+            and (a.login_name = #{searchinfo} OR a.phone = #{searchinfo} OR uif.openid = #{searchinfo} )
+        </if>
+        <if test="phone != null and phone !='' ">
+            AND a.phone = #{phone}
+        </if>
+        <if test="password != null and password !='' ">
+            AND a.password = #{password}
+        </if>
+        <if test="email != null and email !='' ">
+            and a.email = #{email }
+        </if>
+		limit 1
+    </select>
+
+    <!-- 分页查询用户信息 -->
+    <select id="findList" resultType="User">
+        SELECT
+        <include refid="userColumns"/>
+        FROM sys_user a
+        <include refid="userJoins"/>
+
+        <if test="role != null and role.id != null and role.id != ''">
+            JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
+        </if>
+        <if test="role != null and role.enname != null and role.enname != ''">
+            JOIN sys_user_role ur ON ur.user_id = a.id
+            LEFT JOIN sys_role ulr ON ulr.id = ur.role_id
+        </if>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="role != null and role.enname != null and role.enname != ''">
+            AND ulr.enname = #{role.enname}
+        </if>
+        <if test="userinfo!=null and userinfo.status != null and userinfo.status !='' ">
+            AND uif.status = #{userinfo.status}
+        </if>
+        <if test="searchinfo != null and searchinfo != ''">
+                AND (a.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                a.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                uif.COMPANYNAME LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+        <if test="company != null and company.id != null and company.id != ''">
+            AND (c.id = #{company.id} OR c.parent_ids LIKE
+            <if test="dbName == 'oracle'">'%,'||#{company.id}||',%')</if>
+            <if test="dbName == 'mssql'">'%,'+#{company.id}+',%')</if>
+            <if test="dbName == 'mysql'">CONCAT('%,', #{company.id}, ',%'))</if>
+        </if>
+        <if test="office != null and office.id != null and office.id != ''">
+            AND (o.id = #{office.id} OR o.parent_ids LIKE
+            <if test="dbName == 'oracle'">'%,'||#{office.id}||',%')</if>
+            <if test="dbName == 'mssql'">'%,'+#{office.id}+',%')</if>
+            <if test="dbName == 'mysql'">CONCAT('%,', #{office.id}, ',%'))</if>
+        </if>
+        <!-- 如果不是超级管理员，则不显示超级管理员用户 -->
+        <if test="!currentUser.admin">
+            AND a.id != '1'
+        </if>
+        <if test="loginName != null and loginName != ''">
+            AND a.login_name like
+            <if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>
+            <if test="dbName == 'mssql'">'%'+#{loginName}+'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{loginName}, '%')</if>
+        </if>
+        <if test="name != null and name != ''">
+            AND a.name like
+            <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+            <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+        </if>
+        <!-- 数据范围过滤 -->
+        ${sqlMap.dsf}
+
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY c.code, o.code, a.name
+            </otherwise>
+        </choose>
+
+    </select>
+
+    <!-- 根据OfficeId获取用户（树查询用户时用） -->
+    <select id="findUserByOfficeId" resultType="User" useCache="true">
+		SELECT
+			a.id, a.name, a.login_name
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.office_id = #{office.id}
+		ORDER BY a.name
+	</select>
+
+    <!-- 查询全部用户 -->
+    <select id="findAllList" resultType="User">
+        SELECT
+        <include refid="userColumns"/>
+        FROM sys_user a
+        <include refid="userJoins"/>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        ORDER BY c.code, o.code, a.name
+    </select>
+
+    <!-- 查询全部用户数目 -->
+    <select id="findAllCount" resultType="long">
+		SELECT
+			COUNT(1)
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+
+
+    <!-- 查询用户登录 数 -->
+    <select id="findLoginCount" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM sys_user a
+        WHERE 1=1
+        <if test="id != null and id !='' ">
+            AND a.id = #{id}
+        </if>
+        <if test="intervalday!=null and intervalday!='' ">
+            and DATE_SUB(CURDATE(),INTERVAL ${intervalday} DAY) = date(a.login_date)
+        </if>
+
+    </select>
+
+    <!-- 插入用户 -->
+    <insert id="insert">
+		INSERT INTO sys_user(
+			id, 
+			company_id, 
+			office_id, 
+			login_name, 
+			password, 
+			no, 
+			name, 
+			email,
+			phone, 
+			mobile,
+			user_type, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			login_flag, 
+			photo,
+			member_id, 
+			del_flag
+		) VALUES (
+			#{id}, 
+			#{company.id}, 
+			#{office.id}, 
+			#{loginName}, 
+			#{password}, 
+			#{no}, 
+			#{name}, 
+			#{email},
+			#{phone}, 
+			#{mobile},
+			#{userType}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks}, 
+			#{loginFlag}, 
+			#{photo},
+			#{memberId}, 
+			#{delFlag}
+		)
+	</insert>
+
+    <!-- 更新用户 -->
+    <update id="update">
+        UPDATE sys_user SET
+        <if test="company!=null and company.id != null and company.id !='' ">
+            company_id = #{company.id},
+        </if>
+        <if test="office!=null and office.id != null and office.id !='' ">
+            office_id = #{office.id},
+        </if>
+        <if test="loginName != null and loginName !='' ">
+            login_name = #{loginName},
+        </if>
+        <if test="password != null and password !='' ">
+            password = #{password},
+        </if>
+        <if test="no != null and no !='' ">
+            no = #{no},
+        </if>
+        <if test="name != null and name !='' ">
+            name = #{name},
+        </if>
+        <if test="email != null and email !='' ">
+
+            email = #{email},
+        </if>
+        <if test="phone != null and phone !='' ">
+            phone = #{phone},
+        </if>
+        <if test="mobile != null and mobile !='' ">
+            mobile = #{mobile},
+        </if>
+        <if test="userType != null and userType !='' ">
+            user_type = #{userType},
+        </if>
+        <if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        <if test="loginFlag != null and loginFlag !='' ">
+            login_flag = #{loginFlag},
+        </if>
+        <if test="photo != null and photo !='' ">
+            photo = #{photo},
+        </if>
+        <if test="isposuser != null and isposuser != '' ">
+        	isposuser = #{isposuser},
+        </if>
+        <if test="memberId != null and memberId !='' ">
+            member_id = #{memberId},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户和角色关联表数据 -->
+    <delete id="deleteUserRole">
+		DELETE FROM sys_user_role WHERE user_id = #{id}
+	</delete>
+
+
+    <!-- 插入用户和角色关联表数据 -->
+    <insert id="insertUserRole">
+        INSERT INTO sys_user_role(user_id, role_id)
+        <foreach collection="roleList" item="role" separator=" union all ">
+            SELECT #{id}, #{role.id}
+            <if test="dbName != 'mssql'">
+                FROM dual
+            </if>
+        </foreach>
+    </insert>
+
+    <!-- 更新用户信息  -->
+    <update id="updateUserInfo">
+        UPDATE sys_user SET
+        <if test="email != null and email !='' ">
+            email = #{email},
+        </if>
+        <if test="name != null and name !='' ">
+            name = #{name },
+        </if>
+        <if test="mobile != null and mobile !='' ">
+            mobile = #{mobile},
+        </if>
+        <if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        <if test="photo != null and photo !='' ">
+            photo = #{photo},
+        </if>
+        <if test="loginName != null and loginName !='' ">
+            login_name = #{loginName},
+        </if>
+        <if test="isposuser !=null and isposuser != '' ">
+        	isposuser =#{isposuser},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新用户密码 -->
+    <update id="updatePasswordById">
+		UPDATE sys_user SET
+			password = #{password}
+		WHERE id = #{id}
+	</update>
+
+
+    <!-- 更新登录信息，如登录IP、登录时间 -->
+    <update id="updateLoginInfo">
+		UPDATE sys_user SET
+			login_ip = #{loginIp}, 
+			login_Date = #{loginDate} 
+		WHERE id = #{id}
+	</update>
+
+    <!-- 逻辑删除用户 -->
+    <update id="delete">
+		UPDATE sys_user SET
+			phone = Null,
+			login_name=Null,
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 更新用户是否绑定pos机 -->
+    <update id="updateisposuser">
+		UPDATE sys_user SET
+			isposuser = #{isposuser}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新用户明文密码 -->
+    <update id="updateplainpwd">
+		UPDATE sys_user SET
+			plainpwd = #{searchinfo}
+		WHERE id = #{id}
+	</update>
+	<!-- 用户明文密码 -->
+    <select id="getPlainpwd" resultType="String">
+        SELECT
+        plainpwd
+        FROM sys_user a
+        LEFT JOIN sys_userinfo uif ON a.id = uif.user_id
+        
+        WHERE uif.openid = #{openid} 
+
+        limit 1
+    </select>
+
+    <!-- 用户子账户信息 -->
+    <select id="getMyuserfindList" resultType="User">
+        SELECT
+        <include refid="userColumns"/>
+        FROM sys_user a
+        <include refid="userJoins"/>
+        <if test="role != null and role.id != null and role.id != ''">
+            JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
+        </if>
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        AND uif.ASSOCIATED_ID=#{userinfo.associatedId}
+        <if test="company != null and company.id != null and company.id != ''">
+            AND (c.id = #{company.id} OR c.parent_ids LIKE
+            <if test="dbName == 'oracle'">'%,'||#{company.id}||',%')</if>
+            <if test="dbName == 'mssql'">'%,'+#{company.id}+',%')</if>
+            <if test="dbName == 'mysql'">CONCAT('%,', #{company.id}, ',%'))</if>
+        </if>
+        <if test="office != null and office.id != null and office.id != ''">
+            AND (o.id = #{office.id} OR o.parent_ids LIKE
+            <if test="dbName == 'oracle'">'%,'||#{office.id}||',%')</if>
+            <if test="dbName == 'mssql'">'%,'+#{office.id}+',%')</if>
+            <if test="dbName == 'mysql'">CONCAT('%,', #{office.id}, ',%'))</if>
+        </if>
+        <!-- 如果不是超级管理员，则不显示超级管理员用户 -->
+        <if test="!currentUser.admin">
+            AND a.id != '1'
+        </if>
+        <if test="loginName != null and loginName != ''">
+            AND a.login_name like
+            <if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>
+            <if test="dbName == 'mssql'">'%'+#{loginName}+'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{loginName}, '%')</if>
+        </if>
+        <if test="name != null and name != ''">
+            AND a.name like
+            <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+            <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+            <if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+        </if>
+        <if test="beginCreateDate != null and beginCreateDate != '' ">
+            AND a.create_date &gt;= #{beginCreateDate}
+        </if>
+        <if test="endCreateDate != null and endCreateDate != '' ">
+            AND a.create_date &lt;= #{endCreateDate}
+        </if>
+        <if test="searchinfo != null and searchinfo!='' ">
+            and (a.login_name LIKE CONCAT('%', #{searchinfo}, '%') OR a.phone = #{searchinfo} OR a.name LIKE CONCAT('%',
+            #{searchinfo}, '%') )
+        </if>
+        <!-- 数据范围过滤 -->
+        <!-- ${sqlMap.dsf} -->
+        <!-- <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY c.code, o.code, a.name
+            </otherwise>
+        </choose> -->
+    </select>
+     <!-- 根据手机号码查询用户 -->
+    <select id="getSysUserByPhone" resultType="long" parameterType="User">
+        SELECT
+        COUNT(1)
+        FROM sys_user a
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.phone = #{phone}
+    </select>
+    <!-- 查询member用户 -->
+    <select id="getMemberList" resultType="User">
+        SELECT 
+        a.member_id AS "memberId",
+        a.phone AS "phone"
+        FROM sys_user a
+        WHERE a.member_id IS NOT NULL AND a.member_id != ''
+    </select>
+</mapper>

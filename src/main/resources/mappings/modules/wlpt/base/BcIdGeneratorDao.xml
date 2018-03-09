@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BcIdGeneratorDao">
+    
+	<sql id="bcIdGeneratorColumns">
+		a.table_name AS "tableName",
+		a.prefix AS "prefix",
+		a.max_date AS "maxDate",
+		a.max_num AS "maxNum",
+		a.num_length AS "numLength",
+		a.calc_id AS "calcId"
+	</sql>
+	
+	<sql id="bcIdGeneratorJoins">
+	</sql>
+    
+	<!-- <select id="get" resultType="BcIdGenerator">
+		SELECT
+			<include refid="bcIdGeneratorColumns"/>
+		FROM bc_id_generator a
+		<include refid="bcIdGeneratorJoins"/>
+		WHERE table_name = #{tableName},
+	</select> -->
+	
+	<select id="getIdGeneratorByPrefix" resultType="BcIdGenerator">
+		SELECT
+			<include refid="bcIdGeneratorColumns"/>
+		FROM bc_id_generator a
+		<include refid="bcIdGeneratorJoins"/>
+		WHERE a.prefix = #{prefix}
+	</select>
+	
+	<select id="getNewIdGeneratorInfo" resultType="BcIdGenerator">
+		CALL SP_Proc_Generate_Id(#{tableName},1,#{prefix},#{policy})
+	</select>
+	
+	<select id="findList" resultType="BcIdGenerator">
+		SELECT 
+			<include refid="bcIdGeneratorColumns"/>
+		FROM bc_id_generator a
+		<include refid="bcIdGeneratorJoins"/>
+		<where>
+			
+			<if test="tableName != null and tableName != ''">
+				AND a.table_name = #{tableName}
+			</if>
+			<if test="prefix != null and prefix != ''">
+				AND a.prefix = #{prefix}
+			</if>
+			<if test="maxDate != null and maxDate != ''">
+				AND a.max_date = #{maxDate}
+			</if>
+			<if test="maxNum != null and maxNum != ''">
+				AND a.max_num = #{maxNum}
+			</if>
+			<if test="numLength != null and numLength != ''">
+				AND a.num_length = #{numLength}
+			</if>
+			<if test="calcId != null and calcId != ''">
+				AND a.calc_id = #{calcId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BcIdGenerator">
+		SELECT 
+			<include refid="bcIdGeneratorColumns"/>
+		FROM bc_id_generator a
+		<include refid="bcIdGeneratorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bc_id_generator(
+		<if test="prefix != null and prefix !='' ">
+			prefix,
+		</if>
+		<if test="maxDate != null and maxDate !='' ">
+			max_date,
+		</if>
+		<if test="maxNum != null and maxNum !='' ">
+			max_num,
+		</if>
+		<if test="numLength != null and numLength !='' ">
+			num_length,
+		</if>
+		<if test="calcId != null and calcId !='' ">
+			calc_id,
+		</if>
+			table_name
+		) VALUES (
+		<if test="prefix != null and prefix !='' ">
+			#{prefix},
+		</if>
+		<if test="maxDate != null and maxDate !='' ">
+			#{maxDate},
+		</if>
+		<if test="maxNum != null and maxNum !='' ">
+			#{maxNum},
+		</if>
+		<if test="numLength != null and numLength !='' ">
+			#{numLength},
+		</if>
+		<if test="calcId != null and calcId !='' ">
+			#{calcId},
+		</if>
+		#{tableName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bc_id_generator SET 	
+			<if test="prefix != null and prefix !='' ">
+				prefix = #{prefix},
+			</if>
+			<if test="maxDate != null and maxDate !='' ">
+				max_date = #{maxDate},
+			</if>
+			<if test="maxNum != null and maxNum !='' ">
+				max_num = #{maxNum},
+			</if>
+			<if test="numLength != null and numLength !='' ">
+				num_length = #{numLength},
+			</if>
+			<if test="calcId != null and calcId !='' ">
+				calc_id = #{calcId},
+			</if>
+			table_name = #{tableName}
+		WHERE table_name = #{tableName}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM bc_id_generator
+		WHERE table_name = #{tableName}
+	</update>
+	
+</mapper>

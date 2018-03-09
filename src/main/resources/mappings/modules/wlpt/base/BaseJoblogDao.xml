@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseJoblogDao">
+    
+	<sql id="baseJoblogColumns">
+		a.JobLog_Id AS "id",
+		a.jobid AS "jobid",
+		a.starttime AS "starttime",
+		a.exceptioninfo AS "exceptioninfo"
+	</sql>
+	
+	<sql id="baseJoblogJoins">
+	</sql>
+    
+	<select id="get" resultType="BaseJoblog">
+		SELECT
+			<include refid="baseJoblogColumns"/>
+		FROM base_joblog a
+		<include refid="baseJoblogJoins"/>
+		WHERE a.JobLog_Id = #{id}
+	</select>
+
+	<select id="findList" resultType="BaseJoblog">
+		SELECT 
+			<include refid="baseJoblogColumns"/>
+		FROM base_joblog a
+		<include refid="baseJoblogJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.JobLog_Id = #{id}
+			</if>
+			<if test="jobid != null and jobid != ''">
+				AND a.jobid = #{jobid}
+			</if>
+			<if test="starttime != null and starttime != ''">
+				AND a.starttime = #{starttime}
+			</if>
+			<if test="exceptioninfo != null and exceptioninfo != ''">
+				AND a.exceptioninfo = #{exceptioninfo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByCondition" resultType="BaseJoblog">
+		SELECT 
+			<include refid="baseJoblogColumns"/>
+		FROM base_joblog a
+		<include refid="baseJoblogJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.JobLog_Id = #{id}
+			</if>
+			<if test="jobid != null and jobid != ''">
+				AND a.jobid = #{jobid}
+			</if>
+			<if test="starttime != null and starttime != ''">
+				AND a.starttime = #{starttime}
+			</if>
+			<if test="exceptioninfo != null and exceptioninfo != ''">
+				AND a.exceptioninfo = #{exceptioninfo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BaseJoblog">
+		SELECT 
+			<include refid="baseJoblogColumns"/>
+		FROM base_joblog a
+		<include refid="baseJoblogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_joblog(
+
+		<if test="jobid != null and jobid !='' ">
+			jobid,
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			starttime,
+		</if>
+		<if test="exceptioninfo != null and exceptioninfo !='' ">
+			exceptioninfo,
+		</if>
+			JobLog_Id
+		) VALUES (
+
+		<if test="jobid != null and jobid !='' ">
+			#{jobid},
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			#{starttime},
+		</if>
+		<if test="exceptioninfo != null and exceptioninfo !='' ">
+			#{exceptioninfo},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_joblog SET 	
+
+			<if test="jobid != null and jobid !='' ">
+				jobid = #{jobid},
+			</if>
+			<if test="starttime != null and starttime !='' ">
+				starttime = #{starttime},
+			</if>
+			<if test="exceptioninfo != null and exceptioninfo !='' ">
+				exceptioninfo = #{exceptioninfo},
+			</if>
+			JobLog_Id = #{id}
+		WHERE JobLog_Id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_joblog
+		WHERE JobLog_Id = #{id}
+	</update>
+	
+</mapper>

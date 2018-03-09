@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.interfacelog.InterfaceLogDao">
+    
+	<sql id="interfaceLogColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.phone AS "phone",
+		a.username AS "username",
+		a.really_name AS "reallyName",
+		a.interface_type AS "interfaceType",
+		a.interface_name AS "interfaceName",
+		a.interface_source AS "interfaceSource",
+		a.msg_flag AS "msgFlag",
+		a.price AS "price",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="interfaceLogJoins">
+	</sql>
+    
+	<select id="get" resultType="InterfaceLog">
+		SELECT
+			<include refid="interfaceLogColumns"/>
+		FROM interface_log a
+		<include refid="interfaceLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="InterfaceLog">
+		SELECT 
+			@rownum:=@rownum+1 AS rownum,
+			<include refid="interfaceLogColumns"/>
+			
+		FROM interface_log a
+		<include refid="interfaceLogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="phone != null and phone != ''">
+				AND a.phone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{phone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{phone},'%')</if>
+			</if>
+			<if test="username != null and username != ''">
+				AND a.username LIKE 
+					<if test="dbName == 'oracle'">'%'||#{username}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{username}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{username},'%')</if>
+			</if>
+			<if test="interfaceType != null and interfaceType != ''">
+				AND a.interface_type = #{interfaceType}
+			</if>
+			<if test="interfaceSource != null and interfaceSource != ''">
+				AND a.interface_source = #{interfaceSource}
+			</if>
+			<if test="msgFlag != null and msgFlag != ''">
+				AND a.msg_flag = #{msgFlag}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InterfaceLog">
+		SELECT 
+			@rownum:=@rownum+1 AS rownum,
+			<include refid="interfaceLogColumns"/>
+		FROM interface_log a
+		<include refid="interfaceLogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findcount"  resultType="InterfaceLog">
+	    SELECT interface_source,COUNT(0) count,SUM(price) total,
+		CASE interface_source
+		WHEN 0 THEN '永魁接口'
+		WHEN 1 THEN '中交兴路接口'
+  		WHEN 2 THEN 'LBS接口' 
+ 		END inter,interface_source,SUM(price) total from interface_log
+		GROUP BY interface_source;
+	    
+	    
+	</select>
+	
+	
+	
+	<insert id="insert">
+		INSERT INTO interface_log(
+
+		<if test="userid != null and userid !='' ">
+			userid,
+		</if>
+		<if test="phone != null and phone !='' ">
+			phone,
+		</if>
+		<if test="username != null and username !='' ">
+			username,
+		</if>
+		<if test="reallyName != null and reallyName !='' ">
+			really_name,
+		</if>
+		<if test="interfaceType != null and interfaceType !='' ">
+			interface_type,
+		</if>
+		<if test="interfaceName != null and interfaceName !='' ">
+			interface_name,
+		</if>
+		<if test="interfaceSource != null and interfaceSource !='' ">
+			interface_source,
+		</if>
+		<if test="msgFlag != null and msgFlag !='' ">
+			msg_flag,
+		</if>
+		<if test="price != null and price !='' ">
+			price,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="userid != null and userid !='' ">
+			#{userid},
+		</if>
+		<if test="phone != null and phone !='' ">
+			#{phone},
+		</if>
+		<if test="username != null and username !='' ">
+			#{username},
+		</if>
+		<if test="reallyName != null and reallyName !='' ">
+			#{reallyName},
+		</if>
+		<if test="interfaceType != null and interfaceType !='' ">
+			#{interfaceType},
+		</if>
+		<if test="interfaceName != null and interfaceName !='' ">
+			#{interfaceName},
+		</if>
+		<if test="interfaceSource != null and interfaceSource !='' ">
+			#{interfaceSource},
+		</if>
+		<if test="msgFlag != null and msgFlag !='' ">
+			#{msgFlag},
+		</if>
+		<if test="price != null and price !='' ">
+			#{price},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE interface_log SET 	
+			<if test="userid != null and userid !='' ">
+				userid = #{userid},
+			</if>
+			<if test="phone != null and phone !='' ">
+				phone = #{phone},
+			</if>
+			<if test="username != null and username !='' ">
+				username = #{username},
+			</if>
+			<if test="reallyName != null and reallyName !='' ">
+				really_name = #{reallyName},
+			</if>
+			<if test="interfaceType != null and interfaceType !='' ">
+				interface_type = #{interfaceType},
+			</if>
+			<if test="interfaceName != null and interfaceName !='' ">
+				interface_name = #{interfaceName},
+			</if>
+			<if test="interfaceSource != null and interfaceSource !='' ">
+				interface_source = #{interfaceSource},
+			</if>
+			<if test="msgFlag != null and msgFlag !='' ">
+				msg_flag = #{msgFlag},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE interface_log SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

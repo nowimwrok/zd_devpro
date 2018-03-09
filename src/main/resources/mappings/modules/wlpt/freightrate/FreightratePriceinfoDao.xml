@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.freightrate.FreightratePriceinfoDao">
+    
+	<sql id="freightratePriceinfoColumns">
+		a.frprice_id AS "frpriceId",
+		a.goodstype AS "goodstype",
+		a.newprice AS "newprice",
+		a.averageprice AS "averageprice",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.modetranspor AS "modetranspor",
+		a.carlength AS "carlength",
+		a.address AS "address",
+		a.frline_id AS "frlineId"
+	</sql>
+	
+	<sql id="freightratePriceinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="FreightratePriceinfo">
+		SELECT
+			<include refid="freightratePriceinfoColumns"/>
+		FROM freightrate_priceinfo a
+		<include refid="freightratePriceinfoJoins"/>
+		WHERE a.frprice_id = #{frpriceId}
+	</select>
+	
+    <select id="findPrices" resultType="FreightratePriceinfo">
+    SELECT
+			AVG(NEWPRICE) AS "avgprice",
+			DATE_FORMAT(CREATETIME, '%Y-%m-%d') AS "createtimeFormat"
+		FROM
+			freightrate_priceinfo info
+		WHERE info.FRLINE_ID IN (
+			SELECT
+        		a.FRLINE_ID
+			FROM
+				FREIGHTRATE_LINE a
+		<where>
+			<if test="goodstype !=null">
+				and goodstype=#{goodstype}
+			</if>
+			<if test="startAddress !=null">
+				and STARTADDRESS LIKE CONCAT(CONCAT('%', #{startAddress}),'%')
+			</if>
+			<if test="endAddress !=null">
+				and ENDADDRESS LIKE CONCAT(CONCAT('%', #{endAddress}),'%')
+			</if>
+		</where>
+		)
+		GROUP BY DATE_FORMAT(CREATETIME, '%Y-%m-%d')
+		ORDER BY DATE_FORMAT(CREATETIME, '%Y-%m-%d') ASC
+    </select>
+    
+	<select id="findList" resultType="FreightratePriceinfo">
+		SELECT 
+			<include refid="freightratePriceinfoColumns"/>
+		FROM freightrate_priceinfo a
+		<include refid="freightratePriceinfoJoins"/>
+		<where>
+			<if test="address != null and address != ''">
+				AND address LIKE 
+					<if test="dbName == 'oracle'">'%'||#{address}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{address}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{address},'%')</if>
+			</if>
+			<if test="newprice != null and newprice != ''">
+				AND newprice LIKE 
+					<if test="dbName == 'oracle'">'%'||#{newprice}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{newprice}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{newprice},'%')</if>
+			</if>
+            <if test="goodstype != null and goodstype != ''">
+				AND goodstype LIKE 
+					<if test="dbName == 'oracle'">'%'||#{goodstype}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{goodstype}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{goodstype},'%')</if>
+			</if>
+			<if test="averageprice !=null and averageprice !=''">
+				and averageprice= #{averageprice}
+			</if>
+			<if test="createtime !=null and createtime !=''">
+				and createtime= #{createtime}
+			</if>
+			<if test="updatetime !=null and updatetime !=''">
+				and updatetime= #{updatetime}
+			</if>
+			 <if test="timeStart !=null and timeStart !=''"><!-- 创建时间检索 -->
+                and a.updatetime &gt;= #{timeStart}
+            </if>
+            <if test="timeEnd !=null and timeEnd !=''"><!-- 创建时间检索 -->
+                and a.updatetime &lt;= #{timeEnd}
+            </if>
+			<if test="modetranspor !=null and modetranspor !=''">
+				and modetranspor= #{modetranspor}
+			</if>
+			<if test="carlength !=null and carlength !=''">
+				and carlength= #{carlength}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} desc
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FreightratePriceinfo">
+		SELECT 
+			<include refid="freightratePriceinfoColumns"/>
+		FROM freightrate_priceinfo a
+		<include refid="freightratePriceinfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO freightrate_priceinfo(
+
+		<if test="frlineId != null and frlineId !='' ">
+			frline_id,
+		</if>
+		<if test="goodstype != null and goodstype !='' ">
+			goodstype,
+		</if>
+		<if test="newprice != null and newprice !='' ">
+			newprice,
+		</if>
+		<if test="averageprice != null and averageprice !='' ">
+			averageprice,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="modetranspor != null and modetranspor !='' ">
+			modetranspor,
+		</if>
+		<if test="carlength != null and carlength !='' ">
+			carlength,
+		</if>
+		<if test="address != null and address !='' ">
+			address,
+		</if>
+			frprice_id
+		) VALUES (
+		<if test="frlineId != null and frlineId !='' ">
+			#{frlineId},
+		</if>
+		<if test="goodstype != null and goodstype !='' ">
+			#{goodstype},
+		</if>
+		<if test="newprice != null and newprice !='' ">
+			#{newprice},
+		</if>
+		<if test="averageprice != null and averageprice !='' ">
+			#{averageprice},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="modetranspor != null and modetranspor !='' ">
+			#{modetranspor},
+		</if>
+		<if test="carlength != null and carlength !='' ">
+			#{carlength},
+		</if>
+		<if test="address != null and address !='' ">
+			#{address},
+		</if>
+			#{frpriceId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE freightrate_priceinfo SET 	
+			<if test="goodstype != null and goodstype !='' ">
+				goodstype = #{goodstype},
+			</if>
+			<if test="newprice != null and newprice !='' ">
+				newprice = #{newprice},
+			</if>
+			<if test="averageprice != null and averageprice !='' ">
+				averageprice = #{averageprice},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="modetranspor != null and modetranspor !='' ">
+				modetranspor = #{modetranspor},
+			</if>
+			<if test="carlength != null and carlength !='' ">
+				carlength = #{carlength},
+			</if>
+			<if test="address != null and address !='' ">
+				address = #{address},
+			</if>
+				frprice_id = #{frpriceId}
+		WHERE frprice_id = #{frpriceId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM freightrate_priceinfo
+		WHERE frprice_id = #{frpriceId}
+	</update>
+	
+</mapper>

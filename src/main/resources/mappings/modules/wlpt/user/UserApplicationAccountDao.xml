@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserApplicationAccountDao">
+    
+	<sql id="userApplicationAccountColumns">
+		a.id AS "id",
+		a.accountStatus AS "accountStatus",
+		a.type AS "type",
+		a.name AS "name",
+		a.idcard AS "idcard",
+		a.idcardimg AS "idcardimg",
+		a.bizlicenceno AS "bizlicenceno",
+		a.bizlicenceimg AS "bizlicenceimg",
+		a.legalname AS "legalname",
+		a.linkman AS "linkman",
+		a.linkmobile AS "linkmobile",
+		a.linkaddress AS "linkaddress",
+		a.applyid AS "applyid",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.user_id AS "user.id",
+		a.isBind AS "isBind",
+		u.name AS "user.name",
+		u.phone AS "user.phone"
+	</sql>
+	
+	<sql id="userApplicationAccountJoins">
+	    LEFT JOIN sys_user u ON u.id = a.USER_ID
+	</sql>
+    
+	<select id="get" resultType="UserApplicationAccount">
+		SELECT
+			<include refid="userApplicationAccountColumns"/>
+		FROM user_application_account a
+		<include refid="userApplicationAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findByCondition" resultType="UserApplicationAccount">
+		SELECT
+			<include refid="userApplicationAccountColumns"/>
+		FROM user_application_account a
+		<include refid="userApplicationAccountJoins"/>
+		WHERE a.id = #{id} OR a.applyid = #{applyid}
+	</select>
+
+	<select id="findList" resultType="UserApplicationAccount">
+		SELECT 
+			<include refid="userApplicationAccountColumns"/>
+		FROM user_application_account a
+		<include refid="userApplicationAccountJoins"/>
+		<where>
+			
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="accountStatus != null and accountStatus != ''">
+				AND a.accountStatus = #{accountStatus}
+			</if>
+			<if test="isBind != null and isBind != ''">
+				AND a.isBind = #{isBind}
+			</if>
+			<if test="user != null and user.phone != null and user.phone != ''">
+				AND u.phone = #{user.phone}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="idcard != null and idcard != ''">
+				AND a.idcard = #{idcard}
+			</if>
+			<if test="applyid != null and applyid != ''">
+				AND a.applyid = #{applyid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserApplicationAccount">
+		SELECT 
+			<include refid="userApplicationAccountColumns"/>
+		FROM user_application_account a
+		<include refid="userApplicationAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_application_account(
+
+		<if test="accountStatus != null and accountStatus !='' ">
+			accountStatus,
+		</if>
+		<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="isBind != null and isBind !='' ">
+			isBind,
+		</if>
+		<if test="type != null and type !='' ">
+			type,
+		</if>
+		<if test="name != null and name !='' ">
+			name,
+		</if>
+		<if test="idcard != null and idcard !='' ">
+			idcard,
+		</if>
+		<if test="idcardimg != null and idcardimg !='' ">
+			idcardimg,
+		</if>
+		<if test="bizlicenceno != null and bizlicenceno !='' ">
+			bizlicenceno,
+		</if>
+		<if test="bizlicenceimg != null and bizlicenceimg !='' ">
+			bizlicenceimg,
+		</if>
+		<if test="legalname != null and legalname !='' ">
+			legalname,
+		</if>
+		<if test="linkman != null and linkman !='' ">
+			linkman,
+		</if>
+		<if test="linkmobile != null and linkmobile !='' ">
+			linkmobile,
+		</if>
+		<if test="linkaddress != null and linkaddress !='' ">
+			linkaddress,
+		</if>
+		<if test="applyid != null and applyid !='' ">
+			applyid,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+			id
+		) VALUES (
+		<if test="accountStatus != null and accountStatus !='' ">
+			#{accountStatus},
+		</if>
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="isBind != null and isBind !='' ">
+			#{isBind},
+		</if>
+		<if test="type != null and type !='' ">
+			#{type},
+		</if>
+		<if test="name != null and name !='' ">
+			#{name},
+		</if>
+		<if test="idcard != null and idcard !='' ">
+			#{idcard},
+		</if>
+		<if test="idcardimg != null and idcardimg !='' ">
+			#{idcardimg},
+		</if>
+		<if test="bizlicenceno != null and bizlicenceno !='' ">
+			#{bizlicenceno},
+		</if>
+		<if test="bizlicenceimg != null and bizlicenceimg !='' ">
+			#{bizlicenceimg},
+		</if>
+		<if test="legalname != null and legalname !='' ">
+			#{legalname},
+		</if>
+		<if test="linkman != null and linkman !='' ">
+			#{linkman},
+		</if>
+		<if test="linkmobile != null and linkmobile !='' ">
+			#{linkmobile},
+		</if>
+		<if test="linkaddress != null and linkaddress !='' ">
+			#{linkaddress},
+		</if>
+		<if test="applyid != null and applyid !='' ">
+			#{applyid},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_application_account SET 
+		    <if test="accountStatus != null and accountStatus !='' ">
+			    accountStatus = #{accountStatus},
+		    </if>	
+		    <if test="isBind != null and isBind !='' ">
+			    isBind = #{isBind},
+		    </if>
+			<if test="type != null and type !='' ">
+				type = #{type},
+			</if>
+			<if test="name != null and name !='' ">
+				name = #{name},
+			</if>
+			<if test="idcard != null and idcard !='' ">
+				idcard = #{idcard},
+			</if>
+			<if test="idcardimg != null and idcardimg !='' ">
+				idcardimg = #{idcardimg},
+			</if>
+			<if test="bizlicenceno != null and bizlicenceno !='' ">
+				bizlicenceno = #{bizlicenceno},
+			</if>
+			<if test="bizlicenceimg != null and bizlicenceimg !='' ">
+				bizlicenceimg = #{bizlicenceimg},
+			</if>
+			<if test="legalname != null and legalname !='' ">
+				legalname = #{legalname},
+			</if>
+			<if test="linkman != null and linkman !='' ">
+				linkman = #{linkman},
+			</if>
+			<if test="linkmobile != null and linkmobile !='' ">
+				linkmobile = #{linkmobile},
+			</if>
+			<if test="linkaddress != null and linkaddress !='' ">
+				linkaddress = #{linkaddress},
+			</if>
+			<if test="applyid != null and applyid !='' ">
+				applyid = #{applyid},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM user_application_account
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

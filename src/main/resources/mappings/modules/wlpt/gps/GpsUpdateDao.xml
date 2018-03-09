@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.gps.GpsUpdateDao">
+    
+	<sql id="gpsUpdateColumns">
+		a.id AS "id",
+		a.car_number AS "carNumber",
+		a.rail_type AS "railType",
+		a.rail_name AS "railName",
+		a.rail_stoptime AS "railStoptime",
+		a.rail_time AS "railTime",
+		a.rail_leavetime AS "railLeaveTime",
+		a.receive_person AS "receivePerson",
+		a.receive_phone AS "receivePhone",
+		a.save_username_password AS "userword",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.push_flag AS "pushFlag",
+		a.push_type AS "pushType",
+		a.model_code AS "modelCode",
+		a.read_flag AS "readFlag",
+		a.image AS "image",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="gpsUpdateJoins">
+	</sql>
+    
+	<select id="get" resultType="GpsUpdate">
+		SELECT 
+			<include refid="gpsUpdateColumns"/>
+		FROM gps_update a
+		<include refid="gpsUpdateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	<select id="findList" resultType="GpsUpdate">
+		SELECT 
+			<include refid="gpsUpdateColumns"/>
+		FROM gps_update a
+		<include refid="gpsUpdateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GpsUpdate">
+		SELECT 
+			<include refid="gpsUpdateColumns"/>
+		FROM gps_update a
+		<include refid="gpsUpdateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gps_update(
+			id,
+			car_number,
+			rail_type,
+			rail_name,
+			rail_stoptime,
+			rail_time,
+			rail_leavetime,
+			receive_person,
+			receive_phone,
+			save_username_password,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			push_flag,
+			push_type,
+			model_code,
+			read_flag,
+			image,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{carNumber},
+			#{railType},
+			#{railName},
+			#{railStoptime},
+			#{railTime},
+			#{railLeaveTime},
+			#{receivePerson},
+			#{receivePhone},
+			#{userword},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{pushFlag},
+			#{pushType},
+			#{modelCode},
+			#{readFlag},
+			#{image},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gps_update SET 	
+			car_number = #{carNumber},
+			rail_type = #{railType},
+			rail_name = #{railName},
+			rail_stoptime = #{railStoptime},
+			rail_time = #{railTime},
+			rail_leavetime = #{railLeaveTime},
+			receive_person = #{receivePerson},
+			receive_phone = #{receivePhone},
+			save_username_password = #{userword},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			push_flag = #{pushFlag},
+			push_type = #{pushType},
+			model_code = #{modelCode},
+			read_flag = #{readFlag},
+			image = #{image},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gps_update SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getByPushFlag" resultType="GpsUpdate">
+	    SELECT 
+			<include refid="gpsUpdateColumns"/>
+		FROM gps_update a
+			<include refid="gpsUpdateJoins"/>
+		WHERE a.push_flag = #{pushFlag}
+	</select>
+	
+</mapper>

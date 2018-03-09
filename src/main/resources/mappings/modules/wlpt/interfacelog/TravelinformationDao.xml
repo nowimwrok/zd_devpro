@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.interfacelog.TravelinformationDao">
+    
+	<sql id="travelinformationColumns">
+		a.id AS "id",
+		a.carid AS "carid",
+		a.vcln AS "vclN",
+		a.vclwnrnm AS "vclWnrNm",
+		a.vclwnrphn AS "vclWnrPhn",
+		a.areaname AS "areaName",
+		a.vcltpnm AS "vclTpNm",
+		a.vbrndcdnm AS "vbrndCdNm",
+		a.prdcdnm AS "prdCdNm",
+		a.cmpnm AS "cmpNm",
+		a.vin AS "vin",
+		a.vcltn AS "vclTn",
+		a.ldtn AS "ldTn",
+		a.vcldrwtn AS "vclDrwTn",
+		a.vcllng AS "vclLng",
+		a.vclwdt AS "vclWdt",
+		a.vclhgt AS "vclHgt",
+		a.boxlng AS "boxLng",
+		a.boxwdt AS "boxWdt",
+		a.boxhgt AS "boxHgt",
+		a.servicename AS "serviceName",
+		a.servicephone AS "servicePhone",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="travelinformationJoins">
+	</sql>
+    
+	<select id="get" resultType="Travelinformation">
+		SELECT 
+			<include refid="travelinformationColumns"/>
+		FROM cs_car_travelinformation a
+		<include refid="travelinformationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="getBycarid" resultType="Travelinformation">
+	    SELECT 
+			<include refid="travelinformationColumns"/>
+		FROM cs_car_travelinformation a
+		<include refid="travelinformationJoins"/>
+		WHERE a.carid=#{carid} 
+	</select>    
+	
+	<select id="findList" resultType="Travelinformation">
+		SELECT 
+			<include refid="travelinformationColumns"/>
+		FROM cs_car_travelinformation a
+		<include refid="travelinformationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="vclN != null and vclN != ''">
+				AND a.vcln = #{vclN}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Travelinformation">
+		SELECT 
+			<include refid="travelinformationColumns"/>
+		FROM cs_car_travelinformation a
+		<include refid="travelinformationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cs_car_travelinformation(
+			id,
+			carid,
+			vcln,
+			vclwnrnm,
+			vclwnrphn,
+			areaname,
+			vcltpnm,
+			vbrndcdnm,
+			prdcdnm,
+			cmpnm,
+			vin,
+			vcltn,
+			ldtn,
+			vcldrwtn,
+			vcllng,
+			vclwdt,
+			vclhgt,
+			boxlng,
+			boxwdt,
+			boxhgt,
+			servicename,
+			servicephone,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{carid},
+			#{vclN},
+			#{vclWnrNm},
+			#{vclWnrPhn},
+			#{areaName},
+			#{vclTpNm},
+			#{vbrndCdNm},
+			#{prdCdNm},
+			#{cmpNm},
+			#{vin},
+			#{vclTn},
+			#{ldTn},
+			#{vclDrwTn},
+			#{vclLng},
+			#{vclWdt},
+			#{vclHgt},
+			#{boxLng},
+			#{boxWdt},
+			#{boxHgt},
+			#{serviceName},
+			#{servicePhone},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cs_car_travelinformation SET 
+			carid=#{carid},	
+			vcln = #{vclN},
+			vclwnrnm = #{vclWnrNm},
+			vclwnrphn = #{vclWnrPhn},
+			areaname = #{areaName},
+			vcltpnm = #{vclTpNm},
+			vbrndcdnm = #{vbrndCdNm},
+			prdcdnm = #{prdCdNm},
+			cmpnm = #{cmpNm},
+			vin = #{vin},
+			vcltn = #{vclTn},
+			ldtn = #{ldTn},
+			vcldrwtn = #{vclDrwTn},
+			vcllng = #{vclLng},
+			vclwdt = #{vclWdt},
+			vclhgt = #{vclHgt},
+			boxlng = #{boxLng},
+			boxwdt = #{boxWdt},
+			boxhgt = #{boxHgt},
+			servicename = #{serviceName},
+			servicephone = #{servicePhone},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE cs_car_travelinformation SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

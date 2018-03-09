@@ -1,0 +1,317 @@
+/*解决方案*/
+.wrapper{padding:80px 0;}
+.wrapper .container{overflow:hidden;}
+.wrapper .container{padding:0 15px;}
+.wrapper h3{font-size:36px;color:#333;margin:0;margin-bottom:40px;}
+.wrapper .open_line{margin:0 auto;height:5px;width:100px;background-color:#004da0;}
+/*业务痛点*/
+.bPain img{width:80px;transition:all .5s;}
+.bPain .col-sm-3{padding:15px;position:relative;transition:all .5s;-webkit-transition:all .5s;}
+.bPain .col-sm-3:hover{margin-top:-20px;}
+.bPain .col-sm-3:hover img{transform:rotateZ(180deg);-webkit-transform:rotateX(360deg);}
+.bPain .col-sm-3 .col-sm-12{background-color:#fff;box-shadow:0 0 21px rgba(90,89,89,.3);border-radius:10px;-webkit-border-radius:10px;}
+.bPain .bPain_img{padding:30px 0;border-bottom:1px solid #d1d3d3;}
+.bPain .bPain_text{color:#666;font-size:16px;padding:30px 0;}
+.bPain .open_line{margin-bottom:85px;}
+/*卓大物流系统*/
+.zdSys{background-color:#f5f5f5;}
+.introSys{color:#777;font-size:20px;margin:40px 0 80px;}
+.zdSys img{width:100%;}
+/*业务管理*/
+.solveB{background:url(../img/solve_new/solveB.jpg) no-repeat;background-size:100% 100%;}
+.solveB img{width:100%;}
+.solveB .container{margin-top:60px;}
+.solveB h3{color:#fff;}
+.solveB .open_line{background-color:#eee;}
+.solveB p{position:relative;top:-1px;background-color:#fff;margin:0;font-size:18px;color:#000;line-height:24px;padding:10px 0;}
+.solveB p span{color:#018CF1;font-size:18px;}
+/*管理问题*/
+.manageQ{background-color:#f5f5f5;}
+.manageQ .col-sm-4{margin-top:100px;}
+.text_box{position:relative;background:url(../img/solve_new/text_bg.png) no-repeat;height:210px;background-size:100% 100%;}
+.text_box h3{position:absolute;top:-40px;margin:0;width:100%;}
+.text_box h3 img{width:80px;}
+.text_box h4{font-size:24px;padding-top:60px;margin:0;}
+.text_box p{font-size:18px;color:#444;font-weight:300;margin:0;padding:15px;line-height:24px;}
+.text_end{margin-top:30px;}
+.text_end img{width:80px;transition:all 1s;}
+.manageQ .col-sm-4:hover img{transform:rotateZ(360deg);}
+/*管理提供*/
+.manageP{padding:40px 0;background:url(../img/solve_new/provide_bg.jpg) no-repeat;background-size:100% 100%;}
+.manageP h3{margin:0;color:#fff;margin-bottom:40px;}
+.manageP img{width:35px;}
+.provide_box{position:relative;}
+.provide_text{margin:0;color:#fff;font-size:18px;font-weight:300;line-height:35px;position:absolute;}
+.provideL{display:block;margin:0 auto;width:2px;height:35px;background-color:#fff;}
+.provide_one .provide_text{left:53%;top:0;}
+.provide_two .provide_text{right:53%;top:0;}
+/**/
+.service .introSys{color:#333;}
+.service .col-sm-4 .col-sm-12{background-color:#f5f5f5;padding:50px 0 50px 20px;}
+.service .col-sm-4 .col-sm-12:hover img{transform:rotateY(180deg);}
+.service .col-sm-4 .col-sm-12 img{height:115px;transition:all 1s;}
+.service .col-sm-4 .col-sm-12 p{font-size:18px;color:#000;line-height:38px;margin:0;padding:20px 0 0 15px;}
+/*卓大商城*/
+.market{position:relative;background:url(../img/solve_new/service_bg.png) no-repeat;background-size:100% 100%;padding:30px 0;padding-bottom:40px;}
+.market .col-sm-6,.market .col-sm-12{padding:0;}
+.market .col-sm-6 .col-sm-12{margin-bottom:45px;height:39px;position:relative;}
+.market .market_center{width:382px;height:39px;}
+.market .market_r .market_center{position:absolute;right:0;}
+.market h3{margin-bottom:40px;}
+.market h3,.market h4{color:#fff;}
+.market .one_title{line-height:39px;}
+.market h4{margin:0;padding-left:20px;display:inline-block;}
+.market h4 span{font-size:16px;padding-top:6px;}
+.market img{height:39px}
+.market_line{width:1px;height:220px;background-color:#6587a5;position:absolute;top:65px;bottom:0;right:0;left:0;margin:auto;}
+/*我们解决了什么*/
+.ourSolve_box{cursor:pointer;width:31.58%;position:relative;overflow:hidden;}
+.ourSolve_box img{transition:all .5s;-webkit-transition:all .5s;width:100%;height:265px;}
+.ourSolve h3{margin-bottom:60px;}
+.ourSolve .ourSolve_box:nth-child(1){margin-right:20px;}
+.ourSolve .ourSolve_box:nth-child(2){margin:0 10px;}
+.ourSolve .ourSolve_box:nth-child(3){margin-left:20px;}
+.ourSolve_text{line-height:265px;position:absolute;margin:auto;top:0;bottom:0;left:0;right:0;width:100%;background-color:rgba(4,124,255,.5);}
+.ourSolve_box:hover img{transform:scale(1.2);-webkit-transform:scale(1.2);}
+.ourSolve_text p{margin:0;color:#eee;font-size:18px;position:absolute;margin:auto;top:0;bottom:0;left:0;right:0;padding:10px 0;line-height:30px;height:80px;}
+.ourSolve_box:nth-child(odd) .ourSolve_text p{padding:0;height:40px;line-height:40px;}
+.ourSolve_box h3{margin-bottom:60px;}
+/*新版解决方案*/
+.newTitle{color:#333;font-size:24px;margin-bottom:30px;}
+.new_line{height:1px;background-color:#c9c9c9;margin-bottom:80px;position:relative;}
+.new_line span{display:block;width:50px;height:5px;background-color:#004da0;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;}
+.manCol{transition:all .5s;-webkit-transition:all .5s;width:32%;position:relative;overflow:hidden;}
+.manCol img{width:100%;transition:all .5s;-webkit-transition:all .5s;}
+.manCol_pd{width:2%;height:1px;}
+.manCol_img{position:relative;}
+.manCol_tx{position:absolute;margin:auto;top:0;bottom:0;left:0;right:0;z-index:10;}
+.manCol img.manCol_tx{width:84%;transition:all 1s .5s;-webkit-transition:all 1s .5s;}
+p.manCol_tx{transition:all .5s;-webkit-transition:all .5s;color:#fff;z-index:100;height:60px;line-height:60px;font-size:20px;letter-spacing:5px;}
+.man_text{background-color:#ebad47;padding:10px 0;}
+.man_text p{color:#333;font-size:20px;line-height:30px;margin:0;}
+.manCol:hover{position:relative;margin-top:-20px;}
+.manCol:hover p.manCol_tx{transform:scale(1.2);-webkit-transform:scale(1.2);}
+.manCol:hover img.manCol_tx{transform:rotateZ(360deg);-webkit-transform:rotateZ(360deg);}
+/*新版---业务问题*/
+.bus{background:url(../img/newSolve/busBg.jpg) no-repeat;background-size:100% 100%;padding-bottom:0;}
+.bus h3{margin-bottom:15px;}
+.busQ{line-height:26px;margin-bottom:15px;}
+.busQ span{padding-right:20px;display:inline-block;color:#b7b7b7;font-size:14px;}
+.busQ i{margin-right:10px;vertical-align:middle;position:relative;top:-2px;display:inline-block;width:29px;height:26px;background:url(../img/newSolve/q.png) no-repeat;background-size:100% 100%;}
+.bus .newTitle{color:#fff;}
+.bus .new_line{background-color:#9f9f9f;}
+.bus_text{width:840px;margin:0 auto;}
+.busCol{width:150px;}
+.busCol_img{width:150px;line-height:150px;border:1px solid #fff;border-radius:100%;-webkit-border-radius:100%;}
+.busCol_img img{height:60px;transition:all .5s;-webkit-transition:all .5s;}
+.busCol p{color:#fff;font-size:16px;line-height:24px;margin:0;padding-top:15px;letter-spacing:2px;}
+.bus_line{width:80px;height:1px;background-color:#c7c7c7;position:relative;top:74px;}
+.solve_swiper{padding-bottom:80px;}
+.bus .swiper-container-horizontal>.swiper-pagination-bullets{bottom:30px;}
+.bus .swiper-pagination-bullet{width:10px;height:10px;border-radius:100%;-webkit-border-radius:100%;background-color:#e2a849}
+.busCol:hover .busCol_img img{transform:rotateZ(360deg);-webkit-transform:rotateZ(360deg);}
+/*服务问题*/
+.newSer{background-color:#f4f4f4;}
+.serviceCol{width:32%;transition:all .5s;-webkit-transition:all .5s;}
+.newSer .serOne{background-color:#167efd;}
+.newSer .serOne p{color:#fff;font-size:20px;line-height:28px;padding-bottom:30px;margin:0;letter-spacing:2px;}
+.newSer .serOne img{height:85px;padding-top:30px;}
+.newSer .ser_line{margin:30px auto;width:30px;height:2px;background-color:#529ffe;}
+.newSer .serTwo img{transition:all .5s;-webkit-transition:all .5s;width:30px;display:block;margin:0 auto;padding-top:15px;}
+.newSer .serTwo{background-color:#fff;}
+.newSer .serTwo p{color:#0073ff;font-size:16px;letter-spacing:1px;margin:0;padding:25px 0;line-height:24px;}
+.newSer .ser_pd{width:2%;height:1px;}
+.newSer .serUn .serOne{background-color:#0054ff;}
+.newSer .serUn .serTwo p{color:#0054ff;}
+.newSer .serSolve{width:100%;margin:0;}
+.newSer .serSolve span{margin-top:30px;display:inline-block;color:#333;font-size:16px;padding-right:5px;}
+.newSer .serSolve span i{color:#ebad47;font-style:normal;font-size:16px;}
+.serviceCol:hover{box-shadow:0 0 50px rgba(0,0,0,.4);}
+.serviceCol:hover .serTwo img{transform:rotateY(360deg);-webkit-transform:rotateY(360deg);}
+/*响应式*/
+@media (max-width:1200px){
+	.ourSolve_box{width:31%;}
+	.service .col-sm-4 .col-sm-12 img{height:80px;}
+	.service .col-sm-4 .col-sm-12 p{padding:8px 0 0 10px;line-height:32px;}
+}
+@media (max-width:1100px){
+	.wrapper{padding:60px 0;}
+	.wrapper h3{font-size:32px;margin-bottom:30px;}
+	/*服务问题*/
+	.introSys{margin:30px 0 60px;}
+	.service .col-sm-4 .col-sm-12 img{height:80px;}
+	.service .col-sm-4 .col-sm-12 p{line-height:32px;padding:8px 0 0 10px;}
+	/*管理问题*/
+	.text_box p{padding:15px 0;font-size:17px;}
+	/*服务解决*/
+	.ourSolve_box{width:31.2%;}
+	.ourSolve_box img{height:238px;}
+	.ourSolve_text{line-height:238px;}
+}
+@media (max-width:1000px) and (min-width:600px){
+	/*企业痛点*/
+	.bPain .bPain_img,.bPain .bPain_text{padding:8px 0;}
+	.bPain .open_line{margin-bottom:60px;}
+	/*业务解决*/
+	.solveB p,.solveB p span,.text_box p,.provide_text,.service .col-sm-4 .col-sm-12 p{font-size:16px;}
+	.text_box h4{font-size:22px;}
+	.text_end{margin-top:15px;}
+	.service .col-sm-4 .col-sm-12 p,.service .col-sm-4 .col-sm-12{padding-left:5px;}
+	.service .col-sm-4 .col-sm-12 p{line-height:25px;padding-top:2px;}
+	.service .col-sm-4 .col-sm-12 img{height:55px;}
+	/*卓大商城*/
+	.market h4{font-size:16px;padding-left:5px;}
+	.market .container{padding:0;}
+	.market .market_r .market_center{right:-90px;}
+	/*服务解决*/
+	.ourSolve_box{width:31.94%;}
+	.ourSolve .ourSolve_box:nth-child(1){margin-right:10px;}
+	.ourSolve .ourSolve_box:nth-child(2){margin:0 5px;}
+	.ourSolve .ourSolve_box:nth-child(3){margin-left:10px;}
+}
+@media (max-width:500px){
+	.wrapper h3{font-size:28px;}
+	
+	/*业务痛点*/
+	.bPain .bPain_text{padding:35px 0;}
+	/*卓大系统*/
+	.introSys{font-size:18px;padding:0 10px;}
+	.zdSys .container{padding:0;}
+	.solveB .col-sm-3{margin-bottom:20px;}
+	.solveB .col-sm-3:last-child{margin:0;}
+	.provideL{display:none;}
+	.provide_box{text-align:left;padding-left:15px;}
+	.provide_one .provide_text{left:13%;}
+	.provide_two .provide_text{right:0;left:13%;}
+	.market .market_center{width:100%;}
+	.manageP .provide_box,.service .col-sm-4 .col-sm-12{margin-bottom:20px;}
+	.manageP .provide_box:last-child{margin:0;}
+	.service,.ourSolve{padding-bottom:40px;}
+	.market_line{display:none;}
+	.market .col-sm-6 .col-sm-12{margin-bottom:30px;}
+	.ourSolve_box{width:96%;margin:0 auto 20px!important;}
+}
+@media (max-width:400px){
+	.market .container,.provide_box{padding:0 0 0 3px;}
+	.market h4{padding-left:3px;}
+	.provide_text{font-size:16px;}
+	.market h4 span{font-size:15px;}
+}
+/*卓大商城*/
+.solve_banner{z-index:1;}
+.solve_banner img{width:100%;}
+#market_title{position:relative;margin-top:-225px;bottom:0;overflow:hidden;}
+#market_title h4{margin-bottom:30px;}
+#market_title p{font-size:18px;}
+#market_title a{transition:all .5s;-webkit-transition:all .5s;-moz-transition:all .5s;margin-top:30px;display:inline-block;width:152px;height:44px;line-height:44px;color:#fff;background-color:#4894df;border-radius:6px;-moz-border-radius:6px;-webkit-border-radius:6px;font-size:18px;}
+#market_title{padding:45px 0;}
+#market_title .data_c:hover a{-moz-transform:translate3d(0,-2px,0);-webkit-transform:translate3d(0,-2px,0);transform:translate3d(0,-5px,0);}
+/*#market_title .data_c{width:32.8%;}
+#market_title .data_c:nth-child(1){margin-right:.5%;}
+#market_title .data_c:nth-child(2){margin:0 .25% ;}
+#market_title .data_c:nth-child(3){margin-left:.5%;}*/
+#market_detail{margin-top:80px;padding:100px 0;background-image:none;background:url(../img/market/market_bg.jpg) no-repeat;background-size:100% 100%;}
+#market_detail p{font-size:14px;color:#666;line-height:23px;}
+#market_detail .col-sm-4{position:relative;top:0;transition:all .5s linear;-webkit-transition:all .5s;-moz-transition:all .5s;}
+#market_detail .col-sm-4:hover{position:relative;top:-20px;}
+#market_detail .detail_title{position:absolute;left:15px;top:25px;line-height:23px;color:#fff;font-size:24px;background-color:#27da93;padding:6px;padding-right:10px;}
+/*关于我们*/
+.about_box{padding:80px 0;background:url(../img/about/about_bg.jpg) no-repeat;background-size:100% 100%;overflow:hidden;}
+.about_img img{max-width:340px;}
+.about_box h4{color:#ff9933;margin-bottom:20px;}
+.about_text{max-width:70%;padding-left:35px;}
+.about_text p{font-size:16px;padding-left:25px;margin-bottom:20px;line-height:24px;}
+.about_banner{height:auto;}
+.about_banner img{width:100%;}
+@media (width:1200px){
+	.header{overflow:hidden;}
+}
+@media (max-width:1100px){
+	/*卓大商城*/
+	#market_title .data_c{padding:30px 30px 35px;}
+	#market_title h4{margin-top:20px;margin-bottom:20px;}
+	#market_title a{margin-top:20px;}
+	#market_detail .detail_title{font-size:20px;}
+	/*关于我们*/
+	.about_img img{width:280px;}
+	/*新版解决方案*/
+	.man_text p{font-size:18px;line-height:26px;}
+	.bus .flow img{width:90%;}
+	.solve_swiper{padding-bottom:60px;}
+	.bus .swiper-container-horizontal>.swiper-pagination-bullets{bottom:20px;}
+	.busCol_img{width:120px;height:120px;line-height:120px;margin:0 auto;}
+	.busCol_img img{height:48px;}
+	.busCol{margin-right:80px;}
+	.bus .bus_line{display:none;}
+	.bus .busCol:last-child{margin-right:0;}
+	.newSer .serOne img{padding-top:25px;}
+	.newSer .ser_line{margin:25px auto;}
+	.newSer .serOne p{padding-bottom:25px;}
+	.newSer .serTwo p{padding:20px 0;}
+	.newSer .serSolve span,.newSer .serSolve span i{font-size:14px;margin-top:25px;}
+}
+@media (max-width:1000px){
+	/*卓大商城*/
+	#market_title .data_c{padding:20px 0 20px;}
+	#market_title p,#market_title a{font-size:16px;}
+	#market_title h4{margin-top:14px;margin-bottom:14px;}
+	#market_title a{margin-top:14px;}
+	/*关于我们*/
+	.about_img img{width:220px;}
+}
+@media (max-width:800px){
+	/*卓大商城*/
+	#market_title{margin-top:-100px;}
+	/*关于我们*/
+	.about_box{padding:80px 15px;padding-left:30px;}
+	.about_text{padding-left:20px;max-width:67%;}
+	/*新版解决方案*/
+	.man_text p{font-size:14px;line-height:24px;}
+	.manCol:hover p.manCol_tx{transform:none;-webkit-transform:none;}
+	p.manCol_tx{font-size:18px;}
+	.busQ span{padding-right:10px;}
+	.busCol{width:140px;margin-right:58px;}
+	.bus_text{width:738px;}
+	.busCol p{font-size:14px;}
+	.newSer .serOne img{padding-top:15px;}.newSer .ser_line{margin:15px auto;}
+	.newSer .serOne p{padding-bottom:15px;font-size:18px;line-height:24px;}
+	.newSer .serTwo p{padding:15px 0;}
+	.newSer .serOne img{height:66px;}
+	.newSer .serSolve{margin-top:20px;}
+	.newSer .serSolve span{margin-top:0;line-height:20px;}
+}
+@media (max-width:500px){
+	/*解决方案*/
+	.solve_title{position:relative;top:0;left:0;margin:0 auto;margin-bottom:20px;}
+	.solve_title h2{font-size:24px;}
+	.ersolve .ersolve_c p{font-size:15px;line-height:24px;}
+	.ersolve .col-sm-12{padding-left:15px;margin-top:45px;}
+	.ersolve .col-sm-12:last-child{margin-bottom:45px;}
+	.ersolve .ersolve_c{padding:20px;}
+	.ersolve .col-sm-12:nth-child(1) .ersolve_c{padding-top:45px;padding-bottom:45px;}
+	/*卓大商城*/
+	#market_title{margin-top:40px;}
+	#market_detail{padding:40px 0;}
+	/*关于我们*/
+	.about_img img{display:block;width:68%;margin:0 auto;}
+	.about_text{max-width:100%;padding-top:15px;}
+	/**/
+	.manCol,.serviceCol{width:90%;margin:0 auto;float:none!important;margin-bottom:15px;}
+	.newMan .manCol:last-child{margin-bottom:0;}
+	.manCol_pd{width:0;height:0;}
+	.busQ{display:none;}.bus h3{margin-bottom:35px;}
+	.bus .flow img{display:none;}
+	.bus_text{width:100%;}
+	/*.busCol{wdth:50%;}*/
+	.flow,.bus .swiper-container-horizontal>.swiper-pagination-bullets{display:none;}
+	.busCol{margin: 0 0 15px 0;width:50%;}
+	.newSer .serSolve{text-align:left;padding:0 15px;}
+	
+}
+
+
+
+
+
+
+

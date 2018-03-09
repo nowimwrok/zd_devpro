@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.integrity.IntegrityEnterpriseDao">
+    
+	<sql id="integrityEnterpriseColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.linkphone AS "linkphone",
+		a.idcard AS "idcard",
+		a.persionaladdress AS "persionaladdress",
+		a.certificateproperty AS "certificateproperty",
+		a.companyname AS "companyname",
+		a.companyaddress AS "companyaddress",
+		a.operationyears AS "operationyears",
+		a.companyinfo AS "companyinfo",
+		a.stallscorporate AS "stallscorporate",
+		a.officespace AS "officespace",
+		a.storageplace AS "storageplace",
+		a.staffphoto AS "staffphoto",
+		a.businesslicense AS "businesslicense",
+		a.bankopening AS "bankopening",
+		a.roadtransport AS "roadtransport",
+		a.owncar AS "owncar",
+		a.upstreamcontract AS "upstreamcontract",
+		a.user_id AS "user.id",
+		a.operationyearstime AS "operationyearstime",
+		a.updatetime AS "updatetime",
+		a.createtime AS "createtime",
+		a.isedit AS "isedit",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.status AS "status",
+		u20.name AS "user.name"
+	</sql>
+	
+	<sql id="integrityEnterpriseJoins">
+		LEFT JOIN sys_user u20 ON u20.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="IntegrityEnterprise">
+		SELECT
+			<include refid="integrityEnterpriseColumns"/>
+		FROM integrity_enterprise a
+		<include refid="integrityEnterpriseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findEnterprise" resultType="IntegrityEnterprise">
+		SELECT
+			<include refid="integrityEnterpriseColumns"/>
+		FROM integrity_enterprise a
+		<include refid="integrityEnterpriseJoins"/>
+		<where>
+			<if test="user.id != null and user.id !='' ">
+			and a.user_id = #{user.id}
+		</if>
+		</where>
+		limit 1
+	</select>
+
+	<select id="findList" resultType="IntegrityEnterprise">
+		SELECT 
+			<include refid="integrityEnterpriseColumns"/>
+		FROM integrity_enterprise a
+		<include refid="integrityEnterpriseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="linkphone != null and linkphone != ''">
+				AND a.linkphone LIKE
+				<if test="dbName == 'oracle'">'%'||#{linkphone}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{linkphone}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{linkphone},'%')</if>
+			</if>
+			<if test="companyname != null and companyname != ''">
+				AND a.companyname LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{companyname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{companyname},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntegrityEnterprise">
+		SELECT 
+			<include refid="integrityEnterpriseColumns"/>
+		FROM integrity_enterprise a
+		<include refid="integrityEnterpriseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO integrity_enterprise(
+
+		<if test="name != null and name !='' ">
+			name,
+		</if>
+		<if test="linkphone != null and linkphone !='' ">
+			linkphone,
+		</if>
+		<if test="idcard != null and idcard !='' ">
+			idcard,
+		</if>
+		<if test="persionaladdress != null and persionaladdress !='' ">
+			persionaladdress,
+		</if>
+		<if test="certificateproperty != null and certificateproperty !='' ">
+			certificateproperty,
+		</if>
+		<if test="companyname != null and companyname !='' ">
+			companyname,
+		</if>
+		<if test="companyaddress != null and companyaddress !='' ">
+			companyaddress,
+		</if>
+		<if test="operationyears != null and operationyears !='' ">
+			operationyears,
+		</if>
+		<if test="companyinfo != null and companyinfo !='' ">
+			companyinfo,
+		</if>
+		<if test="stallscorporate != null and stallscorporate !='' ">
+			stallscorporate,
+		</if>
+		<if test="officespace != null and officespace !='' ">
+			officespace,
+		</if>
+		<if test="storageplace != null and storageplace !='' ">
+			storageplace,
+		</if>
+		<if test="staffphoto != null and staffphoto !='' ">
+			staffphoto,
+		</if>
+		<if test="businesslicense != null and businesslicense !='' ">
+			businesslicense,
+		</if>
+		<if test="bankopening != null and bankopening !='' ">
+			bankopening,
+		</if>
+		<if test="roadtransport != null and roadtransport !='' ">
+			roadtransport,
+		</if>
+		<if test="owncar != null and owncar !='' ">
+			owncar,
+		</if>
+		<if test="upstreamcontract != null and upstreamcontract !='' ">
+			upstreamcontract,
+		</if>
+		<if test="user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="operationyearstime != null and operationyearstime !='' ">
+			operationyearstime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="isedit != null and isedit !='' ">
+			isedit,
+		</if>
+		<!-- <if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if> -->
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="name != null and name !='' ">
+			#{name},
+		</if>
+		<if test="linkphone != null and linkphone !='' ">
+			#{linkphone},
+		</if>
+		<if test="idcard != null and idcard !='' ">
+			#{idcard},
+		</if>
+		<if test="persionaladdress != null and persionaladdress !='' ">
+			#{persionaladdress},
+		</if>
+		<if test="certificateproperty != null and certificateproperty !='' ">
+			#{certificateproperty},
+		</if>
+		<if test="companyname != null and companyname !='' ">
+			#{companyname},
+		</if>
+		<if test="companyaddress != null and companyaddress !='' ">
+			#{companyaddress},
+		</if>
+		<if test="operationyears != null and operationyears !='' ">
+			#{operationyears},
+		</if>
+		<if test="companyinfo != null and companyinfo !='' ">
+			#{companyinfo},
+		</if>
+		<if test="stallscorporate != null and stallscorporate !='' ">
+			#{stallscorporate},
+		</if>
+		<if test="officespace != null and officespace !='' ">
+			#{officespace},
+		</if>
+		<if test="storageplace != null and storageplace !='' ">
+			#{storageplace},
+		</if>
+		<if test="staffphoto != null and staffphoto !='' ">
+			#{staffphoto},
+		</if>
+		<if test="businesslicense != null and businesslicense !='' ">
+			#{businesslicense},
+		</if>
+		<if test="bankopening != null and bankopening !='' ">
+			#{bankopening},
+		</if>
+		<if test="roadtransport != null and roadtransport !='' ">
+			#{roadtransport},
+		</if>
+		<if test="owncar != null and owncar !='' ">
+			#{owncar},
+		</if>
+		<if test="upstreamcontract != null and upstreamcontract !='' ">
+			#{upstreamcontract},
+		</if>
+		<if test="user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="operationyearstime != null and operationyearstime !='' ">
+			#{operationyearstime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="isedit != null and isedit !='' ">
+			#{isedit},
+		</if>
+		<!-- <if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if> -->
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE integrity_enterprise SET 	
+			<if test="name != null and name !='' ">
+				name = #{name},
+			</if>
+			<if test="linkphone != null and linkphone !='' ">
+				linkphone = #{linkphone},
+			</if>
+			<if test="idcard != null and idcard !='' ">
+				idcard = #{idcard},
+			</if>
+			<if test="persionaladdress != null and persionaladdress !='' ">
+				persionaladdress = #{persionaladdress},
+			</if>
+			<if test="certificateproperty != null and certificateproperty !='' ">
+				certificateproperty = #{certificateproperty},
+			</if>
+			<if test="companyname != null and companyname !='' ">
+				companyname = #{companyname},
+			</if>
+			<if test="companyaddress != null and companyaddress !='' ">
+				companyaddress = #{companyaddress},
+			</if>
+			<if test="operationyears != null and operationyears !='' ">
+				operationyears = #{operationyears},
+			</if>
+			<if test="companyinfo != null and companyinfo !='' ">
+				companyinfo = #{companyinfo},
+			</if>
+			<if test="stallscorporate != null and stallscorporate !='' ">
+				stallscorporate = #{stallscorporate},
+			</if>
+			<if test="officespace != null and officespace !='' ">
+				officespace = #{officespace},
+			</if>
+			<if test="storageplace != null and storageplace !='' ">
+				storageplace = #{storageplace},
+			</if>
+			<if test="staffphoto != null and staffphoto !='' ">
+				staffphoto = #{staffphoto},
+			</if>
+			<if test="businesslicense != null and businesslicense !='' ">
+				businesslicense = #{businesslicense},
+			</if>
+			<if test="bankopening != null and bankopening !='' ">
+				bankopening = #{bankopening},
+			</if>
+			<if test="roadtransport != null and roadtransport !='' ">
+				roadtransport = #{roadtransport},
+			</if>
+			<if test="owncar != null and owncar !='' ">
+				owncar = #{owncar},
+			</if>
+			<if test="upstreamcontract != null and upstreamcontract !='' ">
+				upstreamcontract = #{upstreamcontract},
+			</if>
+			<if test="operationyearstime != null and operationyearstime !='' ">
+				operationyearstime = #{operationyearstime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="isedit != null and isedit !='' ">
+				isedit = #{isedit},
+			</if>
+			<!-- <if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if> -->
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			<if test="status != null and status !='' ">
+			    status = #{status},
+		    </if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE integrity_enterprise SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

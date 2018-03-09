@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsBusinessDao">
+    
+	<sql id="statisticsBusinessColumns">
+		a.id AS "id",
+		a.bidcount AS "bidcount",
+		a.trasportcount AS "trasportcount",
+		a.settlemoney AS "settlemoney",
+		a.createtime AS "createtime",
+		a.bidprice AS "bidprice",
+		a.bidweight AS "bidweight",
+		a.trademoney AS "trademoney",
+		a.tradeweight AS "tradeweight",
+		a.arriveweight AS "arriveweight",
+		a.arrivemoney AS "arrivemoney",
+		a.settlecount AS "settlecount",
+		a.settleweight AS "settleweight",
+		a.arrivecount AS "arrivecount"
+	</sql>
+	
+	<sql id="statisticsBusinessJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsBusiness">
+		SELECT
+			<include refid="statisticsBusinessColumns"/>
+		FROM statistics_business a
+		<include refid="statisticsBusinessJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsBusiness">
+		SELECT 
+			<include refid="statisticsBusinessColumns"/>
+		FROM statistics_business a
+		<include refid="statisticsBusinessJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+			<if test="timeflg != null and timeflg !='' ">
+			 AND  date_format(a.CREATETIME, '%Y-%m-%d')=#{timeflg}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsBusiness">
+		SELECT 
+			<include refid="statisticsBusinessColumns"/>
+		FROM statistics_business a
+		<include refid="statisticsBusinessJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_business(
+
+		<if test="bidcount != null and bidcount !='' ">
+			bidcount,
+		</if>
+		<if test="trasportcount != null and trasportcount !='' ">
+			trasportcount,
+		</if>
+		<if test="settlemoney != null and settlemoney !='' ">
+			settlemoney,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="bidprice != null and bidprice !='' ">
+			bidprice,
+		</if>
+		<if test="bidweight != null and bidweight !='' ">
+			bidweight,
+		</if>
+		<if test="trademoney != null and trademoney !='' ">
+			trademoney,
+		</if>
+		<if test="tradeweight != null and tradeweight !='' ">
+			tradeweight,
+		</if>
+		<if test="arriveweight != null and arriveweight !='' ">
+			arriveweight,
+		</if>
+		<if test="arrivemoney != null and arrivemoney !='' ">
+			arrivemoney,
+		</if>
+		<if test="settlecount != null and settlecount !='' ">
+			settlecount,
+		</if>
+		<if test="settleweight != null and settleweight !='' ">
+			settleweight,
+		</if>
+		<if test="arrivecount != null and arrivecount !='' ">
+			arrivecount,
+		</if>
+			id
+		) VALUES (
+		<if test="bidcount != null and bidcount !='' ">
+			#{bidcount},
+		</if>
+		<if test="trasportcount != null and trasportcount !='' ">
+			#{trasportcount},
+		</if>
+		<if test="settlemoney != null and settlemoney !='' ">
+			#{settlemoney},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="bidprice != null and bidprice !='' ">
+			#{bidprice},
+		</if>
+		<if test="bidweight != null and bidweight !='' ">
+			#{bidweight},
+		</if>
+		<if test="trademoney != null and trademoney !='' ">
+			#{trademoney},
+		</if>
+		<if test="tradeweight != null and tradeweight !='' ">
+			#{tradeweight},
+		</if>
+		<if test="arriveweight != null and arriveweight !='' ">
+			#{arriveweight},
+		</if>
+		<if test="arrivemoney != null and arrivemoney !='' ">
+			#{arrivemoney},
+		</if>
+		<if test="settlecount != null and settlecount !='' ">
+			#{settlecount},
+		</if>
+		<if test="settleweight != null and settleweight !='' ">
+			#{settleweight},
+		</if>
+		<if test="arrivecount != null and arrivecount !='' ">
+			#{arrivecount},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_business SET 	
+			<if test="bidcount != null and bidcount !='' ">
+				bidcount = #{bidcount},
+			</if>
+			<if test="trasportcount != null and trasportcount !='' ">
+				trasportcount = #{trasportcount},
+			</if>
+			<if test="settlemoney != null and settlemoney !='' ">
+				settlemoney = #{settlemoney},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="bidprice != null and bidprice !='' ">
+				bidprice = #{bidprice},
+			</if>
+			<if test="bidweight != null and bidweight !='' ">
+				bidweight = #{bidweight},
+			</if>
+			<if test="trademoney != null and trademoney !='' ">
+				trademoney = #{trademoney},
+			</if>
+			<if test="tradeweight != null and tradeweight !='' ">
+				tradeweight = #{tradeweight},
+			</if>
+			<if test="arriveweight != null and arriveweight !='' ">
+				arriveweight = #{arriveweight},
+			</if>
+			<if test="arrivemoney != null and arrivemoney !='' ">
+				arrivemoney = #{arrivemoney},
+			</if>
+			<if test="settlecount != null and settlecount !='' ">
+				settlecount = #{settlecount},
+			</if>
+			<if test="settleweight != null and settleweight !='' ">
+				settleweight = #{settleweight},
+			</if>
+			<if test="arrivecount != null and arrivecount !='' ">
+				arrivecount = #{arrivecount},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_business
+		WHERE id = #{id}
+	</update>
+	<select id="editBusiness" statementType="CALLABLE">
+			{call SP_Statistics_Business()}
+	</select>
+	
+	<select id="getBidEverDay" resultType="StatisticsBusiness">
+	SELECT
+            a.BIDWEIGHT  AS "bidweight",
+            a.BIDPRICE AS "bidprice",
+            a.BIDCOUNT  AS "bidcount",
+            date_format(a.CREATETIME, '%Y-%m-%d') AS "timeflg",
+            date_format(a.CREATETIME, '%Y-%m-%d') AS "cretime"
+   FROM statistics_business a
+    GROUP BY timeflg
+   ORDER BY a.CREATETIME ASC
+	</select>
+	
+	<select id="getBidEverWeek" resultType="StatisticsBusiness">
+	SELECT
+            a.BIDWEIGHT  AS "bidweight",
+            a.BIDPRICE AS "bidprice",
+            a.BIDCOUNT  AS "bidcount",
+            week(a.CREATETIME, '%Y-%m-%d') + 1 AS "timeflg",
+            date_format(a.CREATETIME, '%Y年') AS "cretime"
+   FROM statistics_business a
+    GROUP BY timeflg
+   ORDER BY a.CREATETIME ASC
+	</select>
+	<select id="getBidEverMonth" resultType="StatisticsBusiness">
+	SELECT
+            a.BIDWEIGHT  AS "bidweight",
+            a.BIDPRICE AS "bidprice",
+            a.BIDCOUNT  AS "bidcount",
+            a.SETTLECOUNT  AS "settlecount",
+			a.SETTLEWEIGHT  AS "settleweight",
+			a.SETTLEMONEY  AS "settlemoney",
+            month(a.CREATETIME) AS "timeflg",
+            date_format(a.CREATETIME, '%Y年-%m月') AS "cretime"
+   FROM statistics_business a
+   		
+    GROUP BY timeflg
+   ORDER BY a.CREATETIME ASC
+	</select>
+	<select id="getBidEverYear" resultType="StatisticsBusiness">
+	SELECT
+            a.BIDWEIGHT  AS "bidweight",
+            a.BIDPRICE AS "bidprice",
+            a.BIDCOUNT  AS "bidcount",
+            year(a.CREATETIME) AS "timeflg",
+            date_format(a.CREATETIME, '%Y年') AS "cretime"
+   FROM statistics_business a
+    GROUP BY timeflg
+   ORDER BY a.CREATETIME ASC
+	</select>
+	
+	<select id="getBidMonthCount" resultType="StatisticsBusiness">
+	SELECT 
+	COUNT(0) AS "bidcount",--   招标数量
+	IFNULL(SUM(bidinfo.EXPECTEDPRICE),0)*IFNULL(SUM(goods.FREIGHTVOLUME),0) AS "bidprice",-- BIDPRICE
+	IFNULL(SUM(goods.FREIGHTVOLUME),0) AS "bidweight", -- 招标总吨位
+	IFNULL(SUM(
+			CASE
+					WHEN orderinfo.CONTRACTSTATUS !=-1 THEN 
+						orderinfo.CONTRACTTOTAL
+					ELSE
+						0
+					END
+		),0
+	) AS "settlemoney",-- 结算金额
+	IFNULL(SUM(
+			CASE
+					WHEN orderinfo.CONTRACTSTATUS !=-1 THEN 
+						1
+					ELSE
+						0
+					END
+		),0
+	) AS "settlecount", -- 结算单数
+	IFNULL(SUM(
+			CASE
+					WHEN orderinfo.CONTRACTSTATUS !=-1 THEN 
+						goods.FREIGHTVOLUME
+					ELSE
+						0
+					END
+		),0
+	) AS "settleweight", -- 结算吨位
+	month(bidinfo.create_date) AS "timeflg",
+  date_format(bidinfo.create_date, '%Y年-%m月') AS "cretime"
+	FROM bid_bidinfo bidinfo
+	LEFT JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+	LEFT JOIN bid_orderinfo orderinfo ON bidinfo.ID = orderinfo.BIDINFOID
+   		<where>
+   			<if test="userid !=null and userid !=''">
+               and (bidinfo.BIDUSERID =#{userid} or orderinfo.BIDDINGUSERID= #{userid} or orderinfo.BIDUSERID=#{userid})
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and bidinfo.create_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and bidinfo.create_date &lt;= #{endDate}
+            </if>
+        </where>
+    GROUP BY timeflg
+   ORDER BY bidinfo.create_date ASC
+	</select>
+	
+	<select id="getBiddingMonthCount" resultType="StatisticsBusiness">
+	SELECT 
+	COUNT(0) AS "biddingpcount",--   竞标数量
+	IFNULL(SUM(bidding.BIDDINGPRICE),0) AS "biddingprice",-- 竞标总金额
+	IFNULL(SUM(goods.FREIGHTVOLUME),0) AS "biddingweight", -- 竞标总吨位
+	month(bidding.create_date) AS "timeflg",
+  date_format(bidding.create_date, '%Y年-%m月') AS "cretime"
+	FROM bid_biddinginfo bidding 
+	LEFT JOIN bid_bidinfo bidinfo ON bidding.BIDID =bidinfo.ID
+	LEFT JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+   		<where>
+   			<if test="userid !=null and userid !=''">
+               and bidinfo.BIDUSERID =#{userid}
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and bidding.create_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and bidding.create_date &lt;= #{endDate}
+            </if>
+        </where>
+   GROUP BY timeflg
+   ORDER BY bidding.create_date ASC
+	</select>
+	
+	
+		<select id="getBidInfoCount" resultType="StatisticsBusiness">
+	SELECT 
+	COUNT(0) AS "bidcount",--   招标数量
+	IFNULL(SUM(bidinfo.EXPECTEDPRICE),0)*IFNULL(SUM(goods.FREIGHTVOLUME),0) AS "bidprice",-- BIDPRICE
+	IFNULL(SUM(goods.FREIGHTVOLUME),0) AS "bidweight", -- 招标总吨位
+	IFNULL(SUM(
+			CASE
+					WHEN orderinfo.CONTRACTSTATUS !=-1 THEN 
+						orderinfo.CONTRACTTOTAL
+					ELSE
+						0
+					END
+		),0
+	) AS "settlemoney",-- 结算金额
+	IFNULL(SUM(
+			CASE
+					WHEN orderinfo.CONTRACTSTATUS !=-1 THEN 
+						1
+					ELSE
+						0
+					END
+		),0
+	) AS "settlecount", -- 结算单数
+	IFNULL(SUM(
+			CASE
+					WHEN orderinfo.CONTRACTSTATUS !=-1 THEN 
+						goods.FREIGHTVOLUME
+					ELSE
+						0
+					END
+		),0
+	) AS "settleweight", -- 结算吨位
+	month(bidinfo.create_date) AS "timeflg",
+  date_format(bidinfo.create_date, '%Y年-%m月') AS "cretime"
+	FROM bid_bidinfo bidinfo
+	LEFT JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+	LEFT JOIN bid_orderinfo orderinfo ON bidinfo.ID = orderinfo.BIDINFOID
+   		<where>
+   			<if test="userid !=null and userid !=''">
+               and (bidinfo.BIDUSERID =#{userid} or orderinfo.BIDDINGUSERID= #{userid} or orderinfo.BIDUSERID=#{userid})
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and bidinfo.create_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and bidinfo.create_date &lt;= #{endDate}
+            </if>
+        </where>
+   ORDER BY bidinfo.create_date ASC
+	</select>
+
+
+	<select id="findBiddingStatusMothCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+		select count(a.id) AS "count",d.label AS "name",d.`value` AS "code"
+		FROM  sys_dict d
+		LEFT JOIN bid_biddinginfo a on a.BIDDINGSTATUS = d.`value`
+		<if test="userid != null and userid != ''">
+			AND a.BIDDINGUSERID =#{userid}
+		</if>
+		<where>
+			d.type='bidding_status'
+
+		</where>
+		GROUP BY d.value
+	</select>
+
+	<select id="findContracStatusMothCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+		select count(a.ID) AS "count",
+		SUM(IFNULL(a.CONTRACTTOTAL,0)) AS "mony",
+		SUM(IFNULL(goods.FREIGHTVOLUME,0)) AS "weight",
+		d.label AS "name",
+		d.`value` AS "code"
+		FROM  sys_dict d
+		LEFT JOIN bid_orderinfo a ON a.CONTRACTSTATUS = d.`value`
+		<if test="userid != null and userid != ''">
+			AND (a.BIDDINGUSERID = #{userid} or a.BIDUSERID =#{userid})
+		</if>
+		<if test="beginCreateDate !=null and beginCreateDate !=''">
+			and a.create_date &gt;= #{beginCreateDate}
+		</if>
+		<if test="endCreateDate !=null and endCreateDate !=''">
+			and a.create_date &lt;= #{endCreateDate}
+		</if>
+		LEFT JOIN bid_bidinfo bidinfo ON bidinfo.ID = a.BIDINFOID
+		LEFT JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+		<where>
+			d.type='bidOrder_status'
+
+		</where>
+		GROUP BY d.value
+		ORDER BY d.value DESC;
+	</select>
+
+	<select id="findContracBusinessList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+		select count(1) AS "sellercount",SUM(IFNULL(a.CONTRACTTOTAL,0)) AS "totalmoney",
+		SUM(IFNULL(goods.FREIGHTVOLUME,0)) AS "allweight",
+		date_format(a.create_date, '%d') AS "cretime",
+		date_format(a.create_date, '%Y-%m-%d') AS "createdate"
+		from bid_orderinfo a
+		INNER JOIN bid_bidinfo bidinfo ON bidinfo.ID = a.BIDINFOID
+		INNER JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+		<where>
+			1=1
+			<if test="userid != null and userid != ''">
+				AND a.BIDDINGUSERID = #{userid} or a.BIDUSERID =#{userid}
+			</if>
+			<if test="beginDate !=null and beginDate !=''">
+				and a.create_date &gt;= #{beginDate}
+			</if>
+			<if test="endDate !=null and endDate !=''">
+				and a.create_date &lt;= #{endDate}
+			</if>
+		</where>
+		GROUP BY createdate
+		ORDER BY createdate DESC
+	</select>
+
+</mapper>

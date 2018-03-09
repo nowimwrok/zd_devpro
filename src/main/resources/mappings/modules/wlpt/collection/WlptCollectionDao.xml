@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.collection.WlptCollectionDao">
+    
+	<sql id="wlptCollectionColumns">
+		a.id 				 AS "id",
+		a.userid 			 AS "user.id",
+		a.targettype 		 AS "targettype",
+		a.fromprovince 		 AS "fromprovince",
+		a.fromcity 			 AS "fromcity",
+		a.toprovince 		 AS "toprovince",
+		a.tocity 			 AS "tocity",
+		a.create_by 		 AS "createBy.id",
+		a.create_date 		 AS "createDate",
+		a.update_by 		 AS "updateBy.id",
+		a.update_date 		 AS "updateDate",
+		a.remarks            AS "remarks",
+		a.del_flag           AS "delFlag",
+		u2.name              AS "user.name",
+		u2.login_name        AS "user.loginName",
+		u2.phone             as "user.phone",
+		uinfo.openid         AS "openid"
+	</sql>
+	
+	<sql id="wlptCollectionJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.userid
+		LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = a.userid
+	</sql>
+    
+	<select id="get" resultType="WlptCollection">
+		SELECT
+			<include refid="wlptCollectionColumns"/>
+		FROM wlpt_collection a
+		<include refid="wlptCollectionJoins"/>
+		WHERE a.del_flag = 0  and a.id = #{id} 
+	</select>
+
+	<select id="findList" resultType="WlptCollection">
+		SELECT 
+			<include refid="wlptCollectionColumns"/>
+		FROM wlpt_collection a
+		<include refid="wlptCollectionJoins"/>
+		<where>
+			a.del_flag = 0 
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			<if test="targettype != null and targettype != ''">
+				AND a.targettype = #{targettype}
+			</if>
+			<if test="fromprovince != null and fromprovince != ''">
+				AND a.fromprovince = #{fromprovince}
+			</if>
+			<if test="fromcity != null and fromcity != ''">
+				AND a.fromcity = #{fromcity}
+			</if>
+			<if test="toprovince != null and toprovince != ''">
+				AND a.toprovince = #{toprovince}
+			</if>
+			<if test="tocity != null and tocity != ''">
+				AND a.tocity = #{tocity}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WlptCollection">
+		SELECT 
+			<include refid="wlptCollectionColumns"/>
+		FROM wlpt_collection a
+		<include refid="wlptCollectionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!--获取每天的交易量 -->
+	<select id="countcollection" resultType="int">
+		SELECT count(0) num
+		FROM wlpt_collection a
+		<where>
+			a.del_flag = 0 
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			<if test="targettype != null and targettype != ''">
+				AND a.targettype = #{targettype}
+			</if>
+			<if test="fromprovince != null and fromprovince != ''">
+				AND a.fromprovince = #{fromprovince}
+			</if>
+			<if test="fromcity != null and fromcity != ''">
+				AND a.fromcity = #{fromcity}
+			</if>
+			<if test="toprovince != null and toprovince != ''">
+				AND a.toprovince = #{toprovince}
+			</if>
+			<if test="tocity != null and tocity != ''">
+				AND a.tocity = #{tocity}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+		</where>
+		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wlpt_collection(
+
+		<if test="user != null and user.id != null and user.id !='' ">
+			userid,
+		</if>
+		<if test="targettype != null and targettype !='' ">
+			targettype,
+		</if>
+		<if test="fromprovince != null and fromprovince !='' ">
+			fromprovince,
+		</if>
+		<if test="fromcity != null and fromcity !='' ">
+			fromcity,
+		</if>
+		<if test="toprovince != null and toprovince !='' ">
+			toprovince,
+		</if>
+		<if test="tocity != null and tocity !='' ">
+			tocity,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="targettype != null and targettype !='' ">
+			#{targettype},
+		</if>
+		<if test="fromprovince != null and fromprovince !='' ">
+			#{fromprovince},
+		</if>
+		<if test="fromcity != null and fromcity !='' ">
+			#{fromcity},
+		</if>
+		<if test="toprovince != null and toprovince !='' ">
+			#{toprovince},
+		</if>
+		<if test="tocity != null and tocity !='' ">
+			#{tocity},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wlpt_collection SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				userid = #{user.id},
+			</if>
+			<if test="targettype != null and targettype !='' ">
+				targettype = #{targettype},
+			</if>
+			<if test="fromprovince != null and fromprovince !='' ">
+				fromprovince = #{fromprovince},
+			</if>
+			<if test="fromcity != null and fromcity !='' ">
+				fromcity = #{fromcity},
+			</if>
+			<if test="toprovince != null and toprovince !='' ">
+				toprovince = #{toprovince},
+			</if>
+			<if test="tocity != null and tocity !='' ">
+				tocity = #{tocity},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE wlpt_collection SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

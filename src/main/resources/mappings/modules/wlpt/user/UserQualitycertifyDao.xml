@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserQualitycertifyDao">
+
+	<sql id="userQualitycertifyColumns">
+		a.id AS "id",
+		a.certifytype AS "certifytype",
+		a.targetid AS "targetid",
+		a.certifyuserid AS "certifyuser.id",
+		a.certifystatus AS "certifystatus",
+		a.certifycomment AS "certifycomment",
+		a.certifyfile AS "certifyfile",
+		a.certifytime AS "certifytime",
+		a.requestuserid AS "requestuser.id",
+		a.requesttime AS "requesttime"
+	</sql>
+
+
+	<sql id="userRoleColumns">
+		,
+		srole.name AS "requestuser.role.name",
+		suser.login_name AS
+		"requestuser.loginName",
+		suser.name AS "requestuser.name",
+		suser.phone
+		AS "requestuser.phone",
+		csuser.login_name AS "certifyuser.loginName",
+		sysuinfo.id AS "requestuser.userinfo.id"
+	</sql>
+
+	<sql id="userQualitycertifyJoins">
+	</sql>
+	<sql id="userQualitycertifyInnerJoins">
+		INNER JOIN sys_user suser ON suser.id=a.requestuserid
+		INNER JOIN sys_user_role surole ON surole.user_id=suser.id
+		INNER JOIN sys_role srole ON srole.id=surole.role_id
+		INNER JOIN sys_userinfo sysuinfo ON sysuinfo.user_id=suser.id
+		LEFT JOIN sys_user csuser ON csuser.id=a.certifyuserid
+	</sql>
+
+	<select id="get" resultType="UserQualitycertify">
+		SELECT
+		<include refid="userQualitycertifyColumns" />
+		<include refid="userRoleColumns" />
+		FROM user_qualitycertify a
+		<include refid="userQualitycertifyJoins" />
+		<include refid="userQualitycertifyInnerJoins" />
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getQualitycertifyInfo" resultType="UserQualitycertify">
+		SELECT
+		<include refid="userQualitycertifyColumns" />
+		<include refid="userRoleColumns" />
+		FROM user_qualitycertify a
+		<include refid="userQualitycertifyJoins" />
+		<include refid="userQualitycertifyInnerJoins" />
+		WHERE a.targetid = #{targetid}  ORDER BY a.RequestTime desc limit 1
+	</select>
+
+	<select id="findList" resultType="UserQualitycertify">
+		SELECT
+		a.id AS "id",
+		a.certifytype AS "certifytype",
+		a.targetid AS "targetid",
+		a.certifyuserid AS "certifyuser.id",
+		a.certifystatus AS "certifystatus",
+		a.certifycomment AS "certifycomment",
+		a.certifyfile AS "certifyfile",
+		a.certifytime AS "certifytime",
+		a.requestuserid AS "requestuser.id",
+		a.requesttime AS "requesttime",
+		srole.name AS "requestuser.role.name",
+		suser.login_name AS
+		"requestuser.loginName",
+		suser.name AS "requestuser.name",
+		suser.phone
+		AS "requestuser.phone",
+		csuser.login_name AS "certifyuser.loginName",
+		sysuinfo.id AS "requestuser.userinfo.id"
+		<if test="certifytype != null and certifytype != '' and companyInfo != null and companyInfo != '' and certifytype== 1 ">
+		,company.companyname AS "companyInfo"
+		</if>
+		<if test="certifytype != null and certifytype != '' and carInfo != null and carInfo != '' and certifytype== 2 ">
+		,car.carnumber AS "carInfo"
+		</if>
+		<if test="certifytype != null and certifytype != '' and driverInfo != null and driverInfo != '' and certifytype== 3 ">
+		,driver.drivername AS "driverInfo"
+		</if>
+		FROM user_qualitycertify a
+		INNER JOIN sys_user suser ON suser.id=a.requestuserid
+		INNER JOIN sys_user_role surole ON surole.user_id=suser.id
+		INNER JOIN sys_role srole ON srole.id=surole.role_id
+		INNER JOIN sys_userinfo sysuinfo ON sysuinfo.user_id=suser.id
+		LEFT JOIN sys_user csuser ON csuser.id=a.certifyuserid
+		<if test="certifytype != null and certifytype != '' and carInfo != null and carInfo != '' and certifytype== 2 ">
+		INNER JOIN cs_car car on car.id=a.targetid
+		</if>
+		<if test="certifytype != null and certifytype != '' and companyInfo != null and companyInfo != '' and certifytype== 1 ">
+		INNER JOIN user_company company on company.id=a.targetid
+		</if>
+		<if test="certifytype != null and certifytype != '' and driverInfo != null and driverInfo != '' and certifytype== 3 ">
+		INNER JOIN cs_driver driver on driver.id=a.targetid
+		</if>
+		<where>
+
+			<if test="certifytype != null and certifytype != ''">
+				AND a.certifytype = #{certifytype}
+			</if>
+			<if test="requestuser != null and requestuser != '' and requestuser.loginName != null and requestuser.loginName != '' and certifytype== 0 ">
+			    AND suser.login_name
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{requestuser.loginName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{requestuser.loginName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{requestuser.loginName},'%')</if>
+			</if>
+			<if test="certifytype != null and certifytype != '' and companyInfo != null and companyInfo != '' and certifytype== 1 ">
+				 AND company.companyname
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{companyInfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{companyInfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{companyInfo},'%')</if>
+			</if>
+			<if test="certifytype != null and certifytype != '' and carInfo != null and carInfo != '' and certifytype== 2 ">
+				 AND car.carnumber
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{carInfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{carInfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{carInfo},'%')</if>
+			</if>
+			<if test="certifytype != null and certifytype != '' and driverInfo != null and driverInfo != '' and certifytype== 3 ">
+				 AND driver.drivername
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{driverInfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{driverInfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{driverInfo},'%')</if>
+			</if>
+			<if test="certifystatus != null and certifystatus != ''">
+				AND a.certifystatus = #{certifystatus}
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (suser.login_name
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR suser.name
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR suser.phone
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+			</if>
+			<if
+				test="beginRequesttime != null and endRequesttime != null and beginRequesttime != '' and endRequesttime != ''">
+				AND a.requesttime BETWEEN #{beginRequesttime} AND
+				#{endRequesttime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		ORDER BY a.requesttime DESC
+	</select>
+
+	<select id="findAllList" resultType="UserQualitycertify">
+		SELECT
+		<include refid="userQualitycertifyColumns" />
+		FROM user_qualitycertify a
+		<include refid="userQualitycertifyJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO user_qualitycertify(
+
+		<if test="id != null and id !='' ">
+			id,
+		</if>
+		<if test="certifytype != null and certifytype !='' ">
+			certifytype,
+		</if>
+		<if test="targetid != null and targetid !='' ">
+			targetid,
+		</if>
+		<if test="certifyuser !=null and certifyuser != null and certifyuser !='' ">
+			certifyuserid,
+		</if>
+		<if test="certifystatus != null and certifystatus !='' ">
+			certifystatus,
+		</if>
+		<if test="certifycomment != null and certifycomment !='' ">
+			certifycomment,
+		</if>
+		<if test="certifyfile != null and certifyfile !='' ">
+			certifyfile,
+		</if>
+		<if test="certifytime != null and certifytime !='' ">
+			certifytime,
+		</if>
+		<if test="requestuser != null and requestuser !='' ">
+			requestuserid,
+		</if>
+		<if test="requesttime != null and requesttime !='' ">
+			requesttime,
+		</if>
+		create_By,
+		create_Date,
+		update_By,
+		update_Date,
+		remarks,
+		del_Flag
+		) VALUES (
+		<if test="id != null and id !='' ">
+			#{id},
+		</if>
+		<if test="certifytype != null and certifytype !='' ">
+			#{certifytype},
+		</if>
+		<if test="targetid != null and targetid !='' ">
+			#{targetid},
+		</if>
+		<if
+			test="certifyuser != null and certifyuser != null and certifyuser !='' ">
+			#{certifyuser.id},
+		</if>
+		<if test="certifystatus != null and certifystatus !='' ">
+			#{certifystatus},
+		</if>
+		<if test="certifycomment != null and certifycomment !='' ">
+			#{certifycomment},
+		</if>
+		<if test="certifyfile != null and certifyfile !='' ">
+			#{certifyfile},
+		</if>
+		<if test="certifytime != null and certifytime !='' ">
+			#{certifytime},
+		</if>
+		<if
+			test="requestuser != null and requestuser.id != null and requestuser.id !='' ">
+			#{requestuser.id},
+		</if>
+		<if test="requesttime != null and requesttime !='' ">
+			#{requesttime},
+		</if>
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE user_qualitycertify SET
+		<if test="id != null and id !='' ">
+			id = #{id},
+		</if>
+		<if test="certifytype != null and certifytype !='' ">
+			certifytype = #{certifytype},
+		</if>
+		<if test="targetid != null and targetid !='' ">
+			targetid = #{targetid},
+		</if>
+		<if test="certifyuser!=null and certifyuser.id != null and certifyuser.id !='' ">
+			certifyuserid = #{certifyuser.id},
+		</if>
+		<if test="certifystatus != null and certifystatus !='' ">
+			certifystatus = #{certifystatus},
+		</if>
+		<if test="certifycomment != null and certifycomment !='' ">
+			certifycomment = #{certifycomment},
+		</if>
+		<if test="certifyfile != null and certifyfile !='' ">
+			certifyfile = #{certifyfile},
+		</if>
+		<if test="certifytime != null and certifytime !='' ">
+			certifytime = #{certifytime},
+		</if>
+		<if
+			test="requestuser!=null and requestuser.id != null and requestuser.id !='' ">
+			requestuserid = #{requestuser.id},
+		</if>
+		<if test="requesttime != null and requesttime !='' ">
+			requesttime = #{requesttime},
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			create_By = #{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_Date = #{createDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_By = #{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_Date = #{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_Flag = #{delFlag},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM user_qualitycertify
+		WHERE id = #{id}
+	</update>
+
+</mapper>

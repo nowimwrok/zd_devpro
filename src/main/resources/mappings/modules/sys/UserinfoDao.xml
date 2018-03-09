@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.UserinfoDao">
+
+    <sql id="sysUserinfoColumns">
+		  a.id             AS "id",
+		  a.telphone       AS "telphone",
+          a.qq             AS "qq",
+          a.contactaddress AS "contactaddress",
+          a.sex            AS "sex",
+          a.identitycard   AS "identitycard",
+          a.company_id     AS "userCompany.id",
+          a.companyname    AS "companyname",
+          a.openid         AS "openid",
+          a.associated_id  AS "associatedId",
+          a.status         AS "status",
+          a.iscompleteinfo AS "iscompleteinfo",
+          a.registerway    AS "registerway",
+          a.cashpassword   AS "cashpassword",
+          a.create_by      AS "createBy.id",
+          a.create_date    AS "createDate",
+          a.update_by      AS "updateBy.id",
+          a.update_date    AS "updateDate",
+          a.remarks        AS "remarks",
+          a.del_flag       AS "delFlag",
+          a.POINT 		   AS "point",
+          a.POINTLEVLE 	   AS "pointlevle",
+          a.MEMBERLEVLE	   AS "memberlevle",
+          a.user_id        AS "user.id",
+          a.COUNT_DATE     AS "countdate",
+          sy.email         AS "user.email",
+          sy.name          AS "user.name",
+          sy.photo         AS "user.photo",
+          sy.login_name    AS "user.login_name",
+          sy.login_date    AS "user.login_date",
+          sy.create_date   AS "user.create_date",
+          sy.login_ip      AS "user.login_ip",
+          sy.mobile        AS "user.mobile",
+          sy.phone         AS "user.phone",
+          sy.password      AS "user.password",
+          sy.isposuser     AS "user.isposuser"
+          
+	</sql>
+	<!--userIdcard表数据  -->
+	<sql id="userIdcardColumns">
+	,
+		b.id AS "userIdcard.id",
+		b.imemberid AS "userIdcard.imemberid",
+		b.idcardnum AS
+		"userIdcard.idcardnum",
+		b.sname AS "userIdcard.sname",
+		b.isex AS "userIdcard.isex",
+		b.snation AS
+		"userIdcard.snation",
+		b.tbirthdate AS "userIdcard.tbirthdate",
+		b.saddress AS "userIdcard.saddress",
+		b.scardaddress AS "userIdcard.scardaddress",
+		b.tvaliddatebegin AS
+		"userIdcard.tvaliddatebegin",
+		b.tvaliddateend AS "userIdcard.tvaliddateend",
+		b.slocalphoto AS
+		"userIdcard.slocalphoto",
+		b.slocaltitle AS "userIdcard.slocaltitle",
+		b.tlocaltime AS
+		"userIdcard.tlocaltime",
+		b.suploader AS "userIdcard.suploader",
+		b.sinternetphoto AS
+		"userIdcard.sinternetphoto",
+		b.sinternettitle AS "userIdcard.sinternettitle",
+		b.tinternettime
+		AS "userIdcard.tinternettime",
+		b.bisinternet AS "userIdcard.bisinternet",
+		b.sinternetmobile AS
+		"userIdcard.sinternetmobile",
+		b.schecker AS "userIdcard.schecker",
+		b.icheckedtimes AS
+		"userIdcard.icheckedtimes",
+		b.create_by AS "userIdcard.createBy.id",
+		b.create_date AS
+		"userIdcard.createDate",
+		b.update_by AS "userIdcard.updateBy.id",
+		b.update_date AS
+		"userIdcard.updateDate",
+		b.remarks AS "userIdcard.remarks",
+		b.del_flag AS "userIdcard.delFlag"
+	</sql>
+    <sql id="sysUserinfoJoins">
+        INNER JOIN sys_user sy ON a.USER_ID = sy.id
+        LEFT JOIN user_company ucm ON ucm.ID=sy.company_id
+    </sql>
+    <!-- 左连接Idcard表 -->
+   <sql id="sysUserinfoJoinsIdcard">
+        LEFT JOIN user_idcard b ON b.idcardnum = a.identitycard
+    </sql>
+    <select id="get" resultType="Userinfo">
+        SELECT
+        <include refid="sysUserinfoColumns"/>
+        FROM sys_userinfo a
+        <include refid="sysUserinfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    
+    <!-- 获取idcard表数据 -->
+      <select id="getAndIdcard" resultType="Userinfo">
+        SELECT
+        <include refid="sysUserinfoColumns"/>
+        <include refid="userIdcardColumns"/>
+        
+        FROM sys_userinfo a
+        <include refid="sysUserinfoJoins"/>
+         <include refid="sysUserinfoJoinsIdcard"/>
+        WHERE sy.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Userinfo">
+        SELECT
+        <include refid="sysUserinfoColumns"/>
+        FROM sys_userinfo a
+        <include refid="sysUserinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="name != null and name != ''">
+                AND a.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Userinfo">
+        SELECT
+        <include refid="sysUserinfoColumns"/>
+        FROM sys_userinfo a
+        <include refid="sysUserinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO sys_userinfo(
+			id,
+			telphone,
+			qq,
+			contactaddress,
+			sex,
+			identitycard,
+			company_id,
+			companyname,
+			openid,
+			associated_id,
+			status,
+			iscompleteinfo,
+			registerway,
+			cashpassword,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			point,
+			user_id
+		) VALUES (
+			#{id},
+			#{telphone},
+			#{qq},
+			#{contactaddress},
+			#{sex},
+			#{identitycard},
+			#{userCompany.id},
+			#{companyname},
+			#{openid},
+			#{associatedId},
+			#{status},
+			#{iscompleteinfo},
+			#{registerway},
+			#{cashpassword},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{point},
+			#{user.id}
+		)
+	</insert>
+
+    <update id="update">
+        UPDATE sys_userinfo SET
+
+        <if test="telphone != null and telphone !='' ">
+            telphone = #{telphone},
+        </if>
+        <if test="qq != null and qq !='' ">
+            qq = #{qq},
+        </if>
+        <if test="contactaddress != null and contactaddress !='' ">
+            contactaddress = #{contactaddress},
+        </if>
+        <if test="user !=null and user.name != null and user.name !='' ">
+            sex = #{sex},
+        </if>
+        <if test="sex != null and sex !='' ">
+            sex = #{sex},
+        </if>
+        <if test="identitycard != null and identitycard !='' ">
+            identitycard = #{identitycard},
+        </if>
+        <if test="userCompany!=null and userCompany.id != null and userCompany.id !='' ">
+            company_id = #{userCompany.id},
+        </if>
+        <if test="companyname != null and companyname !='' ">
+            companyname = #{companyname},
+        </if>
+        <if test="openid != null and openid !='' ">
+            openid = #{openid},
+        </if>
+        <if test="associatedId != null and associatedId !='' ">
+            associated_id = #{associatedId},
+        </if>
+        <if test="status != null and status !='' ">
+            status = #{status},
+        </if>
+        <if test="iscompleteinfo != null and iscompleteinfo !='' ">
+            iscompleteinfo = #{iscompleteinfo},
+        </if>
+        <if test="registerway != null and registerway !='' ">
+            registerway = #{registerway},
+        </if>
+        <if test="cashpassword != null and cashpassword !='' ">
+            cashpassword = #{cashpassword},
+        </if>
+        <if test="memberlevle != null and memberlevle !='' ">
+            memberlevle = #{memberlevle},
+        </if>
+        <if test="pointlevle != null and pointlevle !='' ">
+            pointlevle = #{pointlevle},
+        </if>
+        <if test="point != null and point !='' ">
+            point = #{point},
+        </if>
+
+        <if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="countdate != null and countdate !='' ">
+            COUNT_DATE = #{countdate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+   <!--  验证QQ -->
+   <select id="ValidateQQ" resultType="Userinfo">
+       select 
+       sys.id,
+       sys.qq,
+       a.login_name  AS "user.LoginName"
+       from sys_userinfo sys LEFT JOIN sys_user a ON a.id=sys.USER_ID
+       <where>
+         <if test="qq !=null and qq !=''">
+             AND sys.qq=#{qq}
+         </if>
+         <if test="qq ==null and qq == ''">
+             AND　sys.id=#{id}
+         </if>
+       </where>
+   </select>
+    <!--  验证登录名-->
+   <select id="ValidateLoginName" resultType="Userinfo">
+       select 
+       sys.id,
+       sys.qq,
+       a.login_name  AS "user.LoginName"
+       from sys_userinfo sys LEFT JOIN sys_user a ON a.id=sys.USER_ID
+       <where>
+         <if test="user !=null and user.loginName !=null and user.loginName !=''">
+             AND a.login_name=#{user.loginName}
+         </if>
+         <if test="user.loginName ==null and user.loginName == ''">
+             AND　sys.id=#{id}
+         </if>
+       </where>
+   </select>
+    <!--修改提现密码-->
+    <update id="updateCashPwdById">
+        UPDATE sys_userinfo SET
+        CASHPASSWORD = #{cashpassword}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE sys_userinfo SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+    <!--清空openid-->
+    <update id="updateOpenIdByOpenId">
+        UPDATE sys_userinfo SET
+        openid = NULL
+        WHERE openid = #{openid}
+    </update>
+    
+</mapper>

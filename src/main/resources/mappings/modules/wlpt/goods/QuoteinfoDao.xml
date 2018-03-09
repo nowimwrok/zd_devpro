@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.goods.QuoteinfoDao">
+
+    <sql id="quoteinfoColumns">
+  a.id              AS "id",
+  a.goodsid         AS "goods.id",
+  a.user_id         AS "user.id",
+  a.carid           AS "car.id",
+  a.ooferprice      AS "ooferprice",
+  a.isreload        AS "isreload",
+  a.actload         AS "actload",
+  a.quotestatus     AS "quotestatus",
+  a.create_date     AS "createDate",
+  date_format(a.create_date, '%Y-%m-%d') AS "beginCreateDate",
+  a.update_date     AS "beginUpdateDate",
+  a.del_flag        AS "delFlag",
+  a.oddloadweight   AS "oddloadweight",
+  a.create_by       AS "createBy.id",
+  a.update_by       AS "updateBy.id",
+  a.remarks         AS "remarks",
+  a.isassign		AS "isassign",
+  a.driver_id       AS "driver.id",
+  u14.NAME          AS "driver.name",
+  u14.login_name    AS "driver.loginName",
+  u14.phone         AS "driver.phone",
+  u14.photo         AS "driver.photo",
+  uif2.pointlevle  	AS "driver.credit",
+  u3.name           AS "user.name",
+  u3.login_name     AS "user.loginName",
+  u3.phone          AS "user.phone",
+  uif.POINTLEVLE 	AS "user.userinfo.pointlevle",
+  car.carnumber     AS "car.carnumber",
+  car.CarType       AS "car.cartype",
+  car.CarLength     AS "car.carlength",
+  car.LoadWeight    AS "car.loadweight",
+  car.WeightUnit    AS "car.weightunit",
+  car.LengthUnit    AS "car.lengthunit",
+  gd.GOODSNAME      AS "goods.goodsname",
+  gd.FREIGHTUNIT    AS "goods.freightunit",
+  gd.FREIGHTVOLUME  AS "goods.freightvolume",
+  gd.RESIDUALVOLUME AS "goods.residualvolume",
+  gd.datasource     AS "goods.datasource",
+  gd.gsoddtype      AS "goods.gsoddtype",
+  gd.goodstype      AS "goods.goodstype",
+  gd.expectedprice  AS "goods.expectedprice",
+  gd.ISINSUR		AS "goods.isinsur",
+  gd.PAY_PEOPLE		AS "goods.paypeople"
+	</sql>
+
+    <sql id="quoteinfoJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.user_id
+		  LEFT JOIN sys_user u14 ON u14.id = a.driver_id
+		  LEFT JOIN sys_userinfo uif ON u3.id = uif.user_id
+		  LEFT JOIN sys_userinfo uif2 ON u14.id = uif2.user_id
+		  LEFT JOIN cs_car car ON a.carid = car.id
+		  LEFT JOIN gds_goods gd ON a.GOODSID=gd.ID
+	</sql>
+
+    <select id="get" resultType="Quoteinfo">
+        SELECT
+        <include refid="quoteinfoColumns"/>
+        FROM gds_quoteinfo a
+        <include refid="quoteinfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Quoteinfo">
+        SELECT
+        <include refid="quoteinfoColumns"/>
+        FROM gds_quoteinfo a
+        <include refid="quoteinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (u14.NAME LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                gd.GOODSNAME LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <if test="goods !=null and goods.id != null and goods.id != ''">
+                AND a.goodsid = #{goods.id}
+            </if>
+            <if test="goods !=null and goods.goodsname != null and goods.goodsname != ''">
+                AND gd.goodsname = #{goods.goodsname}
+            </if>
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="car != null and car.id != null and car.id != ''">
+                AND a.carid = #{car.id}
+            </if>
+            <if test="ooferprice != null and ooferprice != ''">
+                AND a.ooferprice = #{ooferprice}
+            </if>
+            <if test="quotestatus != null and quotestatus != ''">
+                AND a.quotestatus = #{quotestatus}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="beginUpdateDate != null and endUpdateDate != null and beginUpdateDate != '' and endUpdateDate != ''">
+                AND a.update_date BETWEEN #{beginUpdateDate} AND #{endUpdateDate}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+            <if test="oddloadweight != null and oddloadweight != ''">
+                AND a.oddloadweight = #{oddloadweight}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND a.remarks LIKE
+                <if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+            </if>
+            <if test="driver != null and driver.id != null and driver.id != ''">
+                AND a.driver_id = #{driver.id}
+            </if>
+            <if test="isassign != null and isassign != ''">
+                AND a.isassign = #{isassign}
+            </if>
+            
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Quoteinfo">
+        SELECT
+        <include refid="quoteinfoColumns"/>
+        FROM gds_quoteinfo a
+        <include refid="quoteinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO gds_quoteinfo(
+
+        <if test="goods !=null and goods.id != null and goods.id !='' ">
+            goodsid,
+        </if>
+        <if test="user !=null and user.id != null and user.id !='' ">
+            user_id,
+        </if>
+        <if test="car != null and car.id != null and car.id !='' ">
+            carid,
+        </if>
+        <if test="ooferprice != null and ooferprice !='' ">
+            ooferprice,
+        </if>
+        <if test="quotestatus != null and quotestatus !='' ">
+            quotestatus,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        <if test="oddloadweight != null and oddloadweight !='' ">
+            oddloadweight,
+        </if>
+        <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="driver!= null and driver.id != null and driver.id !='' ">
+            driver_id,
+        </if>
+
+        <if test="actload != null and actload !='' ">
+            actload,
+        </if>
+        <if test="isreload != null and isreload !='' ">
+            isreload,
+        </if>
+        <if test="isassign != null and isassign !='' ">
+            isassign,
+        </if>
+        id
+        ) VALUES (
+        <if test="goods!=null and goods.id != null and goods.id !='' ">
+            #{goods.id},
+        </if>
+        <if test="user !=null and user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="car != null and car.id != null and car.id !='' ">
+            #{car.id},
+        </if>
+        <if test="ooferprice != null and ooferprice !='' ">
+            #{ooferprice},
+        </if>
+        <if test="quotestatus != null and quotestatus !='' ">
+            #{quotestatus},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        <if test="oddloadweight != null and oddloadweight !='' ">
+            #{oddloadweight},
+        </if>
+        <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="driver !=null and driver.id != null and driver.id !='' ">
+            #{driver.id},
+        </if>
+        <if test="actload != null and actload !='' ">
+            #{actload},
+        </if>
+        <if test="isreload != null and isreload !='' ">
+            #{isreload},
+        </if>
+        <if test="isassign != null and isassign !='' ">
+            #{isassign},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE gds_quoteinfo SET
+
+        <if test="ooferprice != null and ooferprice !='' ">
+            ooferprice = #{ooferprice},
+        </if>
+        <if test="quotestatus != null and quotestatus !='' ">
+            quotestatus = #{quotestatus},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="oddloadweight != null and oddloadweight !='' ">
+            oddloadweight = #{oddloadweight},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="actload != null and actload !='' ">
+            actload= #{actload},
+        </if>
+        <if test="isreload != null and isreload !='' ">
+            isreload= #{isreload},
+        </if>
+        <if test="isassign != null and isassign !='' ">
+            isassign= #{isassign},
+        </if>
+        <if test="driver!= null and driver.id != null and driver.id !='' ">
+            driver_id= #{driver.id},
+        </if>
+		<if test="car != null and car.id != null and car.id !='' ">
+            carid= #{car.id},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <!--货源报价信息为失败状态-->
+    <update id="updateQuoteFiled">
+        UPDATE gds_quoteinfo SET
+        quotestatus = 3,
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        goodsid=#{goods.id}
+        WHERE quotestatus=1 and goodsid = #{goods.id}
+    </update>
+
+    <update id="delete">
+		UPDATE gds_quoteinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

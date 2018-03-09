@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.integrity.IntegrityStandarditemsDao">
+    
+	<sql id="integrityStandarditemsColumns">
+		a.id AS "id",
+		a.standardid AS "standard.id",
+		a.scoreitem AS "scoreitem",
+		a.integritycode AS "integritycode",
+		a.scoreway AS "scoreway",
+		a.scorevalue AS "scorevalue",
+		a.integral AS "integral",
+		a.isrequired AS "isrequired",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		stand.typename AS "standard.typename",
+		stand.membertype AS "standard.membertype"
+	</sql>
+	
+	<sql id="integrityStandarditemsJoins">
+		INNER JOIN integrity_standard stand ON a.standardid=stand.id
+	</sql>
+    
+	<select id="get" resultType="IntegrityStandarditems">
+		SELECT
+			<include refid="integrityStandarditemsColumns"/>
+		FROM integrity_standarditems a
+		<include refid="integrityStandarditemsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByName" resultType="IntegrityStandarditems">
+		SELECT
+			<include refid="integrityStandarditemsColumns"/>
+		FROM integrity_standarditems a
+		<include refid="integrityStandarditemsJoins"/>
+		WHERE a.integritycode=#{integritycode}
+		AND stand.membertype=#{standard.membertype}
+	</select>
+
+	<select id="findList" resultType="IntegrityStandarditems">
+		SELECT 
+			<include refid="integrityStandarditemsColumns"/>
+		FROM integrity_standarditems a
+		<include refid="integrityStandarditemsJoins"/>
+		<where>
+			<if test="scoreitem != null and scoreitem != ''">
+				AND a.scoreitem LIKE 
+					<if test="dbName == 'oracle'">'%'||#{scoreitem}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{scoreitem}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{scoreitem},'%')</if>
+			</if>
+			<if test="integritycode != null and integritycode != ''">
+				AND a.integritycode LIKE 
+					<if test="dbName == 'oracle'">'%'||#{integritycode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{integritycode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{integritycode},'%')</if>
+			</if>
+			<if test="isrequired != null and isrequired != ''">
+				AND a.isrequired = #{isrequired}
+			</if>
+			<if test="standard != null and standard.membertype != null and standard.membertype != ''">
+				AND stand.membertype = #{standard.membertype}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntegrityStandarditems">
+		SELECT 
+			<include refid="integrityStandarditemsColumns"/>
+		FROM integrity_standarditems a
+		<include refid="integrityStandarditemsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO integrity_standarditems(
+
+		<if test="standard.id != null and standard.id !='' ">
+			standardid,
+		</if>
+		<if test="scoreitem != null and scoreitem !='' ">
+			scoreitem,
+		</if>
+		<if test="integritycode != null and integritycode !='' ">
+			integritycode,
+		</if>
+		<if test="scoreway != null and scoreway !='' ">
+			scoreway,
+		</if>
+		<if test="scorevalue != null and scorevalue !='' ">
+			scorevalue,
+		</if>
+		<if test="integral != null and integral !='' ">
+			integral,
+		</if>
+		<if test="isrequired != null and isrequired !='' ">
+			isrequired,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="standard.id != null and standard.id !='' ">
+			#{standard.id},
+		</if>
+		<if test="scoreitem != null and scoreitem !='' ">
+			#{scoreitem},
+		</if>
+		<if test="integritycode != null and integritycode !='' ">
+			#{integritycode},
+		</if>
+		<if test="scoreway != null and scoreway !='' ">
+			#{scoreway},
+		</if>
+		<if test="scorevalue != null and scorevalue !='' ">
+			#{scorevalue},
+		</if>
+		<if test="integral != null and integral !='' ">
+			#{integral},
+		</if>
+		<if test="isrequired != null and isrequired !='' ">
+			#{isrequired},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE integrity_standarditems SET 	
+			<if test="standard.id != null and standard.id !='' ">
+				standardid = #{standard.id},
+			</if>
+			<if test="scoreitem != null and scoreitem !='' ">
+				scoreitem = #{scoreitem},
+			</if>
+			<if test="integritycode != null and integritycode !='' ">
+				integritycode = #{integritycode},
+			</if>
+			<if test="scoreway != null and scoreway !='' ">
+				scoreway = #{scoreway},
+			</if>
+			<if test="scorevalue != null and scorevalue !='' ">
+				scorevalue = #{scorevalue},
+			</if>
+			<if test="integral != null and integral !='' ">
+				integral = #{integral},
+			</if>
+			<if test="isrequired != null and isrequired !='' ">
+				isrequired = #{isrequired},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE integrity_standarditems SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

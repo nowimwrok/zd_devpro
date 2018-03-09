@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.insur.UserInsurancelistDao">
+    
+	<sql id="userInsurancelistColumns">
+		a.id AS "id",
+		a.insur_name AS "insurName",
+		a.suitable_crowd AS "suitableCrowd",
+		a.validity_term AS "validityTerm",
+		a.product_features AS "productFeatures",
+		a.max_amount AS "maxAmount",
+		a.min_amount AS "minAmount",
+		a.pay_type AS "payType",
+		a.insur_amount AS "insurAmount",
+		a.insur_project AS "insurProject",
+		a.insur_range AS "insurRange",
+		a.insur_phone AS "insurPhone",
+		a.insur_companyname AS "insurCompanyname",
+		a.claim_period AS "claimPeriod",
+		a.clause_code AS "clauseCode",
+		a.insur_logo AS "insurLogo",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.insur_img AS "insurImg",
+		a.claim_service AS "claimService",
+		a.claim_notice  AS "claimNotice",
+		a.insuranceway  AS "insuranceway",
+		a.type  AS "type",
+		a.subtype AS "subtype",
+		a.ismeasure AS "ismeasure",
+		a.isenable AS "isenable"
+	</sql>
+	
+	<sql id="userInsurancelistJoins">
+	</sql>
+    
+	<select id="get" resultType="UserInsurancelist">
+		SELECT
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurancelist a
+		<include refid="userInsurancelistJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="UserInsurancelist">
+		SELECT 
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurancelist a
+		<include refid="userInsurancelistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="insurName != null and insurName != ''">
+				AND a.insur_name = #{insurName}
+			</if>
+			<if test="suitableCrowd != null and suitableCrowd != ''">
+				AND a.suitable_crowd = #{suitableCrowd}
+			</if>
+			<if test="validityTerm != null and validityTerm != ''">
+				AND a.validity_term = #{validityTerm}
+			</if>
+			<if test="productFeatures != null and productFeatures != ''">
+				AND a.product_features = #{productFeatures}
+			</if>
+			<if test="maxAmount != null and maxAmount != ''">
+				AND a.max_amount = #{maxAmount}
+			</if>
+			<if test="minAmount != null and minAmount != ''">
+				AND a.min_amount = #{minAmount}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="insurAmount != null and insurAmount != ''">
+				AND a.insur_amount = #{insurAmount}
+			</if>
+			<if test="insurProject != null and insurProject != ''">
+				AND a.insur_project = #{insurProject}
+			</if>
+			<if test="insurRange != null and insurRange != ''">
+				AND a.insur_range = #{insurRange}
+			</if>
+			<if test="insurPhone != null and insurPhone != ''">
+				AND a.insur_phone = #{insurPhone}
+			</if>
+			<if test="insurCompanyname != null and insurCompanyname != ''">
+				AND a.insur_companyname = #{insurCompanyname}
+			</if>
+			<if test="clauseCode != null and clauseCode != ''">
+				AND a.clause_code = #{clauseCode}
+			</if>
+			<if test="insuranceway != null and insuranceway != ''">
+				AND a.insuranceway = #{insuranceway}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="ismeasure != null and ismeasure != ''">
+				AND a.ismeasure = #{ismeasure}
+			</if>
+			<if test="isenable != null and isenable != ''">
+				AND a.isenable = #{isenable}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserInsurancelist">
+		SELECT 
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurancelist a
+		<include refid="userInsurancelistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_insurancelist(
+
+		<if test="insurName != null and insurName !='' ">
+			insur_name,
+		</if>
+		<if test="suitableCrowd != null and suitableCrowd !='' ">
+			suitable_crowd,
+		</if>
+		<if test="validityTerm != null and validityTerm !='' ">
+			validity_term,
+		</if>
+		<if test="productFeatures != null and productFeatures !='' ">
+			product_features,
+		</if>
+		<if test="maxAmount != null and maxAmount !='' ">
+			max_amount,
+		</if>
+		<if test="minAmount != null and minAmount !='' ">
+			min_amount,
+		</if>
+		<if test="payType != null and payType !='' ">
+			pay_type,
+		</if>
+		<if test="insurAmount != null and insurAmount !='' ">
+			insur_amount,
+		</if>
+		<if test="insurProject != null and insurProject !='' ">
+			insur_project,
+		</if>
+		<if test="insurRange != null and insurRange !='' ">
+			insur_range,
+		</if>
+		<if test="insurPhone != null and insurPhone !='' ">
+			insur_phone,
+		</if>
+		<if test="insurCompanyname != null and insurCompanyname !='' ">
+			insur_companyname,
+		</if>
+		<if test="claimPeriod != null and claimPeriod !='' ">
+			claim_period,
+		</if>
+		<if test="clauseCode != null and clauseCode !='' ">
+			clause_code,
+		</if>
+		<if test="insurLogo != null and insurLogo !='' ">
+			insur_logo,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="insurImg != null and insurImg !='' ">
+			insur_img,
+		</if>
+		<if test="claimService != null and claimService !='' ">
+			claim_service,
+		</if>
+		<if test="claimNotice != null and claimNotice !='' ">
+			claim_notice,
+		</if>
+		<if test="insuranceway != null and insuranceway !='' ">
+			insuranceway,
+		</if>
+		<if test="type != null and type !='' ">
+			type,
+		</if>
+		<if test="subtype != null and subtype !='' ">
+			subtype,
+		</if>
+		<if test="ismeasure != null and ismeasure !='' ">
+			ismeasure,
+		</if>
+		<if test="isenable != null and isenable !='' ">
+			isenable,
+		</if>
+		
+			id
+		) VALUES (
+		<if test="insurName != null and insurName !='' ">
+			#{insurName},
+		</if>
+		<if test="suitableCrowd != null and suitableCrowd !='' ">
+			#{suitableCrowd},
+		</if>
+		<if test="validityTerm != null and validityTerm !='' ">
+			#{validityTerm},
+		</if>
+		<if test="productFeatures != null and productFeatures !='' ">
+			#{productFeatures},
+		</if>
+		<if test="maxAmount != null and maxAmount !='' ">
+			#{maxAmount},
+		</if>
+		<if test="minAmount != null and minAmount !='' ">
+			#{minAmount},
+		</if>
+		<if test="payType != null and payType !='' ">
+			#{payType},
+		</if>
+		<if test="insurAmount != null and insurAmount !='' ">
+			#{insurAmount},
+		</if>
+		<if test="insurProject != null and insurProject !='' ">
+			#{insurProject},
+		</if>
+		<if test="insurRange != null and insurRange !='' ">
+			#{insurRange},
+		</if>
+		<if test="insurPhone != null and insurPhone !='' ">
+			#{insurPhone},
+		</if>
+		<if test="insurCompanyname != null and insurCompanyname !='' ">
+			#{insurCompanyname},
+		</if>
+		<if test="claimPeriod != null and claimPeriod !='' ">
+			#{claimPeriod},
+		</if>
+		<if test="clauseCode != null and clauseCode !='' ">
+			#{clauseCode},
+		</if>
+		<if test="insurLogo != null and insurLogo !='' ">
+			#{insurLogo},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="insurImg != null and insurImg !='' ">
+			#{insurImg},
+		</if>
+		<if test="claimService != null and claimService !='' ">
+			#{claimService},
+		</if>
+		<if test="claimNotice != null and claimNotice !='' ">
+			#{claimNotice},
+		</if>
+		<if test="insuranceway != null and insuranceway !='' ">
+			#{insuranceway},
+		</if>
+		<if test="type != null and type !='' ">
+			#{type},
+		</if>
+		<if test="subtype != null and subtype !='' ">
+			#{subtype},
+		</if>
+		<if test="ismeasure != null and ismeasure !='' ">
+			#{ismeasure},
+		</if>
+		<if test="isenable != null and isenable !='' ">
+			#{isenable},
+		</if>
+		
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_insurancelist SET 	
+			<if test="insurName != null and insurName !='' ">
+				insur_name = #{insurName},
+			</if>
+			<if test="suitableCrowd != null and suitableCrowd !='' ">
+				suitable_crowd = #{suitableCrowd},
+			</if>
+			<if test="validityTerm != null and validityTerm !='' ">
+				validity_term = #{validityTerm},
+			</if>
+			<if test="productFeatures != null and productFeatures !='' ">
+				product_features = #{productFeatures},
+			</if>
+			<if test="maxAmount != null and maxAmount !='' ">
+				max_amount = #{maxAmount},
+			</if>
+			<if test="minAmount != null and minAmount !='' ">
+				min_amount = #{minAmount},
+			</if>
+			<if test="payType != null and payType !='' ">
+				pay_type = #{payType},
+			</if>
+			<if test="insurAmount != null and insurAmount !='' ">
+				insur_amount = #{insurAmount},
+			</if>
+			<if test="insurProject != null and insurProject !='' ">
+				insur_project = #{insurProject},
+			</if>
+			<if test="insurRange != null and insurRange !='' ">
+				insur_range = #{insurRange},
+			</if>
+			<if test="insurPhone != null and insurPhone !='' ">
+				insur_phone = #{insurPhone},
+			</if>
+			<if test="insurCompanyname != null and insurCompanyname !='' ">
+				insur_companyname = #{insurCompanyname},
+			</if>
+			<if test="claimPeriod != null and claimPeriod !='' ">
+				claim_period = #{claimPeriod},
+			</if>
+			<if test="clauseCode != null and clauseCode !='' ">
+				clause_code = #{clauseCode},
+			</if>
+			<if test="insurLogo != null and insurLogo !='' ">
+				insur_logo = #{insurLogo},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			<if test="insurImg != null and insurImg !='' ">
+				insur_img = #{insurImg},
+			</if>
+			<if test="claimService != null and claimService !='' ">
+				claim_service = #{claimService},
+			</if>
+			<if test="claimNotice != null and claimNotice !='' ">
+				claim_notice = #{claimNotice},
+			</if>
+			<if test="insuranceway != null and insuranceway !='' ">
+				insuranceway = #{insuranceway},
+			</if>
+			<if test="type != null and type !='' ">
+				type = #{type},
+			</if>
+			<if test="subtype != null and subtype !='' ">
+				subtype = #{subtype},
+			</if>
+			<if test="ismeasure != null and ismeasure !='' ">
+				ismeasure = #{ismeasure},
+			</if>
+			<if test="isenable != null and isenable !='' ">
+				isenable = #{isenable},
+			</if>
+			
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_insurancelist SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

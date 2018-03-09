@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.lbs.LbsLocationinfoDao">
+    
+	<sql id="lbsLocationinfoColumns">
+		a.locationinfoid AS "id",
+		a.mobile AS "mobile",
+		a.lng AS "lng",
+		a.lat AS "lat",
+		a.address AS "address",
+		a.province AS "province",
+		a.city AS "city",
+		a.district AS "district",
+		a.street AS "street",
+		a.streetnumber AS "streetnumber",
+		a.locationtype AS "locationtype",
+		a.locationtime AS "locationtime",
+		a.createtime AS "createtime",
+		a.username AS "username",
+		a.userip AS "userip",
+		a.tradeorderid AS "tradeorderid",
+		a.carid AS "carid"
+	</sql>
+	
+	<sql id="lbsLocationinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="LbsLocationinfo">
+		SELECT
+			<include refid="lbsLocationinfoColumns"/>
+		FROM lbs_locationinfo a
+		<include refid="lbsLocationinfoJoins"/>
+		WHERE a.locationinfoid	 = #{id}
+	</select>
+
+	<select id="findList" resultType="LbsLocationinfo">
+		SELECT 
+			<include refid="lbsLocationinfoColumns"/>
+		FROM lbs_locationinfo a
+		<include refid="lbsLocationinfoJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.locationinfoid = #{id}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="lng != null and lng != ''">
+				AND a.lng = #{lng}
+			</if>
+			<if test="lat != null and lat != ''">
+				AND a.lat = #{lat}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<if test="district != null and district != ''">
+				AND a.district = #{district}
+			</if>
+			<if test="street != null and street != ''">
+				AND a.street = #{street}
+			</if>
+			<if test="streetnumber != null and streetnumber != ''">
+				AND a.streetnumber = #{streetnumber}
+			</if>
+			<if test="locationtype != null and locationtype != ''">
+				AND a.locationtype = #{locationtype}
+			</if>
+			<if test="locationtime != null and locationtime != ''">
+				AND a.locationtime = #{locationtime}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="username != null and username != ''">
+				AND a.username = #{username}
+			</if>
+			<if test="userip != null and userip != ''">
+				AND a.userip = #{userip}
+			</if>
+			<if test="tradeorderid != null and tradeorderid != ''">
+				AND a.tradeorderid = #{tradeorderid}
+			</if>
+			<if test="carid != null and carid != ''">
+				AND a.carid = #{carid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LbsLocationinfo">
+		SELECT 
+			<include refid="lbsLocationinfoColumns"/>
+		FROM lbs_locationinfo a
+		<include refid="lbsLocationinfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO lbs_locationinfo(
+
+		<if test="mobile != null and mobile !='' ">
+			mobile,
+		</if>
+		<if test="lng != null and lng !='' ">
+			lng,
+		</if>
+		<if test="lat != null and lat !='' ">
+			lat,
+		</if>
+		<if test="address != null and address !='' ">
+			address,
+		</if>
+		<if test="province != null and province !='' ">
+			province,
+		</if>
+		<if test="city != null and city !='' ">
+			city,
+		</if>
+		<if test="district != null and district !='' ">
+			district,
+		</if>
+		<if test="street != null and street !='' ">
+			street,
+		</if>
+		<if test="streetnumber != null and streetnumber !='' ">
+			streetnumber,
+		</if>
+		<if test="locationtype != null and locationtype !='' ">
+			locationtype,
+		</if>
+		<if test="locationtime != null and locationtime !='' ">
+			locationtime,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="username != null and username !='' ">
+			username,
+		</if>
+		<if test="userip != null and userip !='' ">
+			userip,
+		</if>
+		<if test="tradeorderid != null and tradeorderid !='' ">
+			tradeorderid,
+		</if>
+		<if test="carid != null and carid !='' ">
+			carid,
+		</if>
+			locationinfoid
+		) VALUES (
+		<if test="mobile != null and mobile !='' ">
+			#{mobile},
+		</if>
+		<if test="lng != null and lng !='' ">
+			#{lng},
+		</if>
+		<if test="lat != null and lat !='' ">
+			#{lat},
+		</if>
+		<if test="address != null and address !='' ">
+			#{address},
+		</if>
+		<if test="province != null and province !='' ">
+			#{province},
+		</if>
+		<if test="city != null and city !='' ">
+			#{city},
+		</if>
+		<if test="district != null and district !='' ">
+			#{district},
+		</if>
+		<if test="street != null and street !='' ">
+			#{street},
+		</if>
+		<if test="streetnumber != null and streetnumber !='' ">
+			#{streetnumber},
+		</if>
+		<if test="locationtype != null and locationtype !='' ">
+			#{locationtype},
+		</if>
+		<if test="locationtime != null and locationtime !='' ">
+			#{locationtime},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="username != null and username !='' ">
+			#{username},
+		</if>
+		<if test="userip != null and userip !='' ">
+			#{userip},
+		</if>
+		<if test="tradeorderid != null and tradeorderid !='' ">
+			#{tradeorderid},
+		</if>
+		<if test="carid != null and carid !='' ">
+			#{carid},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE lbs_locationinfo SET
+			<if test="mobile != null and mobile !='' ">
+				mobile = #{mobile},
+			</if>
+			<if test="lng != null and lng !='' ">
+				lng = #{lng},
+			</if>
+			<if test="lat != null and lat !='' ">
+				lat = #{lat},
+			</if>
+			<if test="address != null and address !='' ">
+				address = #{address},
+			</if>
+			<if test="province != null and province !='' ">
+				province = #{province},
+			</if>
+			<if test="city != null and city !='' ">
+				city = #{city},
+			</if>
+			<if test="district != null and district !='' ">
+				district = #{district},
+			</if>
+			<if test="street != null and street !='' ">
+				street = #{street},
+			</if>
+			<if test="streetnumber != null and streetnumber !='' ">
+				streetnumber = #{streetnumber},
+			</if>
+			<if test="locationtype != null and locationtype !='' ">
+				locationtype = #{locationtype},
+			</if>
+			<if test="locationtime != null and locationtime !='' ">
+				locationtime = #{locationtime},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="username != null and username !='' ">
+				username = #{username},
+			</if>
+			<if test="userip != null and userip !='' ">
+				userip = #{userip},
+			</if>
+			<if test="tradeorderid != null and tradeorderid !='' ">
+				tradeorderid = #{tradeorderid},
+			</if>
+			<if test="carid != null and carid !='' ">
+				carid = #{carid},
+			</if>
+			locationinfoid = #{id}
+		WHERE locationinfoid = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM lbs_locationinfo
+		WHERE locationinfoid = #{id}
+	</update>
+	
+</mapper>

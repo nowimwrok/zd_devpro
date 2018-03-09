@@ -1,0 +1,1874 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.trade.OrderinfoDao">
+
+    <!--运单基本信息列数据-->
+    <sql id="orderinfoColumns">
+	a.id              AS "id",
+  a.quote_id        AS "quoteinfo.id",
+  quo.goodsid       AS "quoteinfo.goods.id",
+  gd.GOODSNAME      AS "quoteinfo.goods.goodsname",
+  gd.GSODDTYPE      AS "quoteinfo.goods.gsoddtype",
+  gd.GOODSTYPE      AS "quoteinfo.goods.goodstype",
+  gd.FREIGHTUNIT    AS "quoteinfo.goods.freightunit",
+  gd.ISINSUR		AS "quoteinfo.goods.isinsur",
+  gd.PAY_PEOPLE		AS "quoteinfo.goods.paypeople",
+  gd.worth			AS "quoteinfo.goods.worth",
+  a.buyer_id        AS "buyer.id",
+  u3.login_name     AS "buyer.loginName",
+  u3.name           AS "buyer.name",
+  u3.phone          AS "buyer.phone",
+  u3.company_id        AS "buyer.company",
+  a.seller_id       AS "seller.id",
+  u4.login_name     AS "seller.loginName",
+  u4.name           AS "seller.name",
+  u4.phone          AS "seller.phone",
+  u4.company_id          AS "seller.company",
+  a.orderno         AS "orderno",
+  a.orderstatus     AS "orderstatus",
+  a.iscomment       AS "iscomment",
+  a.totalcost       AS "totalcost",
+  a.isonlinepay     AS "isonlinepay",
+  a.isprepay        AS "isprepay",
+  a.paystatus       AS "paystatus",
+  a.payway          AS "payway",
+  a.isprint         AS "isprint",
+  a.isdispute       AS "isdispute",
+  a.islocated       AS "islocated",
+  a.ispaycoin       AS "ispaycoin",
+  a.isprecoin       AS "isprecoin",
+  a.pay_id          AS "payinfo.id",
+  a.locationmobile  AS "locationmobile",
+  a.locationtimetype AS "locationtimetype",
+  a.locationtime     AS "locationtime", 
+  a.locationstate    As "locationstate",
+  a.locationamount   AS "locationamount",
+  a.locationcount    As "locationcount",
+  a.locationRate     As "locationRate",
+  a.locationRateType  As "locationRateType",
+  a.locationstarttime As "locationstarttime",
+  a.locationpayway    AS "locationpayway",
+  a.create_date     AS "createDate",
+  a.printcount      AS "printcount",
+  date_format(a.create_date, '%Y-%m-%d') AS "showtime",
+  a.update_date     AS "updateDate",
+  a.create_by       AS "createBy.id",
+  a.update_by       AS "updateBy.id",
+  a.pay_date        AS "payDate",
+  a.insurstatus     AS "insurstatus",
+  a.insur_ispay     AS "insurispay",
+  a.order_ispay     AS "orderispay",
+  a.isLockWay		AS "isLockWay",
+  a.location_flag		AS "locationFlag",
+  a.rail_flag		AS "railFlag",
+  a.railfunction_flag AS "railfunctionFlag",
+  a.loc_count 	AS "locCount",
+  a.trail_count		AS "trailCount",
+  quo.QUOTESTATUS   AS "quoteinfo.quotestatus",
+  quo.ODDLOADWEIGHT AS "quoteinfo.oddloadweight",
+  quo.OOFERPRICE    AS "quoteinfo.ooferprice",
+  quo.ISRELOAD      AS "quoteinfo.isreload",
+  quo.ACTLOAD       AS "quoteinfo.actload",
+  quo.DRIVER_ID     AS "quoteinfo.driver.id",
+  quo.isassign      AS "quoteinfo.isassign",
+  driver.login_name AS "quoteinfo.driver.loginName",
+  driver.name 	    AS "quoteinfo.driver.name",
+  driver.phone      AS "quoteinfo.driver.phone",
+  quo.CARID         AS "quoteinfo.car.id",
+  car.CarNumber     AS "quoteinfo.car.carnumber",
+  car.CarType       AS "quoteinfo.car.cartype",
+  car.CarLength     AS "quoteinfo.car.carlength",
+  payinfo.paystatus AS "payinfo.paystatus",
+  payinfo.totalcost AS "payinfo.totalcost",
+  payinfo.onlineamount AS "payinfo.onlineamount",
+  payinfo.lineamount AS "payinfo.lineamount",
+  payinfo.onlineratio AS "payinfo.onlineratio",
+  payinfo.preraio AS "payinfo.preraio",
+  payinfo.preamount AS "payinfo.preamount",
+  payinfo.onlinebalance AS "payinfo.onlinebalance",
+  payinfo.disputeamount AS "payinfo.disputeamount",
+  payinfo.actualamount AS "payinfo.actualamount",
+  payinfo.coinamount AS  "payinfo.coinamount",
+  payinfo.coinprepaio AS  "payinfo.coinprepaio",
+  payinfo.coinpreamount AS "payinfo.coinpreamount",
+  payinfo.coinactualpay AS "payinfo.coinactualpay",
+  ship.PROVINCE        AS 'quoteinfo.goods.shipAddress.province',
+  ship.CITY            AS 'quoteinfo.goods.shipAddress.city',
+  ship.DISTRICT        AS 'quoteinfo.goods.shipAddress.district',
+  ship.ADDRESS         AS 'quoteinfo.goods.shipAddress.address',
+  consign.PROVINCE     AS 'quoteinfo.goods.consignAddress.province',
+  consign.CITY         AS 'quoteinfo.goods.consignAddress.city',
+  consign.DISTRICT     AS 'quoteinfo.goods.consignAddress.district',
+  consign.ADDRESS      AS 'quoteinfo.goods.consignAddress.address',
+  a.del_flag        AS "delFlag"
+	</sql>
+    <sql id="orderinfoJoins">
+        LEFT JOIN trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        LEFT JOIN sys_user u3 ON u3.id = a.buyer_id
+        LEFT JOIN sys_user u4 ON u4.id = a.seller_id
+        LEFT JOIN gds_quoteinfo quo ON a.QUOTE_ID = quo.ID
+        LEFT JOIN sys_user driver ON quo.DRIVER_ID = driver.id
+        LEFT JOIN gds_goods gd ON quo.GOODSID = gd.id
+        LEFT JOIN cs_car car ON quo.CARID = car.ID
+        LEFT JOIN user_address ship ON ship.ID = gd.SHIP_ID
+        LEFT JOIN user_address consign ON consign.ID = gd.CONSIGN_ID
+    </sql>
+    <!--运单基本信息,不涉及支付信息-->
+    <sql id="orderinfoBaseColumns">
+        a.id                  AS "id",
+  a.quote_id            AS "quoteinfo.id",
+  quo.goodsid           AS "quoteinfo.goods.id",
+  gd.GOODSNAME          AS "quoteinfo.goods.goodsname",
+  gd.GSODDTYPE          AS "quoteinfo.goods.gsoddtype",
+  gd.GOODSTYPE          AS "quoteinfo.goods.goodstype",
+  gd.FREIGHTUNIT        AS "quoteinfo.goods.freightunit",
+  gd.ISINSUR		    AS "quoteinfo.goods.isinsur",
+  gd.PAY_PEOPLE		    AS "quoteinfo.goods.paypeople",
+  a.buyer_id            AS "buyer.id",
+  u3.login_name         AS "buyer.loginName",
+  u3.name               AS "buyer.name",
+  u3.phone              AS "buyer.phone",
+  u3.company_id         AS "buyer.company",
+  a.seller_id           AS "seller.id",
+  u4.login_name         AS "seller.loginName",
+  u4.name               AS "seller.name",
+  u4.phone              AS "seller.phone",
+  u4.company_id         AS "seller.company",
+  a.orderno             AS "orderno",
+  a.orderstatus         AS "orderstatus",
+  a.locationmobile  AS "locationmobile",
+  a.locationtimetype AS "locationtimetype",
+  a.locationtime     AS "locationtime", 
+  a.locationstate    As "locationstate",
+  a.locationamount   AS "locationamount",
+  a.locationcount    As "locationcount",
+  a.locationRate     As "locationRate",
+  a.locationRateType  As "locationRateType",
+  a.locationstarttime As "locationstarttime",
+  a.locationpayway    AS "locationpayway",
+  a.paystatus           AS "paystatus",
+  a.isprint             AS "isprint",
+   a.ispaycoin       AS "ispaycoin",
+  a.isprecoin       AS "isprecoin",
+  a.islocated           AS "islocated",
+  a.pay_id              AS "payinfo.id",
+  a.create_date         AS "createDate",
+  a.update_date         AS "updateDate",
+  a.create_by           AS "createBy.id",
+  a.update_by           AS "updateBy.id",
+  a.insurstatus         AS "insurstatus",
+  a.insur_ispay         AS "insurispay",
+  a.order_ispay     	AS "orderispay",
+  a.printcount          AS "printcount",
+  a.isLockWay			AS "isLockWay",
+  quo.QUOTESTATUS       AS "quoteinfo.quotestatus",
+  quo.ODDLOADWEIGHT     AS "quoteinfo.oddloadweight",
+  quo.OOFERPRICE        AS "quoteinfo.ooferprice",
+  quo.ISRELOAD          AS "quoteinfo.isreload",
+  quo.ACTLOAD           AS "quoteinfo.actload",
+  quo.DRIVER_ID         AS "quoteinfo.driver.id",
+  quo.isassign          AS "quoteinfo.isassign",
+  driver.login_name     AS "quoteinfo.driver.loginName",
+  driver.phone          AS "quoteinfo.driver.phone",
+  driver.name 	    	AS "quoteinfo.driver.name",
+  quo.CARID             AS "quoteinfo.car.id",
+  car.CarNumber         AS "quoteinfo.car.carnumber",
+  car.CarType           AS "quoteinfo.car.cartype",
+  car.CarLength         AS "quoteinfo.car.carlength",
+      gps.cname         AS "quoteinfo.car.gpsCarInfo.cname",
+      gps.ckey          AS "quoteinfo.car.gpsCarInfo.ckey",
+      gps.cid           AS "quoteinfo.car.gpsCarInfo.cid",
+      gps.tid           AS "quoteinfo.car.gpsCarInfo.tid",
+      gps.tname         AS "quoteinfo.car.gpsCarInfo.tname",
+  a.del_flag            AS "delFlag"
+    </sql>
+    <!--基本信息-->
+    <sql id="orderinfoBaseJoins">
+        LEFT JOIN gds_quoteinfo quo ON a.QUOTE_ID = quo.ID
+          LEFT JOIN gds_goods gd ON quo.GOODSID = gd.ID
+          LEFT JOIN bid_order_goods bog ON quo.GOODSID = bog.GOODS_ID
+          LEFT JOIN bid_orderinfo bidod ON bidod.ID = bog.BIDORDER_ID
+          LEFT JOIN sys_user u3 ON u3.id = a.buyer_id
+          LEFT JOIN sys_user u4 ON u4.id = a.seller_id
+          LEFT JOIN sys_user driver ON quo.DRIVER_ID = driver.id
+          LEFT JOIN cs_car car ON quo.CARID = car.ID
+          LEFT JOIN gps_car_infos gps ON car.CarNumber = gps.cname
+    </sql>
+
+
+    <select id="get" resultType="Orderinfo">
+        SELECT
+        <include refid="orderinfoColumns"/>
+        FROM trade_orderinfo a
+        <include refid="orderinfoJoins"/>
+        where
+        a.id = #{id}
+
+
+    </select>
+
+    <!--获取统计数据-->
+    <select id="getEverData" resultType="Orderinfo">
+        SELECT
+        count(*) AS "orderInfoVo.evercount",
+        date_format(trod.CREATE_DATE, #{timeflag}) AS "orderInfoVo.timeflag",
+        date_format(trod.CREATE_DATE, #{timeflag}) AS "timeflag",
+        sum(quot.ODDLOADWEIGHT) AS "orderInfoVo.allload",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        THEN
+        quot.ODDLOADWEIGHT
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.newodload",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        THEN
+        trod.TOTALCOST
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.newodfreight",
+        /*新运单 载重、与运费*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        OR trod.OrderStatus = 1
+        THEN
+        quot.ODDLOADWEIGHT
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.tradingodload",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        OR trod.OrderStatus = 1
+        THEN
+        trod.TOTALCOST
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.tradingodfreight",
+        /*运输中,运输吨位与运费*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        OR trod.OrderStatus = 6
+        OR trod.OrderStatus = 7
+        THEN
+        quot.ODDLOADWEIGHT
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.waitpayodload",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        OR trod.OrderStatus = 6
+        OR trod.OrderStatus = 7
+        THEN
+        trod.TOTALCOST
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.waitpayodfreight",
+
+        /*待支付,运输吨位与运费*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        quot.ODDLOADWEIGHT
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.endodload",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        trod.TOTALCOST
+        ELSE
+        0
+        END
+        ) AS "orderInfoVo.endodfreight",
+
+        /*已支付,运输吨位与运费*/
+        date_format(trod.CREATE_DATE, #{showtime}) AS "orderInfoVo.showtime"
+        FROM trade_orderinfo trod
+        INNER JOIN trade_payinfo pay ON trod.PAY_ID = pay.ID
+        INNER JOIN gds_quoteinfo quot ON trod.QUOTE_ID = quot.ID
+        <where>
+            <if test="beginCreateDate !=null and beginCreateDate !=''">
+                and trod.CREATE_DATE &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate !=null and endCreateDate !=''">
+                and trod.CREATE_DATE &lt;= #{endCreateDate}
+            </if>
+            <if test="currentUser !=null and currentUser.id !=null and currentUser.id !=''">
+                and (trod.SELLER_ID = #{currentUser.id} OR trod.BUYER_ID = #{currentUser.id} )
+            </if>
+        </where>
+        GROUP BY date_format(trod.CREATE_DATE, #{timeflag})
+        ORDER BY trod.CREATE_DATE ASC
+    </select>
+
+    <select id="findList" resultType="Orderinfo">
+        SELECT
+        <include refid="orderinfoColumns"/>
+        FROM trade_orderinfo a
+        <include refid="orderinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (a.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                car.CarNumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u4.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u4.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                OR
+                quo.oddloadweight LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                OR
+                gd.GOODSNAME LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <!-- 查询交易中的运单 -->
+            <if test="istrading != null and istrading != '' and istrading != '1'">
+
+                AND a.orderstatus in (1,3,4,6)
+            </if>
+            <!-- 查询运输中的运单 -->
+            <if test="seletstatus != null and seletstatus != ''">
+                <if test="seletstatus == 1">
+                    AND a.orderstatus in (0,1,3)
+                </if>
+            </if>
+            <if test="quoteinfo != null and quoteinfo.id != null and quoteinfo.id != ''">
+                AND a.quote_id = #{quoteinfo.id}
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND ( a.buyer_id = #{buyer.id} OR a.seller_id = #{buyer.id})
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                <choose>
+                    <when test="seletstatus != null and seletstatus != '' and seletstatus == 1">
+                        AND a.buyer_id = #{seller.id}
+                    </when>
+                    <otherwise>
+                        AND ( a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="orderno != null and orderno != ''">
+                AND a.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{orderno}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{orderno}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{orderno},'%')</if>
+            </if>
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+            <if test="iscomment != null and iscomment != ''">
+                AND a.iscomment = #{iscomment}
+            </if>
+            <if test="beginTotalcost != null and endTotalcost != null and beginTotalcost != '' and endTotalcost != ''">
+                AND a.totalcost BETWEEN #{beginTotalcost} AND #{endTotalcost}
+            </if>
+            <if test="isonlinepay != null and isonlinepay != ''">
+                AND a.isonlinepay = #{isonlinepay}
+            </if>
+            <if test="isprepay != null and isprepay != ''">
+                AND a.isprepay = #{isprepay}
+            </if>
+            <if test="paystatus != null and paystatus != ''">
+                AND a.paystatus = #{paystatus}
+            </if>
+            <if test="payway != null and payway != ''">
+                AND a.payway = #{payway}
+            </if>
+            <if test="isprint != null and isprint != ''">
+                AND a.isprint = #{isprint}
+            </if>
+            <if test="isdispute != null and isdispute != ''">
+                AND a.isdispute = #{isdispute}
+            </if>
+            <if test="islocated != null and islocated != ''">
+                AND a.islocated = #{islocated}
+            </if>
+            <if test="payinfo != null and payinfo.id != null and payinfo.id != ''">
+                AND a.pay_id = #{payinfo.id}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND a.update_date = #{updateDate}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="quoteinfo != null and quoteinfo.goods != null and quoteinfo.goods.gsoddtype != null and quoteinfo.goods.gsoddtype != ''">
+                AND gd.GSODDTYPE = #{quoteinfo.goods.gsoddtype}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.beginCreateDate != null and quoteinfo.beginCreateDate != '' and quoteinfo.endCreateDate != null and quoteinfo.endCreateDate != ''">
+                AND a.create_date &gt;= #{quoteinfo.beginCreateDate} AND a.create_date &lt;= #{quoteinfo.endCreateDate}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.beginUpdateDate != null and quoteinfo.beginUpdateDate != '' and quoteinfo.endUpdateDate != null and quoteinfo.endUpdateDate != ''">
+                AND a.update_date &gt;= #{quoteinfo.beginUpdateDate} AND a.update_date &lt;= #{quoteinfo.endUpdateDate}
+            </if>
+            <if test="beginPayDate != null and beginPayDate != '' and endPayDate != null and endPayDate != ''">
+                AND NOT ISNULL(a.PAY_DATE) AND a.pay_date &gt;= #{beginPayDate} AND a.pay_date &lt;= #{endPayDate}
+            </if>
+
+            <if test="orderispay != null and orderispay != ''">
+                AND a.order_ispay = #{orderispay}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.isassign != null and quoteinfo.isassign != ''">
+                AND quo.isassign = #{quoteinfo.isassign}
+            </if>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--获取招标合同的运单-->
+    <select id="findBidOrderList" resultType="Orderinfo">
+        SELECT
+        <include refid="orderinfoBaseColumns"/>
+        FROM trade_orderinfo a
+        <include refid="orderinfoBaseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="bidorder != null and bidorder.id != null and bidorder.id!='' ">
+                AND bidod.id=#{bidorder.id}
+            </if>
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (a.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                car.CarNumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u4.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u4.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                OR
+                quo.oddloadweight LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                OR
+                gd.GOODSNAME LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <!-- 查询交易中的运单 -->
+            <if test="istrading != null and istrading != '' and istrading != '1'">
+                AND a.orderstatus in (1,3,4,6)
+            </if>
+            <if test="quoteinfo != null and quoteinfo.id != null and quoteinfo.id != ''">
+                AND a.quote_id = #{quoteinfo.id}
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND ( a.buyer_id = #{buyer.id} OR a.seller_id = #{buyer.id})
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND ( a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+            </if>
+            <if test="orderno != null and orderno != ''">
+                AND a.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{orderno}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{orderno}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{orderno},'%')</if>
+            </if>
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+            <if test="iscomment != null and iscomment != ''">
+                AND a.iscomment = #{iscomment}
+            </if>
+            <if test="beginTotalcost != null and endTotalcost != null and beginTotalcost != '' and endTotalcost != ''">
+                AND a.totalcost BETWEEN #{beginTotalcost} AND #{endTotalcost}
+            </if>
+            <if test="isonlinepay != null and isonlinepay != ''">
+                AND a.isonlinepay = #{isonlinepay}
+            </if>
+            <if test="isprepay != null and isprepay != ''">
+                AND a.isprepay = #{isprepay}
+            </if>
+            <if test="paystatus != null and paystatus != ''">
+                AND a.paystatus = #{paystatus}
+            </if>
+            <if test="payway != null and payway != ''">
+                AND a.payway = #{payway}
+            </if>
+            <if test="isprint != null and isprint != ''">
+                AND a.isprint = #{isprint}
+            </if>
+            <if test="isdispute != null and isdispute != ''">
+                AND a.isdispute = #{isdispute}
+            </if>
+            <if test="islocated != null and islocated != ''">
+                AND a.islocated = #{islocated}
+            </if>
+            <if test="payinfo != null and payinfo.id != null and payinfo.id != ''">
+                AND a.pay_id = #{payinfo.id}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND a.update_date = #{updateDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="quoteinfo != null and quoteinfo.goods != null and quoteinfo.goods.gsoddtype != null and quoteinfo.goods.gsoddtype != ''">
+                AND gd.GSODDTYPE = #{quoteinfo.goods.gsoddtype}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.beginCreateDate != null and quoteinfo.beginCreateDate != '' and quoteinfo.endCreateDate != null and quoteinfo.endCreateDate != ''">
+                AND a.create_date &gt;= #{quoteinfo.beginCreateDate} AND a.create_date &lt;= #{quoteinfo.endCreateDate}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.beginUpdateDate != null and quoteinfo.beginUpdateDate != '' and quoteinfo.endUpdateDate != null and quoteinfo.endUpdateDate != ''">
+                AND a.update_date &gt;= #{quoteinfo.beginUpdateDate} AND a.update_date &lt;= #{quoteinfo.endUpdateDate}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.isassign != null and quoteinfo.isassign != ''">
+                AND quo.isassign = #{quoteinfo.isassign}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="findAllList" resultType="Orderinfo">
+        SELECT
+        <include refid="orderinfoColumns"/>
+        FROM trade_orderinfo a
+        <include refid="orderinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO trade_orderinfo(
+
+        <if test="quoteinfo!=null and quoteinfo.id != null and quoteinfo.id !='' ">
+            quote_id,
+        </if>
+        <if test="buyer != null and buyer.id != null and buyer.id !='' ">
+            buyer_id,
+        </if>
+        <if test="seller != null and seller.id != null and seller.id !='' ">
+            seller_id,
+        </if>
+        <if test="orderno != null and orderno !='' ">
+            orderno,
+        </if>
+        <if test="orderstatus != null and orderstatus !='' ">
+            orderstatus,
+        </if>
+        <if test="iscomment != null and iscomment !='' ">
+            iscomment,
+        </if>
+        <if test="totalcost != null and totalcost !='' ">
+            totalcost,
+        </if>
+        <if test="isonlinepay != null and isonlinepay !='' ">
+            isonlinepay,
+        </if>
+        <if test="isprepay != null and isprepay !='' ">
+            isprepay,
+        </if>
+        <if test="paystatus != null and paystatus !='' ">
+            paystatus,
+        </if>
+        <if test="payway != null and payway !='' ">
+            payway,
+        </if>
+        <if test="isprint != null and isprint !='' ">
+            isprint,
+        </if>
+        <if test="isdispute != null and isdispute !='' ">
+            isdispute,
+        </if>
+        <if test="islocated != null and islocated !='' ">
+            islocated,
+        </if>
+        <if test="ispaycoin != null and ispaycoin !='' ">
+            ispaycoin,
+        </if>
+        <if test="isprecoin != null and isprecoin !='' ">
+            isprecoin,
+        </if>
+        <if test="payinfo !=null and payinfo.id != null and payinfo.id !='' ">
+            pay_id,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        <if test="locationmobile != null and locationmobile !='' ">
+            locationmobile,
+        </if>
+        <if test="locationtimetype != null and locationtimetype !='' ">
+            locationtimetype,
+        </if>
+        <if test="locationtime != null and locationtime !='' ">
+            locationtime,
+        </if>
+        <if test="locationstate != null and locationstate !='' ">
+            locationstate,
+        </if>
+        <if test="locationamount != null and locationamount !='' ">
+            locationamount,
+        </if>
+        <if test="locationcount != null and locationcount !='' ">
+            locationcount,
+        </if>
+        <if test="locationRate != null and locationRate !='' ">
+            locationRate,
+        </if>
+        <if test="locationRateType != null and locationRateType !='' ">
+            locationRateType,
+        </if>
+        <if test="locationstarttime != null and locationstarttime !='' ">
+            locationstarttime,
+        </if>
+        <if test="locationpayway != null and locationpayway !='' ">
+            locationpayway,
+        </if>
+        <if test="insurstatus != null and insurstatus !='' ">
+            insurstatus,
+        </if>
+        <if test="insurispay != null and insurispay !='' ">
+            insur_ispay,
+        </if>
+        <if test="orderispay != null and orderispay !='' ">
+            order_ispay,
+        </if>
+        <if test="isLockWay != null and isLockWay !='' ">
+            isLockWay,
+        </if>
+        <if test="locationFlag != null and locationFlag !='' ">
+            location_flag,
+        </if>
+        <if test="railFlag != null and railFlag !='' ">
+            rail_flag,
+        </if>
+        id
+        ) VALUES (
+        <if test="quoteinfo != null and quoteinfo.id != null and quoteinfo.id !='' ">
+            #{quoteinfo.id},
+        </if>
+        <if test="buyer !=null and buyer.id != null and buyer.id !='' ">
+            #{buyer.id},
+        </if>
+        <if test="seller !=null and seller.id != null and seller.id !='' ">
+            #{seller.id},
+        </if>
+        <if test="orderno != null and orderno !='' ">
+            #{orderno},
+        </if>
+        <if test="orderstatus != null and orderstatus !='' ">
+            #{orderstatus},
+        </if>
+        <if test="iscomment != null and iscomment !='' ">
+            #{iscomment},
+        </if>
+        <if test="totalcost != null and totalcost !='' ">
+            #{totalcost},
+        </if>
+        <if test="isonlinepay != null and isonlinepay !='' ">
+            #{isonlinepay},
+        </if>
+        <if test="isprepay != null and isprepay !='' ">
+            #{isprepay},
+        </if>
+        <if test="paystatus != null and paystatus !='' ">
+            #{paystatus},
+        </if>
+        <if test="payway != null and payway !='' ">
+            #{payway},
+        </if>
+        <if test="isprint != null and isprint !='' ">
+            #{isprint},
+        </if>
+        <if test="isdispute != null and isdispute !='' ">
+            #{isdispute},
+        </if>
+        <if test="islocated != null and islocated !='' ">
+            #{islocated},
+        </if>
+        <if test="ispaycoin != null and ispaycoin !='' ">
+            #{ispaycoin},
+        </if>
+        <if test="isprecoin != null and isprecoin !='' ">
+            #{isprecoin},
+        </if>
+        <if test="payinfo != null and payinfo.id != null and payinfo.id !='' ">
+            #{payinfo.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        <if test="locationmobile != null and locationmobile !='' ">
+            #{locationmobile},
+        </if>
+        <if test="locationtimetype != null and locationtimetype !='' ">
+            #{locationtimetype},
+        </if>
+        <if test="locationtime != null and locationtime !='' ">
+            #{locationtime},
+        </if>
+        <if test="locationstate != null and locationstate !='' ">
+            #{locationstate},
+        </if>
+        <if test="locationamount != null and locationamount !='' ">
+            #{locationamount},
+        </if>
+        <if test="locationcount != null and locationcount !='' ">
+            #{locationcount},
+        </if>
+        <if test="locationRate != null and locationRate !='' ">
+            #{locationRate},
+        </if>
+        <if test="locationRateType != null and locationRateType !='' ">
+            #{locationRateType},
+        </if>
+        <if test="locationstarttime != null and locationstarttime !='' ">
+            #{locationstarttime},
+        </if>
+        <if test="locationpayway != null and locationpayway !='' ">
+            #{locationpayway},
+        </if>
+        <if test="insurstatus != null and insurstatus !='' ">
+            #{insurstatus},
+        </if>
+        <if test="insurispay != null and insurispay !='' ">
+            #{insurispay},
+        </if>
+        <if test="orderispay != null and orderispay !='' ">
+            #{orderispay},
+        </if>
+        <if test="isLockWay != null and isLockWay !='' ">
+            #{isLockWay},
+        </if>
+        <if test="locationFlag != null and locationFlag !='' ">
+            #{locationFlag},
+        </if>
+        <if test="railFlag != null and railFlag !='' ">
+            #{railFlag},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE trade_orderinfo SET
+        <if test="quoteinfo != null and quoteinfo.id != null and quoteinfo.id !='' ">
+            quote_id = #{quoteinfo.id},
+        </if>
+        <if test="buyer !=null and buyer.id != null and buyer.id !='' ">
+            buyer_id = #{buyer.id},
+        </if>
+        <if test="seller !=null and seller.id != null and seller.id !='' ">
+            seller_id = #{seller.id},
+        </if>
+        <if test="orderno != null and orderno !='' ">
+            orderno = #{orderno},
+        </if>
+        <if test="orderstatus != null and orderstatus !='' ">
+            orderstatus = #{orderstatus},
+        </if>
+        <if test="iscomment != null and iscomment !='' ">
+            iscomment = #{iscomment},
+        </if>
+        <if test="totalcost != null and totalcost !='' ">
+            totalcost = #{totalcost},
+        </if>
+        <if test="isonlinepay != null and isonlinepay !='' ">
+            isonlinepay = #{isonlinepay},
+        </if>
+        <if test="isprepay != null and isprepay !='' ">
+            isprepay = #{isprepay},
+        </if>
+        <if test="paystatus != null and paystatus !='' ">
+            paystatus = #{paystatus},
+        </if>
+        <if test="payway != null and payway !='' ">
+            payway = #{payway},
+        </if>
+        <if test="isprint != null and isprint !='' ">
+            isprint = #{isprint},
+        </if>
+        <if test="isdispute != null and isdispute !='' ">
+            isdispute = #{isdispute},
+        </if>
+        <if test="islocated != null and islocated !='' ">
+            islocated = #{islocated},
+        </if>
+        <if test="ispaycoin != null and ispaycoin !='' ">
+            ispaycoin= #{ispaycoin},
+        </if>
+        <if test="isprecoin != null and isprecoin !='' ">
+            isprecoin= #{isprecoin},
+        </if>
+        <if test="payinfo !=null and payinfo.id != null and payinfo.id !='' ">
+            pay_id = #{payinfo.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="payDate != null and payDate !='' ">
+            pay_date = #{payDate},
+        </if>
+        <if test="locationmobile != null and locationmobile !='' ">
+            locationmobile = #{locationmobile},
+        </if>
+        <if test="locationtimetype != null and locationtimetype !='' ">
+            locationtimetype = #{locationtimetype},
+        </if>
+        <if test="locationtime != null and locationtime !='' ">
+            locationtime = #{locationtime},
+        </if>
+        <if test="locationstate != null and locationstate !='' ">
+            locationstate = #{locationstate},
+        </if>
+        <if test="locationamount != null and locationamount !='' ">
+            locationamount = #{locationamount},
+        </if>
+        <if test="locationcount != null and locationcount !='' ">
+            locationcount = #{locationcount},
+        </if>
+        <if test="locationRate != null and locationRate !='' ">
+            locationRate = #{locationRate},
+        </if>
+        <if test="locationRateType != null and locationRateType !='' ">
+            locationRateType = #{locationRateType},
+        </if>
+        <if test="locationstarttime != null and locationstarttime !='' ">
+            locationstarttime = #{locationstarttime},
+        </if>
+        <if test="locationpayway != null and locationpayway !='' ">
+            locationpayway = #{locationpayway},
+        </if>
+        <if test="insurstatus != null and insurstatus !='' ">
+            insurstatus = #{insurstatus},
+        </if>
+        <if test="insurispay != null and insurispay !='' ">
+            insur_ispay = #{insurispay},
+        </if>
+        <if test="orderispay != null and orderispay !='' ">
+            order_ispay = #{orderispay},
+        </if>
+        <if test="printcount != null and printcount !='' ">
+            printcount = #{printcount},
+        </if>
+        <if test="isLockWay != null and isLockWay !='' ">
+            isLockWay = #{isLockWay},
+        </if>
+        <if test="trailCount != null and trailCount !=''">
+            trail_count=#{trailCount},
+            
+        </if>
+        <if test="locCount != null and locCount != ''">
+            loc_count=#{locCount},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+    <!-- 打印次数 -->
+    <update id="updatePrintcount">
+		UPDATE trade_orderinfo SET 
+			printcount = IFNULL(printcount,0)+1
+		WHERE id = #{id}
+	</update>
+
+
+    <update id="delete">
+		UPDATE trade_orderinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <select id="getByOrderinfo" resultType="Orderinfo">
+        SELECT
+        <include refid="orderinfoColumns"/>
+        FROM trade_orderinfo a
+        <include refid="orderinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="quoteinfo != null and quoteinfo.id != null and quoteinfo.id != ''">
+                AND a.quote_id = #{quoteinfo.id}
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND ( a.buyer_id = #{buyer.id} OR a.seller_id = #{buyer.id})
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND ( a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+            </if>
+            <if test="orderno != null and orderno != ''">
+                AND a.orderno = #{orderno}
+            </if>
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+            <if test="iscomment != null and iscomment != ''">
+                AND a.iscomment = #{iscomment}
+            </if>
+            <if test="beginTotalcost != null and endTotalcost != null and beginTotalcost != '' and endTotalcost != ''">
+                AND a.totalcost BETWEEN #{beginTotalcost} AND #{endTotalcost}
+            </if>
+            <if test="isonlinepay != null and isonlinepay != ''">
+                AND a.isonlinepay = #{isonlinepay}
+            </if>
+            <if test="isprepay != null and isprepay != ''">
+                AND a.isprepay = #{isprepay}
+            </if>
+            <if test="paystatus != null and paystatus != ''">
+                AND a.paystatus = #{paystatus}
+            </if>
+            <if test="payway != null and payway != ''">
+                AND a.payway = #{payway}
+            </if>
+            <if test="isprint != null and isprint != ''">
+                AND a.isprint = #{isprint}
+            </if>
+            <if test="isdispute != null and isdispute != ''">
+                AND a.isdispute = #{isdispute}
+            </if>
+            <if test="islocated != null and islocated != ''">
+                AND a.islocated = #{islocated}
+            </if>
+            <if test="payinfo != null and payinfo.id != null and payinfo.id != ''">
+                AND a.pay_id = #{payinfo.id}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND a.update_date = #{updateDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 统计运单信息 -->
+    <select id="sumOrderinfo" resultType="Orderinfo">
+        SELECT
+        COUNT(1) AS "sumorder",
+        SUM(quo.oddloadweight) AS "sumoddloadweight",
+        SUM(a.totalcost) AS "sumtotalcost"
+
+        FROM trade_orderinfo a
+        INNER JOIN sys_user buyuser ON buyuser.id = a.buyer_id
+        INNER JOIN sys_user seluser ON seluser.id = a.seller_id
+        INNER JOIN gds_quoteinfo quo ON quo.ID = a.QUOTE_ID
+        INNER JOIN gds_goods gd ON gd.id= quo.GOODSID
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND a.buyer_id = #{buyer.id}
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND (a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+            </if>
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.create_date &lt;= #{endCreateDate}
+            </if>
+            <if test="beginUpdateDate != null and beginUpdateDate != '' ">
+                AND a.update_date &gt;= #{beginUpdateDate}
+            </if>
+            <if test="endUpdateDate != null and endUpdateDate != '' ">
+                AND a.update_date &lt;= #{endUpdateDate}
+            </if>
+            <if test="payDate != null and payDate != '' ">
+                AND a.pay_date &gt;= #{payDate}
+            </if>
+            <if test="sumsearch != null and sumsearch != '' and sumsearch==1 "><!--新运单  -->
+                AND a.orderstatus IN(0)
+            </if>
+            <if test="sumsearch != null and sumsearch != '' and sumsearch==2 "><!-- 运输中 -->
+                AND a.orderstatus IN(1,3)
+            </if>
+            <if test="sumsearch != null and sumsearch != '' and sumsearch==3 "><!-- 待支付 -->
+                AND a.orderstatus IN(4,6,7)
+            </if>
+            <if test="sumsearch != null and sumsearch != '' and sumsearch==4 "><!-- 已完成 -->
+                AND a.orderstatus IN(5)
+            </if>
+
+        </where>
+    </select>
+
+    <select id="findLocationOrder" resultType="Orderinfo">
+        SELECT
+        <include refid="orderinfoColumns"/>
+        ,white.IsReply AS "isreply"
+        FROM trade_orderinfo a
+        <include refid="orderinfoJoins"/>
+        LEFT JOIN lbs_whitelist white ON a.LOCATIONMOBILE = white.Mobile
+        <where>
+            a.del_flag = 0
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="orderno != null and orderno != ''">
+                AND a.orderno = #{orderno}
+            </if>
+            <if test="locationmobile != null and locationmobile != ''">
+                AND a.locationmobile = #{locationmobile}
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND a.buyer_id = #{buyer.id}
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND (a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+            </if>
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+
+
+        </where>
+    </select>
+
+    <!-- 获取今天的运单交易金额   车主-->
+    <select id="carUserPriceNum" resultType="double">
+        SELECT sum(payinfo.totalcost-payinfo.lineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+    </select>
+    <!-- 获取今天的运单交易金额  货主-->
+    <select id="priceNum" resultType="double">
+        SELECT sum(payinfo.totalcost-payinfo.lineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.seller_id = #{userid}
+    </select>
+    <!-- 获取今天的运单待付金额  车主  还未完成交易  线上支付    未上传提货单-->
+    <select id="carUserDaiPrice1" resultType="double">
+        SELECT sum(payinfo.totalcost-payinfo.lineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.paystatus = 2 and a.isonlinepay = 1
+    </select>
+    <!-- 获取今天的运单待付金额  车主  还未完成交易  线上支付   已上传提货单  线上金额已预支付 -->
+    <select id="carUserDaiPrice2" resultType="double">
+        SELECT sum(payinfo.actualamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.isonlinepay = 1 and a.paystatus = 3 and a.isprepay = 1 and a.ispaycoin = 0 
+    </select>
+    <!-- 获取今天的运单待付金额  车主  还未完成交易  线上支付   已上传提货单    线上金额未预支付 -->
+    <select id="carUserDaiPrice3" resultType="double">
+        SELECT sum(payinfo.onlineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.isonlinepay = 1 and a.paystatus = 3 and a.isprepay = 0 and a.ispaycoin = 0
+    </select>
+    <!-- 获取今天的运单待付金额  车主  还未完成交易  线上支付+卓币支付   已上传提货单  卓币和线上已预支付 -->
+    <select id="carUserDaiPrice4" resultType="double">
+        SELECT sum(payinfo.actualamount+(payinfo.coinamount-payinfo.coinpreamount)) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.isonlinepay = 1 and a.paystatus = 3 and a.isprepay = 1 and a.ispaycoin = 1 and a.isprecoin = 1 
+    </select>
+    <!-- 获取今天的运单待付金额  车主  还未完成交易  线上支付+卓币支付   已上传提货单  卓币已预支付  线上未预支付 -->
+    <select id="carUserDaiPrice5" resultType="double">
+        SELECT sum(payinfo.onlineamount+(payinfo.coinamount-payinfo.coinpreamount)) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.isonlinepay = 1 and a.paystatus = 3 and a.isprepay = 0 and a.ispaycoin = 1 and a.isprecoin = 1 
+    </select>
+    <!-- 获取今天的运单待付金额  车主  还未完成交易  线上支付+卓币支付   已上传提货单  线上已预支付  卓币未预支付 -->
+    <select id="carUserDaiPrice6" resultType="double">
+        SELECT sum(payinfo.actualamount+payinfo.coinamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.isonlinepay = 1 and a.paystatus = 3 and a.isprepay = 1 and a.ispaycoin = 1 and a.isprecoin = 0 
+    </select>
+
+    <!-- 获取今天的运单待付金额  货主或物流企业  线上支付  还未完成交易 -->
+    <select id="daiPrice1" resultType="double">
+        SELECT sum(payinfo.totalcost-payinfo.lineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.seller_id = #{userid}
+        and a.isonlinepay = 1 and (a.paystatus = 0 and a.paystatus = 1)
+    </select>
+
+    <!-- 获取今天的运单已付金额    车主  还未完成交易  线上支付    上传提货单    线上已预支付-->
+    <select id="carUserYiPrice1" resultType="double">
+        SELECT sum(payinfo.preamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.paystatus = 3 and a.isonlinepay = 1 and a.ispaycoin = 0 and a.isprepay = 1
+    </select>
+    <!-- 获取今天的运单已付金额    车主  完成交易-->
+    <select id="carUserYiPrice2" resultType="double">
+        SELECT sum(a.totalcost-payinfo.lineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.paystatus = 5
+    </select>
+    <!-- 获取今天的运单已付金额    车主  还未完成交易  线上支付+卓币    上传提货单     线上和卓币已预支付  -->
+    <select id="carUserYiPrice3" resultType="double">
+        SELECT sum(payinfo.preamount+payinfo.coinpreamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.paystatus = 3 and a.isonlinepay = 1 and a.ispaycoin = 1 and a.isprepay = 1 and a.isprecoin = 1
+    </select>
+    <!-- 获取今天的运单已付金额    车主  还未完成交易  线上支付+卓币    上传提货单     卓币已预支付   线上未预支付-->
+    <select id="carUserYiPrice4" resultType="double">
+        SELECT sum(payinfo.coinpreamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.paystatus = 3 and a.isonlinepay = 1 and a.ispaycoin = 1 and a.isprepay = 0 and a.isprecoin = 1
+    </select>
+    <!-- 获取今天的运单已付金额    车主  还未完成交易  线上支付+卓币    上传提货单     线上已预支付  卓币未预支付-->
+    <select id="carUserYiPrice5" resultType="double">
+        SELECT sum(payinfo.preamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.buyer_id = #{userid}
+        and a.paystatus = 3 and a.isonlinepay = 1 and a.ispaycoin = 1 and a.isprepay = 1 and a.isprecoin = 0
+    </select>
+
+    <!-- 获取今天的运单已付金额  货主或物流企业  线上支付  还未完成交易  -->
+    <select id="yiPrice1" resultType="double">
+        SELECT sum(payinfo.onlineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.seller_id = #{userid}
+        and a.isonlinepay = 1 and (a.paystatus = 2 or a.paystatus = 3) and a.ispaycoin = 0
+    </select>
+    <!-- 获取今天的运单已付金额  货主或物流企业  线上支付+卓币  还未完成交易  -->
+    <select id="yiPrice2" resultType="double">
+        SELECT sum(payinfo.onlineamount+payinfo.coinamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.seller_id = #{userid}
+        and a.isonlinepay = 1 and (a.paystatus = 2 or a.paystatus = 3) and a.ispaycoin = 1
+    </select>
+    <!-- 获取今天的运单已付金额  货主或物流企业  完成交易  -->
+    <select id="yiPrice3" resultType="double">
+        SELECT sum(payinfo.totalcost-payinfo.lineamount) 
+        FROM trade_orderinfo a join trade_payinfo payinfo ON a.PAY_ID=payinfo.ID
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.seller_id = #{userid}
+        and a.paystatus = 5
+    </select>
+
+    <select id="daynum" resultType="int">
+        SELECT count(0) num
+        FROM trade_orderinfo
+        WHERE date_format(CREATE_DATE,"%Y-%m-%d") = DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单-->
+    </select>
+
+    <select id="findOrderInfoList" resultType="StatisticsBusiness">
+        SELECT
+        a.id              AS "orderId",
+        gd.GOODSNAME      AS "goodsName",
+        gd.GOODSTYPE      AS "goodsType",
+        gd.SENDTIME      AS "startaTime",
+        a.seller_id       AS "sellerUserId",
+        u4.login_name     AS "sellerCompayName",
+        u4.name           AS "sellerName",
+        u4.phone          AS "sellerPhone",
+        a.orderno         AS "orderNo",
+        a.orderstatus     AS "orderStatus",
+        a.totalcost       AS "totalMoney",
+        a.create_date     AS "orderCreateDate",
+        quo.OOFERPRICE    AS "ooferprice",
+        IFNULL(quo.ACTLOAD,IFNULL(quo.ODDLOADWEIGHT,0))  AS "goodsWeight",
+        quo.DRIVER_ID     AS "buyersUserId",
+        driver.name 	    AS "buyersName",
+        driver.phone      AS "buyersPhone",
+        car.CarNumber     AS "carNumber",
+        car.CarType       AS "cartype",
+        car.CarLength     AS "carlength",
+        ship.PROVINCE        AS "startProvince",
+        ship.CITY            AS "startCity",
+        ship.DISTRICT        AS "startDistrict",
+        ship.ADDRESS         AS "startAddress",
+        consign.PROVINCE     AS "endProvince",
+        consign.CITY         AS "endCity",
+        consign.DISTRICT     AS "endDistrict",
+        consign.ADDRESS      AS "endAddress"
+        FROM trade_orderinfo a
+        LEFT JOIN sys_user u4 ON u4.id = a.seller_id
+        LEFT JOIN gds_quoteinfo quo ON a.QUOTE_ID = quo.ID
+        LEFT JOIN sys_user driver ON quo.DRIVER_ID = driver.id
+        LEFT JOIN gds_goods gd ON quo.GOODSID = gd.id
+        LEFT JOIN cs_car car ON quo.CARID = car.ID
+        LEFT JOIN user_address ship ON ship.ID = gd.SHIP_ID
+        LEFT JOIN user_address consign ON consign.ID = gd.CONSIGN_ID
+        <where>
+            a.del_flag =0
+            <if test="beginCreateDate !=null and beginCreateDate !=''">
+                and a.create_date  &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate !=null and endCreateDate !=''">
+                and a.create_date  &lt;= #{endCreateDate}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date asc
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 获取已回单的数据 -->
+    <select id="findReceiptOrderInfoList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.StatisticsBusinessVO">
+        SELECT
+        a.id              AS "orderId",
+        a.orderno         AS "orderNo",
+        a.orderstatus     AS "orderStatus",
+        a.update_date     AS "returnTime"
+        FROM trade_orderinfo a
+        WHERE a.orderstatus &gt; 3
+        <if test="beginCreateDate !=null and beginCreateDate !=''">
+            and a.create_date  &gt;= #{beginCreateDate}
+        </if>
+        <if test="endCreateDate !=null and endCreateDate !=''">
+            and a.create_date  &lt;= #{endCreateDate}
+        </if>
+
+        <if test="businessList != null and businessList != '' ">
+        AND a.id in
+        <foreach item="item"  collection="businessList" open="("
+                 separator="," close=")"  index="">
+            #{item.orderId,jdbcType=VARCHAR}
+        </foreach>
+        </if>
+    </select>
+
+
+    <select id="findOrderList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.OrderinfoNewVO">
+        SELECT
+        <include refid="orderinfoColumns"/>
+        FROM trade_orderinfo a
+        <include refid="orderinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (a.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                car.CarNumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u4.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u4.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                OR
+                quo.oddloadweight LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                OR
+                gd.GOODSNAME LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <!-- 查询交易中的运单 -->
+            <if test="istrading != null and istrading != '' and istrading != '1'">
+                AND a.orderstatus in (1,3,4,6)
+            </if>
+            <if test="quoteinfo != null and quoteinfo.id != null and quoteinfo.id != ''">
+                AND a.quote_id = #{quoteinfo.id}
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND ( a.buyer_id = #{buyer.id} OR a.seller_id = #{buyer.id})
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND ( a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+            </if>
+            <if test="orderno != null and orderno != ''">
+                AND a.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{orderno}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{orderno}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{orderno},'%')</if>
+            </if>
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+            <if test="iscomment != null and iscomment != ''">
+                AND a.iscomment = #{iscomment}
+            </if>
+            <if test="beginTotalcost != null and endTotalcost != null and beginTotalcost != '' and endTotalcost != ''">
+                AND a.totalcost BETWEEN #{beginTotalcost} AND #{endTotalcost}
+            </if>
+            <if test="isonlinepay != null and isonlinepay != ''">
+                AND a.isonlinepay = #{isonlinepay}
+            </if>
+            <if test="isprepay != null and isprepay != ''">
+                AND a.isprepay = #{isprepay}
+            </if>
+            <if test="paystatus != null and paystatus != ''">
+                AND a.paystatus = #{paystatus}
+            </if>
+            <if test="payway != null and payway != ''">
+                AND a.payway = #{payway}
+            </if>
+            <if test="isprint != null and isprint != ''">
+                AND a.isprint = #{isprint}
+            </if>
+            <if test="isdispute != null and isdispute != ''">
+                AND a.isdispute = #{isdispute}
+            </if>
+            <if test="islocated != null and islocated != ''">
+                AND a.islocated = #{islocated}
+            </if>
+            <if test="payinfo != null and payinfo.id != null and payinfo.id != ''">
+                AND a.pay_id = #{payinfo.id}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND a.create_date = #{createDate}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND a.update_date = #{updateDate}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="quoteinfo != null and quoteinfo.goods != null and quoteinfo.goods.gsoddtype != null and quoteinfo.goods.gsoddtype != ''">
+                AND gd.GSODDTYPE = #{quoteinfo.goods.gsoddtype}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.beginCreateDate != null and quoteinfo.beginCreateDate != '' and quoteinfo.endCreateDate != null and quoteinfo.endCreateDate != ''">
+                AND a.create_date &gt;= #{quoteinfo.beginCreateDate} AND a.create_date &lt;= #{quoteinfo.endCreateDate}
+            </if>
+            <if test="quoteinfo !=null and quoteinfo.beginUpdateDate != null and quoteinfo.beginUpdateDate != '' and quoteinfo.endUpdateDate != null and quoteinfo.endUpdateDate != ''">
+                AND a.update_date &gt;= #{quoteinfo.beginUpdateDate} AND a.update_date &lt;= #{quoteinfo.endUpdateDate}
+            </if>
+            <if test="beginPayDate != null and beginPayDate != '' and endPayDate != null and endPayDate != ''">
+                AND NOT ISNULL(a.PAY_DATE) AND a.pay_date &gt;= #{beginPayDate} AND a.pay_date &lt;= #{endPayDate}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getOrdersStatusNum" resultType="Integer">
+        SELECT
+        COUNT(a.id)
+        FROM trade_orderinfo a
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="orderstatus != null and orderstatus != ''">
+                AND a.orderstatus = #{orderstatus}
+            </if>
+            <if test="iscomment != null and iscomment != ''">
+                AND a.iscomment = #{iscomment}
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND ( a.seller_id = #{seller.id} OR a.buyer_id = #{seller.id})
+            </if>
+        </where>
+    </select>
+
+    <select id="findCarAndTradeList" resultType="Orderinfo">
+       SELECT DISTINCT a.CarNumber AS "quoteinfo.car.carnumber",qt.ORDERNO AS "orderno",qt.DRIVER_ID AS "quoteinfo.driver.id"
+        FROM cs_car a
+        LEFT JOIN
+        (SELECT MAX(t.ORDERNO) as ORDERNO,q.CARID,MAX(t.CREATE_DATE) as CREATE_DATE,q.DRIVER_ID AS DRIVER_ID  from trade_orderinfo t
+        LEFT JOIN gds_quoteinfo q ON t.QUOTE_ID = q.ID
+        where t.ORDERSTATUS in('1','3','4','6','7')
+        GROUP BY q.CARID
+        ) qt ON qt.CARID = a.ID
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (qt.orderno LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                a.CarNumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+            <if test="quoteinfo != null and quoteinfo.user != null and  quoteinfo.user.id != null and quoteinfo.user.id != ''">
+                and a.user_id = #{quoteinfo.user.id}
+            </if>
+        </where>
+        GROUP BY a.carnumber
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY qt.CREATE_DATE DESC
+            </otherwise>
+        </choose>
+    </select>
+	
+	<select id="findByUserid" resultType="long" parameterType="String">
+	    SELECT
+	    	COUNT(1)
+	    FROM
+	    	trade_orderinfo a
+	    WHERE
+	    	a.buyer_id = #{userid}
+	</select>
+
+
+
+	<select id="findBuyerOrderList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+        SELECT
+        count(0) evercout,SUM(IFNULL(p.ACTUALAMOUNT,0)) alltradmy,su.login_name username,su.phone phone
+        FROM trade_orderinfo tod
+        INNER JOIN sys_user su on tod.BUYER_ID = su.id
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        <where>
+            AND tod.orderstatus IN(4,6,7)
+            and tod.SELLER_ID =#{userid}
+        </where>
+        GROUP BY tod.BUYER_ID
+        ORDER BY evercout DESC
+    </select>
+
+    <select id="findSllerOrderList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+        SELECT
+        count(0) evercout,SUM(IFNULL(p.ACTUALAMOUNT,0)) alltradmy,su.login_name username,su.phone phone
+        FROM trade_orderinfo tod
+        INNER JOIN sys_user su on tod.SELLER_ID = su.id
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        <where>
+            AND tod.orderstatus IN(4,6,7)
+            and tod.BUYER_ID =#{userid}
+        </where>
+        GROUP BY tod.SELLER_ID
+        ORDER BY evercout DESC
+    </select>
+
+    <select id="getSllerOrderCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+        SELECT
+        count(tod.id) evercout,SUM(IFNULL(p.ACTUALAMOUNT,0)) alltradmy,SUM(IFNULL(tod.totalcost,0)) totaltradmy,su.login_name username,SUM(IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0))) allweight
+        FROM trade_orderinfo tod
+        INNER JOIN sys_user su on tod.SELLER_ID = su.id
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        LEFT JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+            <if test="orderstatus != null and orderstatus != ''">
+                <if test="orderstatus == 1">
+                    AND tod.orderstatus in (-1,0,1,3)
+                </if>
+                <if test="orderstatus == 2">
+                    AND tod.orderstatus in(4,6,7)
+                </if>
+                <if test="orderstatus == 3">
+                    AND tod.orderstatus =5
+                </if>
+            </if>
+            <if test="orderstatus == null or orderstatus == ''">
+                AND tod.orderstatus IN(4,6,7)
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and tod.update_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and tod.update_date &lt;= #{endDate}
+            </if>
+            and tod.BUYER_ID =#{userid}
+        </where>
+        ORDER BY evercout DESC
+    </select>
+
+    <select id="getBuyerOrderCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+        SELECT
+        count(tod.id) evercout,SUM(IFNULL(p.ACTUALAMOUNT,0)) alltradmy,SUM(IFNULL(tod.totalcost,0)) totaltradmy,su.login_name username,SUM(IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0))) allweight
+        FROM trade_orderinfo tod
+        INNER JOIN sys_user su on tod.BUYER_ID = su.id
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        LEFT JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+            <if test="orderstatus != null and orderstatus != ''">
+                <if test="orderstatus == 1">
+                    AND tod.orderstatus in (-1,0,1,3)
+                </if>
+                <if test="orderstatus == 2">
+                    AND tod.orderstatus in(4,6,7)
+                </if>
+                <if test="orderstatus == 3">
+                    AND tod.orderstatus =5
+                </if>
+            </if>
+            <if test="orderstatus == null or orderstatus == ''">
+                AND tod.orderstatus IN(4,6,7)
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and tod.update_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and tod.update_date &lt;= #{endDate}
+            </if>
+            and tod.SELLER_ID =#{userid}
+        </where>
+        ORDER BY evercout DESC
+    </select>
+
+
+    <select id="getOrderStatusCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+        SELECT
+        count(tod.id) count,SUM(IFNULL(p.ACTUALAMOUNT,0)) mony,
+        SUM(IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0))) weight,
+        d.label name,d.`value` code
+        FROM  sys_dict d
+        LEFT JOIN trade_orderinfo tod ON tod.ORDERSTATUS = d.`value`
+        <if test="userid != null and userid != ''">
+            and (tod.SELLER_ID =#{userid}
+            or tod.BUYER_ID =#{userid})
+        </if>
+        <if test="beginCreateDate !=null and beginCreateDate !=''">
+            and tod.create_date &gt;= #{beginCreateDate}
+        </if>
+        <if test="endCreateDate !=null and endCreateDate !=''">
+            and tod.create_date &lt;= #{endCreateDate}
+        </if>
+
+        LEFT JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        LEFT JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+             d.type='order_status'
+            AND d.`value` NOT IN ('-1', '5')
+        </where>
+        GROUP BY d.value
+        ORDER BY d.value DESC;
+    </select>
+
+    <select id="getOrderBusinessList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+        SELECT
+        count(0) sellercount,SUM(IFNULL(p.ACTUALAMOUNT,0)) totalmoney,
+        SUM(IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0))) allweight,
+        date_format(tod.create_date, '%d') AS "cretime",
+        date_format(tod.create_date, '%Y-%m-%d') AS "createdate"
+        FROM trade_orderinfo tod
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        INNER JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+            1=1
+            <if test="userid != null and userid != ''">
+            and tod.SELLER_ID =#{userid}
+            or tod.BUYER_ID =#{userid}
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and tod.create_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and tod.create_date &lt;= #{endDate}
+            </if>
+        </where>
+        GROUP BY createdate
+        ORDER BY createdate DESC
+        LIMIT 30
+    </select>
+
+
+    <select id="findFinancialOrderList" resultType="Orderinfo">
+        SELECT
+        tod.ID AS "id",
+        tod.ORDERNO AS "orderno",
+        su1.login_name AS "buyer.loginName",
+        su1.phone AS "buyer.phone",
+        su2.login_name AS "seller.loginName",
+        su2.phone AS "seller.phone",
+        tod.TOTALCOST AS "totalcost",
+        p.ACTUALAMOUNT AS "payinfo.actualamount",
+        IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0)) AS "quoteinfo.actload",
+        tod.orderstatus AS "orderstatus",
+        tod.update_date AS "updateDate"
+        FROM trade_orderinfo tod
+        LEFT JOIN sys_user su1 on tod.BUYER_ID = su1.id
+        LEFT JOIN sys_user su2 on tod.SELLER_ID = su2.id
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        INNER JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+            <if test="orderstatus != null and orderstatus != ''">
+                <if test="orderstatus == 1">
+                    AND tod.orderstatus in (-1,0,1,3)
+                </if>
+                <if test="orderstatus == 2">
+                    AND tod.orderstatus in(4,6,7)
+                </if>
+                <if test="orderstatus == 3">
+                    AND tod.orderstatus =5
+                </if>
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND tod.buyer_id = #{buyer.id}
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND tod.seller_id = #{seller.id}
+            </if>
+            <if test="beginUpdateDate !=null and beginUpdateDate !=''">
+                and tod.update_date &gt;= #{beginUpdateDate}
+            </if>
+            <if test="endUpdateDate !=null and endUpdateDate !=''">
+                and tod.update_date &lt;= #{endUpdateDate}
+            </if>
+        </where>
+        ORDER BY tod.update_date DESC
+    </select>
+
+    <select id="findFinancialOrderExcel" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.OrderinfoExcelVO">
+        SELECT
+        tod.ID AS "id",
+        tod.ORDERNO AS "orderno",
+        <if test="seller != null and seller.id != null and seller.id != ''">
+        su1.login_name AS "loginName",
+        su1.phone AS "phone",
+        </if>
+        <if test="buyer != null and buyer.id != null and buyer.id != ''">
+        su2.login_name AS "loginName",
+        su2.phone AS "phone",
+        </if>
+        tod.TOTALCOST AS "totalcost",
+        p.ACTUALAMOUNT AS "actualamount",
+        IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0)) AS "actload",
+        tod.orderstatus AS "orderstatus",
+        date_format(tod.update_date, '%Y-%m-%d') AS "createtime"
+        FROM trade_orderinfo tod
+        LEFT JOIN sys_user su1 on tod.BUYER_ID = su1.id
+        LEFT JOIN sys_user su2 on tod.SELLER_ID = su2.id
+        INNER JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        INNER JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+            <if test="orderstatus != null and orderstatus != ''">
+                <if test="orderstatus == 1">
+                    AND tod.orderstatus in (-1,0,1,3)
+                </if>
+                <if test="orderstatus == 2">
+                    AND tod.orderstatus in(4,6,7)
+                </if>
+                <if test="orderstatus == 3">
+                    AND tod.orderstatus =5
+                </if>
+            </if>
+            <if test="buyer != null and buyer.id != null and buyer.id != ''">
+                AND tod.buyer_id = #{buyer.id}
+            </if>
+            <if test="seller != null and seller.id != null and seller.id != ''">
+                AND tod.seller_id = #{seller.id}
+            </if>
+            <if test="beginUpdateDate !=null and beginUpdateDate !=''">
+                and tod.update_date &gt;= #{beginUpdateDate}
+            </if>
+            <if test="endUpdateDate !=null and endUpdateDate !=''">
+                and tod.update_date &lt;= #{endUpdateDate}
+            </if>
+        </where>
+        ORDER BY tod.update_date DESC
+    </select>
+
+    <select id="getOrderCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+        SELECT
+        count(tod.id) count,SUM(IFNULL(p.ACTUALAMOUNT,0)) mony,
+        SUM(IFNULL(q.ACTLOAD,IFNULL(q.ODDLOADWEIGHT,0))) weight
+        FROM trade_orderinfo tod
+
+        LEFT JOIN trade_payinfo p ON tod.ID = p.ORDER_ID
+        LEFT JOIN gds_quoteinfo q ON tod.QUOTE_ID = q.ID
+        <where>
+            <if test="userid != null and userid != ''">
+                and tod.SELLER_ID =#{userid}
+                or tod.BUYER_ID =#{userid}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findInterfaceFlag" resultType="Orderinfo">
+        SELECT
+	      <include refid="orderinfoColumns"/>
+		FROM
+			trade_orderinfo a
+		<include refid="orderinfoJoins"/>
+		WHERE
+			rail_flag	= #{railFlag}
+		AND
+			railfunction_flag = #{railfunctionFlag}
+	</select>
+	
+    <update id="updateRailState">
+        UPDATE 
+        	trade_orderinfo 
+        SET 
+        <if test="railfunctionFlag != null and railfunctionFlag != ''">
+			railfunction_flag = #{railfunctionFlag},
+		</if>
+        <if test="locationFlag != null and locationFlag !='' ">
+            location_flag = #{locationFlag}
+        </if>
+			
+		WHERE id = #{id}
+    </update>
+
+</mapper>

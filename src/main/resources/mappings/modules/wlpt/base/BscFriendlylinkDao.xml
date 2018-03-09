@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BscFriendlylinkDao">
+    
+	<sql id="bscFriendlylinkColumns">
+		a.friendlylink_id AS "friendlylinkId",
+		a.webname AS "webname",
+		a.weburl AS "weburl",
+		a.webtype AS "webtype",
+		a.webinfo AS "webinfo",
+		a.linkname AS "linkname",
+		a.linkmobile AS "linkmobile",
+		a.linkemail AS "linkemail",
+		a.auditstatus AS "auditstatus",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.isvisible AS "isvisible",
+		a.module AS "module",
+		a.sortcode AS "sortcode"
+	</sql>
+	
+	<sql id="bscFriendlylinkJoins">
+	</sql>
+    
+	<select id="get" resultType="BscFriendlylink">
+		SELECT
+			<include refid="bscFriendlylinkColumns"/>
+		FROM bsc_friendlylink a
+		<include refid="bscFriendlylinkJoins"/>
+		WHERE a.friendlylink_id = #{friendlylinkId}
+	</select>
+
+	<select id="findList" resultType="BscFriendlylink">
+		SELECT 
+			<include refid="bscFriendlylinkColumns"/>
+		FROM bsc_friendlylink a
+		<include refid="bscFriendlylinkJoins"/>
+		<where>
+			
+			<if test="webname != null and webname != ''">
+				AND a.webname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{webname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{webname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{webname},'%')</if>
+			</if>
+			<if test="webtype != null and webtype != ''">
+				AND a.webtype = #{webtype}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BscFriendlylink">
+		SELECT 
+			<include refid="bscFriendlylinkColumns"/>
+		FROM bsc_friendlylink a
+		<include refid="bscFriendlylinkJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bsc_friendlylink(
+
+		<if test="webname != null and webname !='' ">
+			webname,
+		</if>
+		<if test="weburl != null and weburl !='' ">
+			weburl,
+		</if>
+		<if test="webtype != null and webtype !='' ">
+			webtype,
+		</if>
+		<if test="webinfo != null and webinfo !='' ">
+			webinfo,
+		</if>
+		<if test="linkname != null and linkname !='' ">
+			linkname,
+		</if>
+		<if test="linkmobile != null and linkmobile !='' ">
+			linkmobile,
+		</if>
+		<if test="linkemail != null and linkemail !='' ">
+			linkemail,
+		</if>
+		<if test="auditstatus != null and auditstatus !='' ">
+			auditstatus,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="isvisible != null and isvisible !='' ">
+			isvisible,
+		</if>
+		<if test="module != null and module !='' ">
+			module,
+		</if>
+		<if test="sortcode != null and sortcode !='' ">
+			sortcode,
+		</if>
+			friendlylink_id
+		) VALUES (
+
+		<if test="webname != null and webname !='' ">
+			#{webname},
+		</if>
+		<if test="weburl != null and weburl !='' ">
+			#{weburl},
+		</if>
+		<if test="webtype != null and webtype !='' ">
+			#{webtype},
+		</if>
+		<if test="webinfo != null and webinfo !='' ">
+			#{webinfo},
+		</if>
+		<if test="linkname != null and linkname !='' ">
+			#{linkname},
+		</if>
+		<if test="linkmobile != null and linkmobile !='' ">
+			#{linkmobile},
+		</if>
+		<if test="linkemail != null and linkemail !='' ">
+			#{linkemail},
+		</if>
+		<if test="auditstatus != null and auditstatus !='' ">
+			#{auditstatus},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="isvisible != null and isvisible !='' ">
+			#{isvisible},
+		</if>
+		<if test="module != null and module !='' ">
+			#{module},
+		</if>
+		<if test="sortcode != null and sortcode !='' ">
+			#{sortcode},
+		</if>
+		#{friendlylinkId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bsc_friendlylink SET 	
+			<if test="webname != null and webname !='' ">
+				webname = #{webname},
+			</if>
+			<if test="weburl != null and weburl !='' ">
+				weburl = #{weburl},
+			</if>
+			<if test="webtype != null and webtype !='' ">
+				webtype = #{webtype},
+			</if>
+			<if test="webinfo != null and webinfo !='' ">
+				webinfo = #{webinfo},
+			</if>
+			<if test="linkname != null and linkname !='' ">
+				linkname = #{linkname},
+			</if>
+			<if test="linkmobile != null and linkmobile !='' ">
+				linkmobile = #{linkmobile},
+			</if>
+			<if test="linkemail != null and linkemail !='' ">
+				linkemail = #{linkemail},
+			</if>
+			<if test="auditstatus != null and auditstatus !='' ">
+				auditstatus = #{auditstatus},
+			</if>
+			<if test="isvisible != null and isvisible !='' ">
+				isvisible = #{isvisible},
+			</if>
+			<if test="module != null and module !='' ">
+				module = #{module},
+			</if>
+			<if test="sortcode != null and sortcode !='' ">
+				sortcode = #{sortcode},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			friendlylink_id = #{friendlylinkId}
+		WHERE friendlylink_id = #{friendlylinkId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM bsc_friendlylink
+		WHERE friendlylink_id = #{friendlylinkId}
+	</update>
+			<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from bsc_friendlylink
+		where 
+		friendlylink_id in  ${delteArrayStr}
+	</delete>
+</mapper>

@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.bid.BidBlinfoDao">
+    
+	<sql id="bidBlinfoColumns">
+		a.id AS "id",
+		a.biddinguserid AS "biddinguser.id",
+		a.biduserid AS "biduser.id",
+		a.goodsid AS "goods.id",
+		a.bidgoodsid AS "bidgoods.id",
+		a.contractno AS "contractno",
+		a.orderid AS "bidOrder.id",
+		a.namematerials AS "namematerials",
+		a.standard AS "standard",
+		a.quantity AS "quantity",
+		a.batch AS "batch",
+		a.blstatus AS "blstatus",
+		/*a.blcode AS "blcode",*/
+		a.tradestatus AS "tradestatus",
+		a.address AS "address",
+		a.width AS "width",
+		a.bltype AS "bltype",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.biddingstatus AS "biddingstatus",
+		a.bidstatus AS "bidstatus",
+		a.warehouse_name AS "warehousename",
+		a.bidding_inbound_date AS "biddingInboundDate",
+		date_format(a.bidding_inbound_date, '%Y-%m-%d') AS "ymdbiddingInboundDate",
+		a.bidding_outbound_date AS "biddingOutboundDate",
+		a.bid_inbound_date AS "bidInboundDate",
+		a.bid_outbound_date AS "bidOutboundDate",
+		date_format(a.create_date, '%Y-%m-%d') AS "ymdDate",
+		ifnull(bidno.BIDCODE,"自有")   AS "blcode"
+	</sql>
+	
+	<sql id="bidBlinfoJoins">
+		LEFT JOIN  gds_goods goods ON a.goodsid=goods.id
+		LEFT JOIN  gds_goods bidGoods ON a.bidgoodsid=bidGoods.id
+		LEFT JOIN (SELECT
+               bid.BIDCODE,
+               bod.ID,
+               bod.CONTRACTNO
+             FROM bid_bidinfo bid INNER JOIN bid_orderinfo bod ON bid.ID = bod.BIDINFOID) bidno ON a.ORDERID = bidno.ID
+	</sql>
+    
+	<select id="get" resultType="BidBlinfo">
+		SELECT
+			<include refid="bidBlinfoColumns"/>
+		FROM bid_blinfo a
+		<include refid="bidBlinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="BidBlinfo">
+		SELECT 
+			<include refid="bidBlinfoColumns"/>
+		FROM bid_blinfo a
+		<include refid="bidBlinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="goods != null and goods.id != null and goods.id != ''">
+				AND a.goodsid = #{goods.id}
+			</if>
+			<if test="bidgoods !=null and bidgoods.id != null and bidgoods.id != ''">
+				AND a.bidgoodsid = #{bidgoods.id}
+			</if>
+			<if test="bidOrder !=null and bidOrder.id != null and bidOrder.id != ''">
+				AND a.orderid = #{bidOrder.id}
+			</if>
+			<if test="biddinguser != null and biddinguser.id != null and biddinguser.id != ''">
+				AND a.biddinguserid = #{biddinguser.id}
+			</if>
+			<if test="biduser !=null and biduser.id != null and biduser.id != ''">
+				AND a.biduserid = #{biduser.id}
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND ((a.biduserid = #{searchinfo} AND a.BLTYPE!=0) or a.biddinguserid = #{searchinfo})
+			</if>
+			<if test="blstatus != null and blstatus != ''">
+				AND a.blstatus = #{blstatus}
+			</if>
+			<if test="tradestatus != null and tradestatus != ''">
+				AND a.tradestatus = #{tradestatus}
+			</if>
+			<if test="bltype != null and bltype != ''">
+				AND a.bltype = #{bltype}
+			</if>
+			<if test="contractno != null and contractno != ''">
+				AND a.contractno = #{contractno}
+			</if>
+			<if test="namematerials != null and namematerials != ''">
+				AND a.namematerials = #{namematerials}
+			</if>
+			<if test="standard != null and standard != ''">
+				AND a.standard = #{standard}
+			</if>
+			<if test="quantity != null and quantity != ''">
+				AND a.quantity = #{quantity}
+			</if>
+			<if test="batch != null and batch != ''">
+				AND a.batch = #{batch}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="width != null and width != ''">
+				AND a.width = #{width}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="biddingstatus != null and biddingstatus != ''">
+				AND a.biddingstatus = #{biddingstatus}
+			</if>
+			<if test="bidstatus != null and bidstatus != ''">
+				AND a.bidstatus = #{bidstatus}
+			</if>
+			<if test="warehousename != null and warehousename != ''">
+				AND a.warehouse_name = #{warehousename}
+			</if>
+			<if test="biddingInboundDate != null and biddingInboundDate != ''">
+				AND date_format(a.bidding_inbound_date, '%Y-%m-%d') = date_format(#{biddingInboundDate},'%Y-%m-%d')
+			</if>
+			<if test="biddingOutboundDate != null and biddingOutboundDate != ''">
+				AND date_format(a.bidding_outbound_date, '%Y-%m-%d') = date_format(#{biddingOutboundDate},'%Y-%m-%d')
+			</if>
+			<if test="bidInboundDate != null and bidInboundDate != ''">
+				AND date_format(a.bid_inbound_date, '%Y-%m-%d') = date_format(#{bidInboundDate},'%Y-%m-%d')
+			</if>
+			<if test="bidOutboundDate != null and bidOutboundDate != ''">
+				AND date_format(a.bid_outbound_date, '%Y-%m-%d') = date_format(#{bidOutboundDate},'%Y-%m-%d')
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND date_format(a.create_date, '%Y-%m-%d') = date_format(#{createDate},'%Y-%m-%d')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BidBlinfo">
+		SELECT 
+			<include refid="bidBlinfoColumns"/>
+		FROM bid_blinfo a
+		<include refid="bidBlinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bid_blinfo(
+
+		<if test="biddinguser!=null and biddinguser.id != null and biddinguser.id !='' ">
+			biddinguserid,
+		</if>
+		<if test="biduser!=null and biduser.id != null and biduser.id !='' ">
+			biduserid,
+		</if>
+		<if test="goods!=null and goods.id != null and goods.id !='' ">
+			goodsid,
+		</if>
+		<if test="bidgoods !=null and bidgoods.id != null and bidgoods.id !='' ">
+			bidgoodsid,
+		</if>
+		<if test="contractno != null and contractno !='' ">
+			contractno,
+		</if>
+		<if test="bidOrder!=null and bidOrder.id != null and bidOrder.id !='' ">
+			orderid,
+		</if>
+		<if test="namematerials != null and namematerials !='' ">
+			namematerials,
+		</if>
+		<if test="standard != null and standard !='' ">
+			standard,
+		</if>
+		<if test="quantity != null and quantity !='' ">
+			quantity,
+		</if>
+		<if test="batch != null and batch !='' ">
+			batch,
+		</if>
+		<if test="blstatus != null and blstatus !='' ">
+			blstatus,
+		</if>
+		<if test="blcode != null and blcode !='' ">
+			blcode,
+		</if>
+		<if test="tradestatus != null and tradestatus !='' ">
+			tradestatus,
+		</if>
+		<if test="address != null and address !='' ">
+			address,
+		</if>
+		<if test="width != null and width !='' ">
+			width,
+		</if>
+		<if test="bltype != null and bltype !='' ">
+			bltype,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="biddingstatus != null and biddingstatus !='' ">
+			biddingstatus,
+		</if>
+		<if test="bidstatus != null and bidstatus !='' ">
+			bidstatus,
+		</if>
+		<if test="warehousename != null and warehousename !='' ">
+			warehouse_name,
+		</if>
+		<if test="biddingInboundDate != null and biddingInboundDate !='' ">
+			bidding_inbound_date,
+		</if>
+		<if test="biddingOutboundDate != null and biddingOutboundDate !='' ">
+			bidding_outbound_date,
+		</if>
+		<if test="bidInboundDate != null and bidInboundDate !='' ">
+			bid_inbound_date,
+		</if>
+		<if test="bidOutboundDate != null and bidOutboundDate !='' ">
+			bid_outbound_date,
+		</if>
+			id
+		) VALUES (
+		<if test="biddinguser != null and biddinguser.id != null and biddinguser.id !='' ">
+			#{biddinguser.id},
+		</if>
+		<if test="biduser!=null and biduser.id != null and biduser.id !='' ">
+			#{biduser.id},
+		</if>
+		<if test="goods!=null and goods.id != null and goods.id !='' ">
+			#{goodsid},
+		</if>
+		<if test="bidgoods!=null and bidgoods.id != null and bidgoods.id !='' ">
+			#{bidgoods.id},
+		</if>
+		<if test="contractno != null and contractno !='' ">
+			#{contractno},
+		</if>
+		<if test="bidOrder!=null and bidOrder.id != null and bidOrder.id !='' ">
+			#{orderid},
+		</if>
+		<if test="namematerials != null and namematerials !='' ">
+			#{namematerials},
+		</if>
+		<if test="standard != null and standard !='' ">
+			#{standard},
+		</if>
+		<if test="quantity != null and quantity !='' ">
+			#{quantity},
+		</if>
+		<if test="batch != null and batch !='' ">
+			#{batch},
+		</if>
+		<if test="blstatus != null and blstatus !='' ">
+			#{blstatus},
+		</if>
+		<if test="blcode != null and blcode !='' ">
+			#{blcode},
+		</if>
+		<if test="tradestatus != null and tradestatus !='' ">
+			#{tradestatus},
+		</if>
+		<if test="address != null and address !='' ">
+			#{address},
+		</if>
+		<if test="width != null and width !='' ">
+			#{width},
+		</if>
+		<if test="bltype != null and bltype !='' ">
+			#{bltype},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="biddingstatus != null and biddingstatus !='' ">
+			#{biddingstatus},
+		</if>
+		<if test="bidstatus != null and bidstatus !='' ">
+			#{bidstatus},
+		</if>
+		<if test="warehousename != null and warehousename !='' ">
+			#{warehousename},
+		</if>
+		<if test="biddingInboundDate != null and biddingInboundDate !='' ">
+			#{biddingInboundDate},
+		</if>
+		<if test="biddingOutboundDate != null and biddingOutboundDate !='' ">
+			#{biddingOutboundDate},
+		</if>
+		<if test="bidInboundDate != null and bidInboundDate !='' ">
+			#{bidInboundDate},
+		</if>
+		<if test="bidOutboundDate != null and bidOutboundDate !='' ">
+			#{bidOutboundDate},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bid_blinfo SET 	
+			<if test="biddinguser != null and biddinguser.id != null and biddinguser.id !='' ">
+				biddinguserid = #{biddinguser.id},
+			</if>
+			<if test="biduser !=null and biduser.id != null and biduser.id !='' ">
+				biduserid = #{biduser.id},
+			</if>
+			<if test="goods != null and goods.id != null and goods.id !='' ">
+				goodsid = #{goods.id},
+			</if>
+			<if test="bidgoods != null and bidgoods.id != null and bidgoods.id !='' ">
+				bidgoodsid = #{bidgoods.id},
+			</if>
+			<if test="contractno != null and contractno !=''">
+				contractno = #{contractno},
+			</if>
+			<if test="bidOrder!=null and bidOrder.id != null and bidOrder.id !=''">
+				orderid = #{bidOrder.id},
+			</if>
+			<if test="namematerials != null and namematerials !=''">
+				namematerials = #{namematerials},
+			</if>
+			<if test="standard != null and standard !='' ">
+				standard = #{standard},
+			</if>
+			<if test="quantity != null and quantity !='' ">
+				quantity = #{quantity},
+			</if>
+			<if test="batch != null and batch !='' ">
+				batch = #{batch},
+			</if>
+			<if test="blstatus != null and blstatus !='' ">
+				blstatus = #{blstatus},
+			</if>
+			<if test="blcode != null and blcode !='' ">
+				blcode = #{blcode},
+			</if>
+			<if test="tradestatus != null and tradestatus !='' ">
+				tradestatus = #{tradestatus},
+			</if>
+			<if test="address != null and address !='' ">
+				address = #{address},
+			</if>
+			<if test="width != null and width !='' ">
+				width = #{width},
+			</if>
+			<if test="bltype != null and bltype !='' ">
+				bltype = #{bltype},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			<if test="biddingstatus != null and biddingstatus !='' ">
+				biddingstatus = #{biddingstatus},
+			</if>
+			<if test="bidstatus != null and bidstatus !='' ">
+				bidstatus = #{bidstatus},
+			</if>
+			<if test="warehousename != null and warehousename !='' ">
+				warehouse_name = #{warehousename},
+			</if>
+			<if test="biddingInboundDate != null and biddingInboundDate !='' ">
+				bidding_inbound_date = #{biddingInboundDate},
+			</if>
+			<if test="biddingOutboundDate != null and biddingOutboundDate !='' ">
+				bidding_outbound_date = #{biddingOutboundDate},
+			</if>
+			<if test="bidInboundDate != null and bidInboundDate !='' ">
+				bid_inbound_date = #{bidInboundDate},
+			</if>
+			<if test="bidOutboundDate != null and bidOutboundDate !='' ">
+				bid_outbound_date = #{bidOutboundDate},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bid_blinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 批量删除 -->
+	<update id="deleteAll">
+		UPDATE bid_blinfo SET
+		del_flag = #{DEL_FLAG_DELETE}
+		where
+		id in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 修改提货单关闭状态 -->
+	<update id="updateCancelByGoods">
+		UPDATE bid_blinfo SET
+		TRADESTATUS = 1
+		where
+		GOODSID =#{goods.id}
+	</update>
+
+	<!-- 批量修改提货单状态为已完成 -->
+	<update id="updateTradeSuccess">
+		UPDATE  bid_blinfo SET
+		TRADESTATUS=3<!--交易状态为已完成-->
+		where
+		ID in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 批量修改提货单状态为未运输 -->
+	<update id="updateTradeCancel">
+		UPDATE  bid_blinfo SET
+		TRADESTATUS=1<!--交易状态为已完成-->
+		where
+		ID in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 批量修改提货单状态为运输中 -->
+	<update id="updateTradeFreighting">
+		UPDATE  bid_blinfo SET
+		TRADESTATUS=2<!--交易状态为运输中-->
+
+		where
+		ID in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 批量修改提货单状态为已发布 -->
+	<update id="updateTradePubGds">
+		UPDATE  bid_blinfo SET
+		GOODSID=#{goods.id},
+		TRADESTATUS=1,<!--交易状态为已发布-->
+		BLSTATUS=2<!--发布状态为已发布:涉及自我发布的提货单-->
+		where
+		ID in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 批量修改提货单状态未发布 招标合同除外-->
+	<update id="updateTradeUnPub">
+		UPDATE  bid_blinfo SET
+		biddingstatus = 2,
+		TRADESTATUS=0<!--交易状态为未发布-->
+		where
+		ID in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 批量修改提货单招标仓库状态未发布 招标合同除外-->
+	<update id="updateBidStatusUnPubone">
+		UPDATE  bid_blinfo SET
+		bidstatus = 1
+		where
+		BIDUSERID= BIDDINGUSERID
+		AND
+		ID in
+		<foreach collection="array" index="index"  item="item" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 批量修改提货单招标仓库状态未发布 招标合同除外-->
+	<update id="updateBidStatusUnPubtow">
+		UPDATE  bid_blinfo SET
+		bidstatus = 2
+		where
+		BIDUSERID= BIDDINGUSERID
+		AND
+		ID in
+		<foreach collection="array" index="index"  item="item" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 批量修改提货单招标仓库状态未发布 招标合同除外-->
+	<update id="updateBidStatusUnPubtree">
+		UPDATE  bid_blinfo SET
+		bidstatus = 3
+		where
+		BIDUSERID= BIDDINGUSERID
+		AND
+		ID in
+		<foreach collection="array" index="index"  item="item" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 修改提货单竞标方仓库状态 -->
+	<update id="updateBiddingstatusByGoods">
+		UPDATE bid_blinfo SET
+		<if test="biddingOutboundDate != null and biddingOutboundDate !='' ">
+			bidding_outbound_date = #{biddingOutboundDate},
+		</if>
+		<if test="bidstatus != null and bidstatus !='' ">
+			bidstatus = #{bidstatus},
+		</if>
+		biddingstatus = #{biddingstatus}
+		where
+		GOODSID =#{goods.id}
+	</update>
+
+	<!-- 根据选中的提货单IDS 获取提货单详情内容到发布零担货源页面 -->
+	<select id="getBLListData" resultType="BidBlinfo">
+		SELECT
+			<include refid="bidBlinfoColumns"/>
+		FROM bid_blinfo a
+		<include refid="bidBlinfoJoins"/>
+		WHERE a.id in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+		<select id="findByBidId" resultType="BidBlinfo">
+		SELECT 
+			<include refid="bidBlinfoColumns"/>
+		FROM bid_blinfo a
+		<include refid="bidBlinfoJoins"/>
+		where
+		a.contractno = #{bidId}
+	</select>
+
+	<!--获取每天的交易量-->
+	<select id="daynum" resultType="int">
+		SELECT count(0) num
+		FROM bid_blinfo
+		WHERE date_format(CREATE_DATE,"%Y-%m-%d") = DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单-->
+	</select>
+
+	<!-- 自发仓库状态统计 -->
+	<select id="findBidStatusCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoCountVO">
+		select count(a.id) AS "count",sum(IFNULL(a.quantity,0)) AS weight,d.label AS "name",d.`value` AS "code"
+		FROM  sys_dict d
+		LEFT JOIN bid_blinfo a on a.BIDSTATUS = d.`value`
+		<if test="type != null and type != '' ">
+
+			<if test="type==1 ">
+				AND a.BIDDINGUSERID = #{userid}
+			</if>
+			<if test="type==2 ">
+				AND a.BIDUSERID = #{userid}
+				AND IFNULL(a.BIDDINGSTATUS,0)!=0
+			</if>
+			<if test="type==3 ">
+				AND (a.BIDUSERID = #{userid} OR a.BIDDINGUSERID = #{userid} )
+			</if>
+		</if>
+		LEFT JOIN bid_orderinfo o ON a.ORDERID = o.ID
+		LEFT JOIN bid_bidinfo b ON o.BIDINFOID = b.ID
+		<where>
+			a.del_flag = 0
+
+			AND d.type='bidwarehouse_status'
+			<if test="searchinfo !=null and searchinfo!=''">
+				AND (a.warehouse_name LIKE
+				<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+				<if test="searchinfo !='自发'">
+					or b.BIDCODE LIKE
+					<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+				</if>
+				<if test="searchinfo =='自发'">
+					OR ISNULL(b.BIDCODE)
+				</if>
+				)
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND a.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND a.create_date &lt;= #{endCreateDate}
+			</if>
+		</where>
+		GROUP BY d.value
+	</select>
+
+	<!-- 接单仓库状态统计 -->
+	<select id="findBiddingStatusCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoCountVO">
+		select count(a.id) AS "count",sum(IFNULL(a.quantity,0)) AS weight,d.label AS "name",d.`value` AS "code"
+		FROM  sys_dict d
+		LEFT JOIN bid_blinfo a on a.biddingstatus = d.`value`
+		<if test="type != null and type != '' ">
+
+			<if test="type==1 ">
+				AND a.BIDUSERID = #{userid}
+			</if>
+			<if test="type==2 ">
+				AND a.BIDDINGUSERID = #{userid}
+				AND IFNULL(a.BIDDINGSTATUS,0)!=0
+			</if>
+			<if test="type==3 ">
+				AND (a.BIDUSERID = #{userid} OR a.BIDDINGUSERID = #{userid} )
+
+			</if>
+		</if>
+		LEFT JOIN bid_orderinfo o ON a.ORDERID = o.ID
+		LEFT JOIN bid_bidinfo b ON o.BIDINFOID = b.ID
+
+		<where>
+			a.del_flag = 0
+
+			AND d.type='bidwarehouse_status'
+			<if test="searchinfo !=null and searchinfo!=''">
+				AND (a.warehouse_name LIKE
+				<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+				<if test="searchinfo !='自发'">
+					or b.BIDCODE LIKE
+					<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+				</if>
+				<if test="searchinfo =='自发'">
+					OR ISNULL(b.BIDCODE)
+				</if>
+				)
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND a.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND a.create_date &lt;= #{endCreateDate}
+			</if>
+		</where>
+		GROUP BY d.value
+	</select>
+
+
+	<!-- 仓库状态总统计 -->
+	<select id="findBidBlinfoCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoCountVO">
+		select count(a.id) AS "count",sum(IFNULL(a.quantity,0)) AS weight
+		FROM  bid_blinfo a
+		LEFT JOIN bid_orderinfo o ON a.ORDERID = o.ID
+		LEFT JOIN bid_bidinfo b ON o.BIDINFOID = b.ID
+		<where>
+			a.del_flag = 0
+
+			<if test="type != null and type != '' ">
+
+				<if test="type==1 ">
+					AND a.BIDUSERID = #{userid}
+				</if>
+				<if test="type==2 ">
+					AND a.BIDDINGUSERID = #{userid}
+					AND IFNULL(a.BIDDINGSTATUS,0)!=0
+				</if>
+				<if test="type==3 ">
+					AND (a.BIDUSERID = #{userid} OR a.BIDDINGUSERID = #{userid} )
+
+				</if>
+			</if>
+			<if test="biddingstatus != null and biddingstatus != ''">
+				AND a.biddingstatus = #{biddingstatus}
+			</if>
+			<if test="bidstatus != null and bidstatus != ''">
+				AND a.bidstatus = #{bidstatus}
+			</if>
+			<if test="searchinfo !=null and searchinfo!=''">
+				AND (a.warehouse_name LIKE
+				<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+				<if test="searchinfo !='自发'">
+					or b.BIDCODE LIKE
+					<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+				</if>
+				<if test="searchinfo =='自发'">
+					OR ISNULL(b.BIDCODE)
+				</if>
+				)
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND a.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND a.create_date &lt;= #{endCreateDate}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 交易状态统计 -->
+	<select id="findBlinfoTradeStatusCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoCountVO">
+		select count(a.id) AS "count",sum(IFNULL(a.quantity,0)) AS weight,d.label AS "name",d.`value` AS "code"
+		FROM  sys_dict d
+		LEFT JOIN bid_blinfo a on a.TRADESTATUS = d.`value`
+		<if test="userid != null and userid != ''">
+			AND a.BIDUSERID =#{userid}
+		</if>
+		<where>
+			a.del_flag = 0
+			AND d.type='trade_status'
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND a.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND a.create_date &lt;= #{endCreateDate}
+			</if>
+		</where>
+
+		GROUP BY d.value
+	</select>
+
+	<!-- 各个仓库统计 -->
+	<select id="findBlinfoWarehouseList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoCountVO">
+		select count(a.id) AS "count",sum(IFNULL(a.quantity,0)) AS weight,a.warehouse_name AS "name"
+		FROM   bid_blinfo a
+		<where>
+			a.del_flag = 0
+			<if test="userid != null and userid != ''">
+				AND a.BIDUSERID =#{userid}
+			</if>
+		</where>
+		GROUP BY a.warehouse_name
+	</select>
+
+	<!-- 仓库每日运输分析统计 -->
+	<select id="findBlinfoDayList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoCountVO">
+		select count(a.id) AS "count",sum(IFNULL(a.quantity,0)) AS weight,date_format(a.update_date, '%d') AS "createtime"
+		FROM   bid_blinfo a
+		<where>
+			a.del_flag = 0
+			AND a.TRADESTATUS = 1
+			<if test="userid != null and userid != ''">
+				AND (a.BIDUSERID =#{userid} OR a.biddingstatus = #{userid})
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND a.update_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND a.update_date &lt;= #{endCreateDate}
+			</if>
+		</where>
+		GROUP BY date_format(a.update_date, '%Y-%m-%d')
+		ORDER BY date_format(a.update_date, '%Y-%m-%d')
+		LIMIT 15
+	</select>
+
+
+	<!-- 仓库报表统计 -->
+	<select id="findBlinfoList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidBlinfoVO">
+		select
+		a.id AS "id",
+		a.biddinguserid AS "biddinguser.id",
+		a.biduserid AS "biduser.id",
+		a.contractno AS "contractno",
+		a.orderid AS "bidOrder.id",
+		IFNULL(b.BIDCODE,"自有") AS "bidcode",
+		a.namematerials AS "namematerials",
+		a.standard AS "standard",
+		a.quantity AS "quantity",
+		a.batch AS "batch",
+		a.blcode AS "blcode",
+		a.address AS "address",
+		a.width AS "width",
+		a.bltype AS "bltype",
+		<if test="type != null and type != '' ">
+			<if test="type==1 ">
+				a.bidstatus AS "status",
+			</if>
+			<if test="type==2 ">
+				a.biddingstatus AS "status",
+			</if>
+		</if>
+		a.biddingstatus AS "biddingstatus",
+		a.bidstatus AS "bidstatus",
+		a.warehouse_name AS "warehousename",
+		date_format(a.create_date, '%Y-%m-%d') AS "ymdDate"
+		FROM   bid_blinfo a
+		LEFT JOIN sys_user su1 ON a.BIDUSERID = su1.id
+		LEFT JOIN sys_user su2 ON a.BIDDINGUSERID = su2.id
+		LEFT JOIN bid_orderinfo o ON a.ORDERID = o.ID
+		LEFT JOIN bid_bidinfo b ON o.BIDINFOID = b.ID
+	<where>
+		a.del_flag = 0
+		<if test="type != null and type != '' ">
+			<if test="type==2 ">
+				AND IFNULL(a.BIDDINGSTATUS,0)!=0
+			</if>
+		</if>
+
+		<if test="searchinfo !=null and searchinfo!=''">
+			AND (a.warehouse_name LIKE
+			<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+			<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+			<if test="searchinfo !='自发'">
+				or b.BIDCODE LIKE
+				<if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+			</if>
+			<if test="searchinfo =='自有'">
+				OR ISNULL(b.BIDCODE)
+			</if>
+			)
+		</if>
+		<if test="biddinguser != null and biddinguser.id != null and biddinguser.id != ''">
+			AND a.biddinguserid = #{biddinguser.id}
+		</if>
+		<if test="biduser !=null and biduser.id != null and biduser.id != ''">
+			AND a.biduserid = #{biduser.id}
+		</if>
+		<if test="biddingstatus != null and biddingstatus != ''">
+			AND a.biddingstatus = #{biddingstatus}
+		</if>
+		<if test="bidstatus != null and bidstatus != ''">
+			AND a.bidstatus = #{bidstatus}
+		</if>
+		<if test="beginCreateDate != null and beginCreateDate != '' ">
+			AND a.create_date &gt;= #{beginCreateDate}
+		</if>
+		<if test="endCreateDate != null and endCreateDate != '' ">
+			AND a.create_date &lt;= #{endCreateDate}
+		</if>
+	</where>
+	<choose>
+		<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+			ORDER BY ${page.orderBy}
+		</when>
+		<otherwise>
+			ORDER BY a.create_date DESC
+		</otherwise>
+	</choose>
+</select>
+</mapper>

@@ -1,0 +1,189 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0 auto;
+	width: 100%;
+	font-family: Microsoft YaHei;
+	min-width: 320px;
+	min-height: 480px;
+}
+
+#title {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: #F74000;
+}
+
+.backhost {
+	float: left;
+	height: 50px;
+	padding-left: 10px;
+}
+
+.title {
+	font-size: 1.8em;
+	margin-left: -25px;
+	color: white;
+	line-height: 50px;
+}
+
+.authMargin {
+	margin: 0px 10px;
+}
+
+.divbox {
+	margin: 0 1%;
+}
+
+.b_border {
+	border-bottom: 1px solid #E5E5E5;
+	padding-left: 10px;
+}
+
+.com_height {
+	height: 50px;
+	line-height: 50px;
+}
+
+input[type='text'] {
+	width: 65%;
+	border: 0;
+	float: right;
+	height: 50px;
+	font-size: 14px;
+	text-align: right;
+	padding-right: 10px;
+	outline: none;
+}
+
+.upload_pic {
+	height: 50px;
+	line-height: 50px;
+}
+
+.for_img {
+	width: 40px;
+	height: 40px;
+	float: right;
+	cursor: pointer;
+	background: url(/static/images/weixin/photo.png) center no-repeat;
+}
+
+.photo_identify {
+	width: 200px;
+	height: 150px;
+	/* float: left; */
+	margin: 10px 0px 10px 20px;
+	display: none;
+}
+
+.photo_img {
+	width: 200px;
+	height: 150px;
+	vertical-align: middle;
+}
+
+.last_div {
+	width: 100%;
+	height: 125px;
+	background: #F2F2F2;
+	float: left;
+	display: none;
+}
+
+.fortreaty {
+	line-height: 40px;
+	padding-left: 10px;
+}
+
+.side {
+	width: 18px;
+	height: 18px;
+	color: #fff;
+	line-height: 18px;
+	border: 1px solid #FF9001;
+	display: inline-block;
+	background: #FF9001;
+	vertical-align: middle;
+	cursor: pointer;
+	margin-right: 8px;
+	text-align: center;
+}
+
+.forprompt {
+	line-height: 32px;
+	padding-left: 15px;
+}
+
+.treaty {
+	text-decoration: none;
+	color: #F00;
+}
+
+.prompt {
+	color: #969696;
+	font-size: 14px;
+}
+
+#submit {
+	line-height: 40px;
+	margin: 10px 10px 0px 10px;
+	background: #F00;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+#erro {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	background: rgba(0, 0, 0, 0.38);
+	display: none;
+}
+
+.bor_bot {
+	border-bottom: 1px #EBEBEB solid;
+}
+
+.imgTypeIcon {
+	margin-bottom: -8px;
+}
+
+.mar {
+	margin-bottom: 10px;
+}
+
+strong {
+	color: #797979;
+	line-height: 30px;
+}
+
+.explainMargin {
+	margin: 15px 10px;
+}
+
+.simpleRight {
+	text-align: center;
+}
+
+.imgSimple {
+	height: 150px;
+}
+
+p {
+	color: #666666;
+	line-height: 25px;
+	letter-spacing: 0.1em;
+}

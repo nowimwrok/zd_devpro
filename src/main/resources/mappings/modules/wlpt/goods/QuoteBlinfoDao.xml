@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.goods.QuoteBlinfoDao">
+    
+	<sql id="quoteBlinfoColumns">
+		a.id AS "id",
+		a.quote_id AS "quote.id",
+		a.blinfo_id AS "blinfo.id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.remarks AS "remarks",
+		blinfo.goodsid AS "blinfo.goods.id",
+		blinfo.bidgoodsid AS "blinfo.bidgoods.id",
+		blinfo.contractno AS "blinfo.contractno",
+		blinfo.orderid AS "blinfo.bidOrder.id",
+		blinfo.namematerials AS "blinfo.namematerials",
+		blinfo.standard AS "blinfo.standard",
+		blinfo.quantity AS "blinfo.quantity",
+		blinfo.batch AS "blinfo.batch",
+		blinfo.blstatus AS "blinfo.blstatus",
+		blinfo.blcode AS "blinfo.blcode",
+		blinfo.tradestatus AS "blinfo.tradestatus",
+		blinfo.address AS "blinfo.address",
+		blinfo.width AS "blinfo.width",
+		blinfo.bltype AS "blinfo.bltype",
+		blinfo.create_by AS "blinfo.createBy.id",
+		blinfo.create_date AS "blinfo.createDate",
+		blinfo.update_by AS "blinfo.updateBy.id",
+		blinfo.update_date AS "blinfo.updateDate",
+		blinfo.remarks AS "blinfo.remarks",
+		blinfo.del_flag AS "blinfo.delFlag"
+	</sql>
+	
+	<sql id="quoteBlinfoJoins">
+		LEFT JOIN bid_blinfo blinfo ON blinfo.id=a.blinfo_id
+	</sql>
+    
+	<select id="get" resultType="QuoteBlinfo">
+		SELECT
+			<include refid="quoteBlinfoColumns"/>
+		FROM gds_quote_blinfo a
+		<include refid="quoteBlinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="QuoteBlinfo">
+		SELECT 
+			<include refid="quoteBlinfoColumns"/>
+		FROM gds_quote_blinfo a
+		<include refid="quoteBlinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="quote != null and quote.id != null and quote.id != ''">
+				AND a.quote_id = #{quote.id}
+			</if>
+			<if test="blinfo != null and blinfo.id != null and blinfo.id != ''">
+				AND a.blinfo_id = #{blinfo.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="QuoteBlinfo">
+		SELECT 
+			<include refid="quoteBlinfoColumns"/>
+		FROM gds_quote_blinfo a
+		<include refid="quoteBlinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gds_quote_blinfo(
+
+		<if test="quote !=null and quote.id != null and quote.id !='' ">
+			quote_id,
+		</if>
+		<if test="blinfo != null and blinfo.id != null and blinfo.id !='' ">
+			blinfo_id,
+		</if>
+		<if test="createBy !=null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and  updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+			id
+		) VALUES (
+		<if test="quote != null and quote.id != null and quote.id !='' ">
+			#{quote.id},
+		</if>
+		<if test="blinfo != null and blinfo.id != null and blinfo.id !='' ">
+			#{blinfo.id},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gds_quote_blinfo SET 	
+			<if test="quote !=null and quote.id != null and quote.id !='' ">
+				quote_id = #{quote.id},
+			</if>
+			<if test="blinfo != null and blinfo.id != null and blinfo.id !='' ">
+				blinfo_id = #{blinfo.id},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gds_quote_blinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

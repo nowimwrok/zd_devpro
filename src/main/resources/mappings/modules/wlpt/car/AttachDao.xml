@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.AttachDao">
+
+    <sql id="attachColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.reuser_id AS "reuser.id",
+		a.car_id AS "carId",
+		a.isagree AS "isagree",
+		a.del_flag AS "delFlag",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.remarks AS "remarks",
+		u2.name AS "user.name",
+		u2.phone AS "user.phone",
+		u3.name AS "reuser.name",
+		u3.phone AS "reuser.phone",
+		c.id AS "remotorcade.id",
+		c.name AS "remotorcade.name",
+		c1.id AS "motorcade.id",
+		c1.name AS "motorcade.name"
+	</sql>
+
+    <sql id="attachJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN sys_user u3 ON u3.id = a.reuser_id
+		LEFT JOIN cs_motorcade_driver b on b.DriverId=a.reuser_id
+		LEFT JOIN cs_motorcade_driver b1 on b1.DriverId=a.user_id
+        LEFT JOIN cs_motorcade c on b.MotorcadeId=c.id
+        LEFT JOIN cs_motorcade c1 on b1.MotorcadeId=c1.id
+	</sql>
+
+    <select id="get" resultType="Attach">
+        SELECT
+        <include refid="attachColumns"/>
+        FROM cs_attach a
+        <include refid="attachJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findAttach" resultType="Attach">
+        SELECT
+        <include refid="attachColumns"/>
+        FROM cs_attach a
+        <include refid="attachJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="reuser != null and reuser.id != null and reuser.id != ''">
+                AND a.reuser_id = #{reuser.id}
+            </if>
+            <if test="isagree != null and isagree != ''">
+                AND a.isagree = #{isagree}
+            </if>
+        </where>
+    </select>
+
+    <select id="findList" resultType="Attach">
+        SELECT
+        <include refid="attachColumns"/>
+        FROM cs_attach a
+        <include refid="attachJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="reuser != null and reuser.id != null and reuser.id != ''">
+                AND a.reuser_id = #{reuser.id}
+            </if>
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (u3.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u3.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+
+            <if test="carId != null and carId != ''">
+                AND a.car_id = #{carId}
+            </if>
+            <if test="isagree != null and isagree != ''">
+                AND a.isagree = #{isagree}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="beginUpdateDate != null and endUpdateDate != null and beginUpdateDate != '' and endUpdateDate != ''">
+                AND a.update_date BETWEEN #{beginUpdateDate} AND #{endUpdateDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND a.remarks = #{remarks}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findList1" resultType="Attach">
+        SELECT
+        <include refid="attachColumns"/>
+        FROM cs_attach a
+        <include refid="attachJoins"/>
+
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="user != null and user.id != null and user.id != ''">
+                <choose>
+                    <when test="type != null and type != '' and type == 1">
+                        AND a.user_id = #{user.id}
+                    </when>
+                    <when test="type != null and type != '' and type == 2">
+                        AND a.reuser_id = #{user.id}
+                    </when>
+                    <otherwise>
+                        AND (a.user_id = #{user.id} OR a.reuser_id = #{user.id})
+                    </otherwise>
+                </choose>
+
+            </if>
+            <if test="carId != null and carId != ''">
+                AND a.car_id = #{carId}
+            </if>
+            <if test="isagree != null and isagree != ''">
+                AND a.isagree = #{isagree}
+            </if>
+            <if test="namesearch != null and namesearch != ''">
+                AND (u2.name = #{namesearch} OR u3.name = #{namesearch} OR u2.login_name = #{namesearch} OR
+                u3.login_name = #{namesearch})
+            </if>
+            <if test="phonesearch != null and phonesearch != ''">
+                AND (u2.phone = #{phonesearch} OR u3.phone = #{phonesearch})
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="beginUpdateDate != null and endUpdateDate != null and beginUpdateDate != '' and endUpdateDate != ''">
+                AND a.update_date BETWEEN #{beginUpdateDate} AND #{endUpdateDate}
+            </if>
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                AND a.remarks = #{remarks}
+            </if>
+            <if test="motorcadeId != null and motorcadeId != ''">
+                AND (b.MotorcadeId = #{motorcadeId} OR b1.MotorcadeId = #{motorcadeId})
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Attach">
+        SELECT
+        <include refid="attachColumns"/>
+        FROM cs_attach a
+        <include refid="attachJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO cs_attach(
+
+        <if test="user.id != null and user.id !='' ">
+            user_id,
+        </if>
+        <if test="reuser.id != null and reuser.id !='' ">
+            reuser_id,
+        </if>
+        <if test="carId != null and carId !='' ">
+            car_id,
+        </if>
+        <if test="isagree != null and isagree !='' ">
+            isagree,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        id
+        ) VALUES (
+        <if test="user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="reuser.id != null and reuser.id !='' ">
+            #{reuser.id},
+        </if>
+        <if test="carId != null and carId !='' ">
+            #{carId},
+        </if>
+        <if test="isagree != null and isagree !='' ">
+            #{isagree},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE cs_attach SET
+        <if test="user.id != null and user.id !='' ">
+            user_id = #{user.id},
+        </if>
+        <if test="reuser.id != null and reuser.id !='' ">
+            reuser_id = #{reuser.id},
+        </if>
+        <if test="carId != null and carId !='' ">
+            car_id = #{carId},
+        </if>
+        <if test="isagree != null and isagree !='' ">
+            isagree = #{isagree},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE cs_attach SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <select id="getUserDriverNum" resultType="Integer">
+        SELECT
+        COUNT(a.id)
+        FROM cs_attach a
+        <include refid="attachJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="user != null and user.id != null and user.id != ''">
+                AND (a.user_id = #{user.id} OR a.reuser_id = #{user.id})
+            </if>
+        </where>
+    </select>
+
+</mapper>

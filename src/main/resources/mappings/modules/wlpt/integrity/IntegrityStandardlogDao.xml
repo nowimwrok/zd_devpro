@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.integrity.IntegrityStandardlogDao">
+    
+	<sql id="integrityStandardlogColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.standarditemsid AS "standarditems.id",
+		a.pointvalue AS "pointvalue",
+		a.pointbefore AS "pointbefore",
+		a.pointafter AS "pointafter",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		suser.NAME          AS "user.name",
+	    suser.login_name    AS "user.loginName",
+	    suser.phone         AS "user.phone",
+	    sItmes.scoreitem AS "standarditems.scoreitem",
+	    date_format(a.create_date, '%Y-%m-%d') AS "ymdDate"
+	</sql>
+	
+	<sql id="integrityStandardlogJoins">
+		INNER JOIN sys_user suser ON a.userid=suser.id
+		INNER JOIN integrity_standarditems sItmes ON a.standarditemsid=sItmes.id
+	</sql>
+    
+	<select id="get" resultType="IntegrityStandardlog">
+		SELECT
+			<include refid="integrityStandardlogColumns"/>
+		FROM integrity_standardlog a
+		<include refid="integrityStandardlogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="IntegrityStandardlog">
+		SELECT 
+			<include refid="integrityStandardlogColumns"/>
+		FROM integrity_standardlog a
+		<include refid="integrityStandardlogJoins"/>
+		<where>
+			a.del_flag = 0
+			<if test="standarditems != null and standarditems.scoreitem != null and standarditems.scoreitem != ''">
+				AND sItmes.SCOREITEM LIKE 
+					<if test="dbName == 'oracle'">'%'||#{standarditems.scoreitem}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{standarditems.scoreitem}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{standarditems.scoreitem},'%')</if>
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND date_format(a.create_date, '%Y-%m-%d') &gt;= date_format(#{beginCreateDate}, '%Y-%m-%d')
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND date_format(a.create_date, '%Y-%m-%d') &lt;= date_format(#{endCreateDate}, '%Y-%m-%d')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntegrityStandardlog">
+		SELECT 
+			<include refid="integrityStandardlogColumns"/>
+		FROM integrity_standardlog a
+		<include refid="integrityStandardlogJoins"/>
+		<where>
+			a.del_flag =0
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO integrity_standardlog(
+
+		<if test="user != null and user.id != null and user.id !='' ">
+			userid,
+		</if>
+		<if test="standarditems !=null and standarditems.id != null and standarditems.id !='' ">
+			standarditemsid,
+		</if>
+		<if test="pointvalue != null and pointvalue !='' ">
+			pointvalue,
+		</if>
+		<if test="pointbefore != null and pointbefore !='' ">
+			pointbefore,
+		</if>
+		<if test="pointafter != null and pointafter !='' ">
+			pointafter,
+		</if>
+		<!-- <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if> -->
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<!-- <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if> -->
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="standarditems != null and standarditems.id != null and standarditems.id !='' ">
+			#{standarditems.id},
+		</if>
+		<if test="pointvalue != null and pointvalue !='' ">
+			#{pointvalue},
+		</if>
+		<if test="pointbefore != null and pointbefore !='' ">
+			#{pointbefore},
+		</if>
+		<if test="pointafter != null and pointafter !='' ">
+			#{pointafter},
+		</if>
+		<!-- <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if> -->
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<!-- <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if> -->
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE integrity_standardlog SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				userid = #{user.id},
+			</if>
+			<if test="standarditems != null and standarditems.id != null and standarditems.id !='' ">
+				standarditemsid = #{standarditems.id},
+			</if>
+			<if test="pointvalue != null and pointvalue !='' ">
+				pointvalue = #{pointvalue},
+			</if>
+			<if test="pointbefore != null and pointbefore !='' ">
+				pointbefore = #{pointbefore},
+			</if>
+			<if test="pointafter != null and pointafter !='' ">
+				pointafter = #{pointafter},
+			</if>
+			<!-- <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if> -->
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE integrity_standardlog SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="findSumPointvalueData" resultType="IntegrityStandardlog">
+		SELECT
+		SUM(IFNULL(a.pointvalue,0)) AS "pointvalue",
+		sItmes.scoreitem AS "standarditems.scoreitem"
+		FROM integrity_standardlog a
+		INNER JOIN sys_user suser ON a.userid = suser.id
+		INNER JOIN integrity_standarditems sItmes ON a.standarditemsid = sItmes.id
+		<where>
+			a.del_flag = 0
+			<if test="standarditems != null and standarditems.scoreitem != null and standarditems.scoreitem != ''">
+				AND sItmes.SCOREITEM LIKE
+				<if test="dbName == 'oracle'">'%'||#{standarditems.scoreitem}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{standarditems.scoreitem}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{standarditems.scoreitem},'%')</if>
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND date_format(a.create_date, '%Y-%m-%d') &gt;= date_format(#{beginCreateDate}, '%Y-%m-%d')
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND date_format(a.create_date, '%Y-%m-%d') &lt;= date_format(#{endCreateDate}, '%Y-%m-%d')
+			</if>
+		</where>
+		GROUP BY sItmes.scoreitem
+	</select>
+	<select id="findSumPointvalueList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.IntegrityRecordVO">
+		SELECT
+		a.userid AS "user.id",
+		SUM(IFNULL(a.pointvalue,0)) as totalValue,
+		SUM(
+		CASE
+		WHEN sItmes.scoreitem ='线上支付结算' or
+		sItmes.scoreitem ='线上业务交易' or
+		sItmes.scoreitem ='业务积累'
+		THEN
+		a.pointvalue
+		ELSE
+		0
+		END
+		)
+		tradeValue,
+		SUM(
+		CASE
+		WHEN sItmes.scoreitem ='商城消费'
+		THEN
+		a.pointvalue
+		ELSE
+		0
+		END
+		)
+		shopValue,
+		SUM(
+		CASE
+		WHEN sItmes.scoreitem ='消费'
+		THEN
+		a.pointvalue
+		ELSE
+		0
+		END
+		)
+		consumeValue,
+		SUM(
+		CASE
+		WHEN sItmes.scoreitem ='保证金充值' or
+		sItmes.scoreitem ='资料完善' or
+		sItmes.scoreitem ='平台登录' or
+		sItmes.scoreitem ='好评记录'
+		THEN
+		a.pointvalue
+		ELSE
+		0
+		END
+		)
+		otherValue,
+		suser.NAME AS "user.name",
+		suser.login_name AS "user.loginName",
+		sItmes.integritycode ,
+		suser.phone AS "user.phone",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		date_format(a.create_date, '%Y-%m-%d') AS "ymdDate"
+		FROM
+		integrity_standardlog a
+		INNER JOIN sys_user suser ON a.userid = suser.id
+		INNER JOIN integrity_standarditems sItmes ON a.standarditemsid = sItmes.id
+		<where>
+			a.del_flag = 0
+
+			<if test="searchinfo!= null and searchinfo!=''">
+				AND (suser.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.NAME  LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND date_format(a.create_date, '%Y-%m-%d') &gt;= date_format(#{beginCreateDate}, '%Y-%m-%d')
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND date_format(a.create_date, '%Y-%m-%d') &lt;= date_format(#{endCreateDate}, '%Y-%m-%d')
+			</if>
+		</where>
+		GROUP BY a.userid
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+</mapper>

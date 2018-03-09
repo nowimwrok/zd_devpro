@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.lbs.LbsReslogDao">
+    
+	<sql id="lbsReslogColumns">
+		a.reslog_id AS "id",
+		a.companyid AS "companyid",
+		a.companypwd AS "companypwd",
+		a.mobile AS "mobile",
+		a.actiontype AS "actiontype",
+		a.opertype AS "opertype",
+		a.result AS "result",
+		a.resmsg AS "resmsg",
+		a.resreason AS "resreason",
+		a.resfrom AS "resfrom",
+		a.restimedelay AS "restimedelay",
+		a.operatetime AS "operatetime",
+		a.username AS "username",
+		a.userip AS "userip"
+	</sql>
+	
+	<sql id="lbsReslogJoins">
+	</sql>
+    
+	<select id="get" resultType="LbsReslog">
+		SELECT
+			<include refid="lbsReslogColumns"/>
+		FROM lbs_reslog a
+		<include refid="lbsReslogJoins"/>
+		WHERE a.ResLog_Id = #{id}
+	</select>
+
+	<select id="findList" resultType="LbsReslog">
+		SELECT 
+			<include refid="lbsReslogColumns"/>
+		FROM lbs_reslog a
+		<include refid="lbsReslogJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LbsReslog">
+		SELECT 
+			<include refid="lbsReslogColumns"/>
+		FROM lbs_reslog a
+		<include refid="lbsReslogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO lbs_reslog(
+
+		<if test="companyid != null and companyid !='' ">
+			companyid,
+		</if>
+		<if test="companypwd != null and companypwd !='' ">
+			companypwd,
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			mobile,
+		</if>
+		<if test="actiontype != null and actiontype !='' ">
+			actiontype,
+		</if>
+		<if test="opertype != null and opertype !='' ">
+			opertype,
+		</if>
+		<if test="result != null and result !='' ">
+			result,
+		</if>
+		<if test="resmsg != null and resmsg !='' ">
+			resmsg,
+		</if>
+		<if test="resreason != null and resreason !='' ">
+			resreason,
+		</if>
+		<if test="resfrom != null and resfrom !='' ">
+			resfrom,
+		</if>
+		<if test="restimedelay != null and restimedelay !='' ">
+			restimedelay,
+		</if>
+		<if test="operatetime != null and operatetime !='' ">
+			operatetime,
+		</if>
+		<if test="username != null and username !='' ">
+			username,
+		</if>
+		<if test="userip != null and userip !='' ">
+			userip,
+		</if>
+			ResLog_Id
+		) VALUES (
+		<if test="companyid != null and companyid !='' ">
+			#{companyid},
+		</if>
+		<if test="companypwd != null and companypwd !='' ">
+			#{companypwd},
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			#{mobile},
+		</if>
+		<if test="actiontype != null and actiontype !='' ">
+			#{actiontype},
+		</if>
+		<if test="opertype != null and opertype !='' ">
+			#{opertype},
+		</if>
+		<if test="result != null and result !='' ">
+			#{result},
+		</if>
+		<if test="resmsg != null and resmsg !='' ">
+			#{resmsg},
+		</if>
+		<if test="resreason != null and resreason !='' ">
+			#{resreason},
+		</if>
+		<if test="resfrom != null and resfrom !='' ">
+			#{resfrom},
+		</if>
+		<if test="restimedelay != null and restimedelay !='' ">
+			#{restimedelay},
+		</if>
+		<if test="operatetime != null and operatetime !='' ">
+			#{operatetime},
+		</if>
+		<if test="username != null and username !='' ">
+			#{username},
+		</if>
+		<if test="userip != null and userip !='' ">
+			#{userip},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE lbs_reslog SET 	
+			<if test="companyid != null and companyid !='' ">
+				companyid = #{companyid},
+			</if>
+			<if test="companypwd != null and companypwd !='' ">
+				companypwd = #{companypwd},
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				mobile = #{mobile},
+			</if>
+			<if test="actiontype != null and actiontype !='' ">
+				actiontype = #{actiontype},
+			</if>
+			<if test="opertype != null and opertype !='' ">
+				opertype = #{opertype},
+			</if>
+			<if test="result != null and result !='' ">
+				result = #{result},
+			</if>
+			<if test="resmsg != null and resmsg !='' ">
+				resmsg = #{resmsg},
+			</if>
+			<if test="resreason != null and resreason !='' ">
+				resreason = #{resreason},
+			</if>
+			<if test="resfrom != null and resfrom !='' ">
+				resfrom = #{resfrom},
+			</if>
+			<if test="restimedelay != null and restimedelay !='' ">
+				restimedelay = #{restimedelay},
+			</if>
+			<if test="operatetime != null and operatetime !='' ">
+				operatetime = #{operatetime},
+			</if>
+			<if test="username != null and username !='' ">
+				username = #{username},
+			</if>
+			<if test="userip != null and userip !='' ">
+				userip = #{userip},
+			</if>
+			ResLog_Id = #{id}
+		WHERE ResLog_Id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM lbs_reslog
+		WHERE ResLog_Id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.activity.ActivityAwardrecordDao">
+    
+	<sql id="activityAwardrecordColumns">
+		a.award_id AS "id",
+		a.user_id AS "user.id",
+		a.issue AS "issue",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.phone AS "phone",
+		a.awardno AS "awardno",
+		a.starttime AS "starttime",
+		a.endtime AS "endtime",
+		a.gift_id AS "wxgift.id",
+		a.activity_id AS "wxinfo.id",
+		wxinfo.activity_name AS "wxinfo.activityName",
+		wxinfo.activity_content AS "wxinfo.activityContent",
+		wxgift.giftname AS "wxgift.giftname",
+		wxgift.giftcontent AS "wxgift.giftcontent",
+		wxgift.giftworth AS "wxgift.giftworth",
+		wxgift.gifttype AS "wxgift.gifttype",
+		u2.NAME AS "user.name",
+		u2.login_name AS "user.loginName",
+		u2.phone AS "user.phone"
+	</sql>
+	
+	<sql id="activityAwardrecordJoins">
+		LEFT JOIN activity_wxinfo wxinfo ON wxinfo.ACTIVITY_ID=a.ACTIVITY_ID
+		LEFT JOIN activity_wxgift wxgift ON wxgift.GIFT_ID=a.GIFT_ID
+		LEFT JOIN sys_user u2 ON a.USER_ID = u2.id
+	</sql>
+	
+	<sql id="activityAwardrecordJoins2">
+		INNER JOIN activity_wxinfo wxinfo ON wxinfo.ACTIVITY_ID=a.ACTIVITY_ID
+		INNER JOIN activity_wxgift wxgift ON wxgift.GIFT_ID=a.GIFT_ID
+		LEFT JOIN sys_user u2 ON a.USER_ID = u2.id
+	</sql>
+     <!--中奖记录-->
+    <select id="getAwardlistPage" resultType="ActivityAwardrecord">
+    	SELECT
+			<include refid="activityAwardrecordColumns"/>
+		FROM activity_awardrecord a
+		<include refid="activityAwardrecordJoins2"/>
+    	<where>
+             <if test="user !=null and user.id !=null and user.id !=''">
+                and a.USER_ID = #{user.id}
+            </if>
+             <if test="wxgift !=null and wxgift.id !=null and wxgift.id !=''">
+                and wxgift.GIFT_ID = #{wxgift.id}
+            </if>
+            <if test="wxgift !=null and wxgift.gifttype !=null and wxgift.gifttype !=''"><!-- 礼品类型 -->
+                and wxgift.gifttype = #{wxgift.gifttype}
+            </if>
+			<if test="issue !=null and issue !=''"><!-- 礼品发放状态 -->
+                and a.issue = #{issue}
+            </if>
+        </where>
+        <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+
+    </select>
+	<select id="get" resultType="ActivityAwardrecord">
+		SELECT
+			<include refid="activityAwardrecordColumns"/>
+		FROM activity_awardrecord a
+		<include refid="activityAwardrecordJoins"/>
+		WHERE a.award_id = #{id}
+	</select>
+
+	<!--根据中奖编号获取中奖记录-->
+	<select id="getAwardlistInfoByAwardNo" resultType="ActivityAwardrecord">
+		SELECT
+		<include refid="activityAwardrecordColumns"/>
+		FROM activity_awardrecord a
+		<include refid="activityAwardrecordJoins2"/>
+		<where>
+				a.awardno= #{awardno}
+		</where>
+		LIMIT 1
+	</select>
+	<!--根据用户手机和活动id获取中奖记录-->
+	<select id="getAwardlistInfo" resultType="ActivityAwardrecord">
+		SELECT
+		<include refid="activityAwardrecordColumns"/>
+		FROM activity_awardrecord a
+		<include refid="activityAwardrecordJoins2"/>
+		<where>
+			a.activity_id= #{wxinfo.id}
+			and a.phone = #{phone}
+		</where>
+		LIMIT 1
+	</select>
+
+	<select id="findList" resultType="ActivityAwardrecord">
+		SELECT 
+			<include refid="activityAwardrecordColumns"/>
+		FROM activity_awardrecord a
+		<include refid="activityAwardrecordJoins"/>
+		<where>
+			<if test="user !=null and user.id !=null and user.id !=''">
+                and a.USER_ID = #{user.id}
+            </if>
+			<if test="searchcondition != null and searchcondition != ''">
+				AND (u2.NAME LIKE 
+					<if test="dbName == 'oracle'">'%'||#{searchcondition}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{searchcondition}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{searchcondition},'%')</if>
+				OR u2.login_name LIKE
+					<if test="dbName == 'oracle'">'%'||#{searchcondition}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{searchcondition}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{searchcondition},'%')</if>
+				OR a.phone LIKE
+					<if test="dbName == 'oracle'">'%'||#{searchcondition}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{searchcondition}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{searchcondition},'%')</if>
+				OR a.awardno LIKE
+					<if test="dbName == 'oracle'">'%'||#{searchcondition}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{searchcondition}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{searchcondition},'%')</if>
+				OR u2.phone LIKE 
+					<if test="dbName == 'oracle'">'%'||#{searchcondition}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{searchcondition}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{searchcondition},'%')</if>)
+			</if>
+			<if test="wxgift !=null and wxgift.gifttype !=null and wxgift.gifttype !=''"><!-- 礼品类型 -->
+                and wxgift.gifttype = #{wxgift.gifttype}
+            </if>
+			<if test="awardno !=null and awardno !=''"><!-- 礼品发放状态 -->
+				and a.awardno = #{awardno}
+			</if>
+			<if test="phone !=null and phone !=''">
+				and a.phone = #{phone}
+			</if>
+			<if test="issue !=null and issue !=''"><!-- 礼品发放状态 -->
+                and a.issue = #{issue}
+            </if>
+			<if test="timeStart !=null and timeStart !=''"><!-- 创建时间检索 -->
+                and a.createtime &gt;= #{timeStart}
+            </if>
+            <if test="timeEnd !=null and timeEnd !=''"><!-- 创建时间检索 -->
+                and a.createtime &lt;= #{timeEnd}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActivityAwardrecord">
+		SELECT 
+			<include refid="activityAwardrecordColumns"/>
+		FROM activity_awardrecord a
+		<include refid="activityAwardrecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO activity_awardrecord(
+		<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="phone != null and phone !='' ">
+			phone,
+		</if>
+		<if test="awardno != null and awardno !='' ">
+			awardno,
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			starttime,
+		</if>
+		<if test="endtime != null and endtime !='' ">
+			endtime,
+		</if>
+
+		<if test="issue != null and issue !='' ">
+			issue,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="wxgift != null and wxgift.id != null and wxgift.id !='' ">
+			gift_id,
+		</if>
+		<if test="wxinfo !=null and wxinfo.id != null and wxinfo.id !='' ">
+			activity_id,
+		</if>
+			award_id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="phone != null and phone !='' ">
+			#{phone},
+		</if>
+		<if test="awardno != null and awardno !='' ">
+			#{awardno},
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			#{starttime},
+		</if>
+		<if test="endtime != null and endtime !='' ">
+			#{endtime},
+		</if>
+		<if test="issue != null and issue !='' ">
+			#{issue},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="wxgift != null and wxgift.id != null and wxgift.id !='' ">
+			#{wxgift.id},
+		</if>
+		<if test="wxinfo !=null and wxinfo.id != null and wxinfo.id !='' ">
+			#{wxinfo.id},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE activity_awardrecord SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="phone != null and phone !='' ">
+				phone = #{phone},
+			</if>
+			<if test="awardno != null and awardno !='' ">
+				awardno=#{awardno},
+			</if>
+			<if test="starttime != null and starttime !='' ">
+				starttime = #{starttime},
+			</if>
+			<if test="endtime != null and endtime !='' ">
+				endtime = #{endtime},
+			</if>
+			<if test="issue != null and issue !='' ">
+				issue = #{issue},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="wxgift != null and wxgift.id != null and wxgift.id !='' ">
+				gift_id = #{wxgift.id},
+			</if>
+			<if test="wxinfo !=null and wxinfo.id != null and wxinfo.id !='' ">
+				activity_id = #{wxinfo.id},
+			</if>
+			award_id = #{id}
+		WHERE award_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM activity_awardrecord
+		WHERE award_id = #{id}
+	</update>
+	<!--获取每天的交易量-->
+	<select id="daynum" resultType="int">
+		SELECT count(0) num
+		FROM activity_awardrecord
+		WHERE date_format(createtime,"%Y-%m-%d") = DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单-->
+	</select>
+	<!-- 更新奖品为过期状态 -->
+	<update id="updateIsSueInvalid">
+		update activity_awardrecord set ISSUE=2 WHERE AWARD_ID in (select AWARD_ID from activity_awardrecord where ENDTIME &lt; NOW());
+	</update>
+
+	<!-- 更新奖品为发放状态 -->
+	<update id="updateIsSueGrant">
+		update activity_awardrecord set ISSUE=1 WHERE AWARD_ID in (select AWARD_ID from activity_awardrecord aw
+		INNER JOIN sys_user su ON aw.PHONE = su.phone
+		where aw.ISSUE = 0);
+	</update>
+
+	<update id="updateIsSue">
+		update activity_awardrecord set ISSUE=#{issue} WHERE AWARD_ID =#{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,247 @@
+/*������ʽ*/
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+/*��������ʽ*/
+
+.search-bg {
+    background-color: #E8EBED;
+    width: 100%;
+}
+
+.search-bar {
+    width: 86%;
+    margin: 0 auto;
+    padding-left: 10px;
+    overflow: hidden;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+#search-in {
+    width: 60%;
+    height: 45px;
+    border: 2px solid #00A2E9;
+    float: left;
+}
+
+#search-btn {
+    background-color: #00A2E9;
+    border: none;
+    float: left;
+    margin-left: 35px;
+    width: 12%;
+    height: 50px;
+    text-align: center;
+}
+
+#search-btn a {
+    color: #fff;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+/*�������·���ʽ*/
+
+/*�������·�--���--Ʒ�ơ���Ʒ������ʽ--��ʽ*/
+.genre-title {
+    font-weight: bold;
+    display: block;
+    float: left;
+    margin-left: 1.5%;
+}
+
+.genre {
+    margin-bottom: 2%;
+}
+
+.sort {
+    margin-bottom: 4%;
+}
+
+ul {
+    display: inline-block;
+    float: left;
+    margin-top: -3px;
+}
+.sort-style,.brand,.goods {
+    margin-top: -3px;
+}
+
+.sort-style li,.brand li,.goods li {
+    float: left;
+    margin-left: 10px;
+    text-align: center;
+    padding: 3px 8px;
+}
+
+.active {
+    background-color: #00A2E9;
+    color: #fff;
+}
+
+/*�������·�--���--�б�--��ʽ*/
+
+/*�������·�--���--�б�--ͼƬ--��ʽ*/
+.cpic {
+    display: block;
+    float: left;
+    width: 9%;
+    margin-right: 4%;
+    margin-left: 1%;
+    margin-top: 1%;
+}
+
+/*�������·�--���--�б�--��ҵ�ն�ʡ15%���ֳ���Ƶ�鿱--��ʽ*/
+.safe-req {
+    line-height: 23px;
+    width: 22%;
+    float: left;
+}
+
+.age-term {
+    color: #00a2e9;
+    padding-left: 8px;
+}
+
+.insurance {
+    display: block;
+    float: left;
+    line-height: 25px;
+    padding-top: 5px;
+    margin-left: 12%;
+    text-align: center;
+}
+
+/*�������·�--���--�б�--�鿴--��ʽ*/
+.see {
+    display: block;
+    float: right;
+    color: #fff;
+    background-color: #FFC52E;
+    text-align: center;
+    padding: 4px 20px;
+    border-radius: 5px;
+    margin-right: 3%;
+    margin-top: 4%;
+}
+
+/*�������·�--�Ҳ�--��ʽ*/
+
+/*�������·�--�Ҳ�--�Ѵ���δ������--��ʽ*/
+.order {
+    border: 1px solid #ccc;
+    overflow: hidden;
+    margin-bottom: 2%;
+    width: 100%;
+}
+
+.ord {
+    display: inline-block;
+    width: 50%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.proces-ord {
+    float: left;
+}
+
+.unp-ord {
+    float: left;
+}
+
+.order {
+    overflow: hidden;
+    margin-bottom: 2%;
+    border: 1px solid #ccc;
+    width: 99%;
+}
+
+/*�������·�--�Ҳ�--�б�--ͼƬ--��ʽ*/
+.cpic-r {
+    display: block;
+    float: left;
+    width: 21%;
+    margin-right: 2%;
+    margin-left: 1%;
+    margin-top: 2%;
+}
+
+/*�������·�--�Ҳ�--��ɫ����--��ʽ*/
+.term-tim {
+    padding-left: 8px;
+    color: #FFC52E;
+}
+
+/*�������·�--�Ҳ�--����ר�ߵ绰����--��ʽ*/
+.term-tim-co {
+    color: #000;
+}
+
+.safe-req-r {
+    line-height: 23px;
+    width: 75%;
+    float: left;
+}
+
+/*�������·�--��๫��--��ʽ*/
+.left-css {
+    width: 100%;
+    overflow: hidden;
+}
+
+.list-l {
+    float: left;
+    width: 69%;
+    margin-right: 1%;
+    margin-top: 0px;
+}
+
+/*�������·�--�Ҳ�--����--��ʽ*/
+.right-css {
+    width: 99%;
+    overflow: hidden;
+}
+
+.list-r {
+    float: right;
+    width: 30%;
+}
+
+/*�������·�--����--��ʽ*/
+.all-css {
+    border: 1px solid #ccc;
+    padding-top: 1.5%;
+    line-height: 20px;
+}
+
+.se-wr {
+    width: 100%;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.line-wrap {
+    height: 20px;
+}
+
+.left-img {
+    margin-bottom: 2%;
+}
+
+li, .ord {
+    cursor: pointer;
+}
+
+   
+

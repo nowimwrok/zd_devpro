@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseCategoriesDao">
+    
+	<sql id="baseCategoriesColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.despcription AS "despcription",
+		a.parent_id AS "parent.id",
+		a.isdelete AS "isdelete"
+	</sql>
+	
+	<sql id="baseCategoriesJoins">
+	</sql>
+    
+	<select id="get" resultType="BaseCategories">
+		SELECT
+			<include refid="baseCategoriesColumns"/>
+		FROM base_categories a
+		<include refid="baseCategoriesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="BaseCategories">
+		SELECT 
+			<include refid="baseCategoriesColumns"/>
+		FROM base_categories a
+		<include refid="baseCategoriesJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BaseCategories">
+		SELECT 
+			<include refid="baseCategoriesColumns"/>
+		FROM base_categories a
+		<include refid="baseCategoriesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_categories(
+
+		<if test="name != null and name !='' ">
+			name,
+		</if>
+		<if test="despcription != null and despcription !='' ">
+			despcription,
+		</if>
+		<if test="parent.id != null and parent.id !='' ">
+			parent_id,
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			isdelete,
+		</if>
+			id
+		) VALUES (
+		<if test="name != null and name !='' ">
+			#{name},
+		</if>
+		<if test="despcription != null and despcription !='' ">
+			#{despcription},
+		</if>
+		<if test="parent.id != null and parent.id !='' ">
+			#{parent.id},
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			#{isdelete},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_categories SET 	
+			<if test="name != null and name !='' ">
+				name = #{name},
+			</if>
+			<if test="despcription != null and despcription !='' ">
+				despcription = #{despcription},
+			</if>
+			<if test="parent.id != null and parent.id !='' ">
+				parent_id = #{parent.id},
+			</if>
+			<if test="isdelete != null and isdelete !='' ">
+				isdelete = #{isdelete},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_categories
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getCategoriesByCondition" resultType="BaseCategories">
+        SELECT
+        <include refid="baseCategoriesColumns"/>
+        FROM base_categories a
+        <include refid="baseCategoriesJoins"/>
+        <where>
+            <if test="id !=null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="name != null and name !='' ">
+				AND name = #{name}
+			</if>
+			<if test="despcription != null and despcription !='' ">
+				AND despcription = #{despcription}
+			</if>
+			<if test="parent != null and parent !='' ">
+				AND parent_id = #{parent.id}
+			</if>
+			<if test="isdelete != null and isdelete !='' ">
+				AND isdelete = #{isdelete}
+			</if>
+		</where>
+    </select>
+	
+</mapper>

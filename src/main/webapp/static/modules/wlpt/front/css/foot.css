@@ -1,0 +1,79 @@
+@charset "utf-8";
+
+/*底部为蓝色的底部分界--样式*/
+#bg-blue{
+	font-size: 1.8rem;
+	padding-top: 2%;
+	padding-bottom: 2%;
+}
+.foot-broke{
+	background-color: #00A2E9;
+	width: 100%;
+	text-align: center;
+}
+
+/*为黑色的底部--样式*/
+.col1-left img{
+	margin-right: 10px;
+	margin-top: -7px;
+}
+.col1-left{
+	font-size: 30px;
+	float: left;
+}
+.col1-right{
+	display: block;
+	float: right;
+}
+
+.company-list li a{
+	color: #fff;
+	font-size:13px;
+	margin-right:18px;
+}
+.company-list{
+	text-align: center;
+	overflow: hidden;
+	width: 100%;
+}
+.company-list li{
+	display: inline-block;
+   /* margin-left: 0.5%;
+    margin-right: 0.5%;*/
+}
+.company-ul {
+	overflow: hidden;
+	width: 100%;
+	padding-top: 10px;
+}
+
+.copyright{
+	text-align: center;
+    margin-top: 2%;
+	font-size:12px;
+}
+
+.foot-col1 {
+    width: 85%;
+    overflow: hidden;
+    margin: 0 auto;
+    vertical-align: middle;
+    line-height: 50px;
+    height: 50px;
+}
+.foot-wrap {
+	width: 90%;
+	/* margin-left: 16%; */
+	padding-top: 1%;
+	overflow: hidden;
+	color: #fff;
+	line-height: 1.3rem;
+	margin: 0px auto;
+}
+footer{
+	width: 100%;
+	/*margin-top: 80px;*/
+	clear: both;
+	background-color: #363E41;
+	padding-bottom: 1%;
+}

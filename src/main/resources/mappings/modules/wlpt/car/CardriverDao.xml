@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.CardriverDao">
+    
+	<sql id="cardriverColumns">
+		a.carid AS "carid",
+		a.driverid AS "driver.id"
+	</sql>
+	
+	<sql id="cardriverJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.driverid
+	</sql>
+    
+	<select id="get" resultType="Cardriver">
+		SELECT
+			<include refid="cardriverColumns"/>
+		FROM cs_cardriver a
+		<include refid="cardriverJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Cardriver">
+		SELECT 
+			<include refid="cardriverColumns"/>
+		FROM cs_cardriver a
+		<include refid="cardriverJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Cardriver">
+		SELECT 
+			<include refid="cardriverColumns"/>
+		FROM cs_cardriver a
+		<include refid="cardriverJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cs_cardriver(
+
+		<if test="carid != null and carid !='' ">
+			carid,
+		</if>
+		<if test="driver.id != null and driver.id !='' ">
+			driverid,
+		</if>
+			id
+		) VALUES (
+		<if test="carid != null and carid !='' ">
+			#{carid},
+		</if>
+		<if test="driver.id != null and driver.id !='' ">
+			#{driver.id},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cs_cardriver SET 	
+			<if test="carid != null and carid !='' ">
+				carid = #{carid},
+			</if>
+			<if test="driver.id != null and driver.id !='' ">
+				driverid = #{driver.id},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cs_cardriver
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

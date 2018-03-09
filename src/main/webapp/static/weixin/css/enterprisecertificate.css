@@ -1,0 +1,142 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: "Microsoft YaHei";
+}
+
+.divbox {
+	margin: 0 1%;
+}
+
+.b_border {
+	border-bottom: 1px solid #E5E5E5;
+	padding-left: 10px;
+}
+
+.com_height {
+	height: 50px;
+	line-height: 50px;
+}
+
+.for_title {
+	height: 50px;
+	line-height: 50px;
+	background: rgb(32, 134, 226);
+	text-align: center;
+}
+
+.backhost {
+	float: left;
+	height: 50px;
+	padding-left: 10px;
+}
+
+.title {
+	margin-left: -25px;
+	color: #fff;
+	font-size: 1.8em;
+}
+
+.upload_pic {
+	height: 68px;
+	line-height: 68px;
+}
+
+#uploadFile {
+	display: none;
+}
+
+input[type='text'] {
+	width: 65%;
+	border: 0;
+	float: right;
+	height: 50px;
+	font-size: 14px;
+	text-align: right;
+	padding-right: 10px;
+	outline: none;
+}
+
+.for_img {
+	width: 68px;
+	height: 68px;
+	float: right;
+	cursor: pointer;
+	background: url(/LogisticsSystem/static/images/weixin/photo.png) center no-repeat;
+}
+
+.photo_identify {
+	width: 200px;
+	height: 150px;
+	float: left;
+	margin: 10px 0px 10px 20px;
+	display: none;
+}
+
+.photo_img {
+	width: 200px;
+	height: 150px;
+	vertical-align: middle;
+}
+
+.last_div {
+	width: 100%;
+	height: 125px;
+	background: #F2F2F2;
+	float: left;
+}
+
+.fortreaty {
+	line-height: 40px;
+	padding-left: 10px;
+}
+
+.forprompt {
+	line-height: 32px;
+	padding-left: 15px;
+}
+
+.side {
+	width: 18px;
+	height: 18px;
+	color: #fff;
+	line-height: 18px;
+	border: 1px solid #FF9001;
+	display: inline-block;
+	background: #FF9001;
+	vertical-align: middle;
+	cursor: pointer;
+	margin-right: 8px;
+	text-align: center;
+}
+
+.treaty {
+	text-decoration: none;
+	color: #F00;
+}
+
+.prompt {
+	color: #969696;
+	font-size: 14px;
+}
+
+#erro {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	background: rgba(0, 0, 0, 0.38);
+	display: none;
+}
+
+#submit {
+	line-height: 40px;
+	margin: 10px 10px 0px 10px;
+	background: rgb(32, 134, 226);
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 5px;
+}

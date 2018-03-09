@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseCredibilityDao">
+    
+	<sql id="baseCredibilityColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.release_time AS "releaseTime",
+		a.category_id AS "categoryId",
+		a.content AS "content"
+	</sql>
+	
+	<sql id="baseCredibilityJoins">
+	</sql>
+    
+	<select id="get" resultType="BaseCredibility">
+		SELECT
+			<include refid="baseCredibilityColumns"/>
+		FROM base_credibility a
+		<include refid="baseCredibilityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="BaseCredibility">
+		SELECT 
+			<include refid="baseCredibilityColumns"/>
+		FROM base_credibility a
+		<include refid="baseCredibilityJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="beginReleaseTime != null and endReleaseTime != null and beginReleaseTime != '' and endReleaseTime != ''">
+				AND a.release_time BETWEEN #{beginReleaseTime} AND #{endReleaseTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY release_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BaseCredibility">
+		SELECT 
+			<include refid="baseCredibilityColumns"/>
+		FROM base_credibility a
+		<include refid="baseCredibilityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY release_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_credibility(
+		<if test="releaseTime != null and releaseTime !='' ">
+			release_time,
+		</if>
+		<if test="categoryId != null and categoryId !='' ">
+			category_id,
+		</if>
+		<if test="content != null and content !='' ">
+			content,
+		</if>
+		<if test="title != null and title !='' ">
+			title
+		</if>
+		) VALUES (
+		<if test="releaseTime != null and releaseTime !='' ">
+			#{releaseTime},
+		</if>
+		<if test="categoryId != null and categoryId !='' ">
+			#{categoryId},
+		</if>
+		<if test="content != null and content !='' ">
+			#{content},
+		</if>
+		<if test="title != null and title !='' ">
+			#{title}
+		</if>
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_credibility SET 	
+			<if test="title != null and title !='' ">
+				title = #{title},
+			</if>
+			<if test="content != null and content !='' ">
+				content = #{content},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_credibility
+		WHERE id = #{id}
+	</update>
+			<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from base_credibility
+		where 
+		id in  ${delteArrayStr}
+	</delete>
+</mapper>

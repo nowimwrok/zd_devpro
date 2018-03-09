@@ -1,0 +1,359 @@
+@CHARSET "utf-8";
+@media only screen and (max-width: 1200px) {
+
+    * {
+        font-size: 18px;
+    }
+
+    .icon {
+        height: 25px;
+    }
+
+    .ic_img {
+        height: 65px;
+    }
+
+    .sub_btn{
+        font-size: 23px;
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+
+    * {
+        font-size: 17px;
+    }
+
+    .icon {
+        height: 24px;
+    }
+
+    .ic_img {
+        height: 62px;
+    }
+
+    .sub_btn{
+        font-size: 22px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+
+    * {
+        font-size: 17px;
+    }
+
+    .icon {
+        height: 24px;
+    }
+
+    .ic_img {
+        height: 62px;
+    }
+
+    .sub_btn{
+        font-size: 21px;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+
+    * {
+        font-size: 16px;
+    }
+
+    .icon {
+        height: 23px;
+    }
+
+    .ic_img {
+        height: 60px;
+    }
+
+    .sub_btn{
+        font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+
+    * {
+        font-size: 16px;
+    }
+
+    .icon {
+        height: 23px;
+    }
+
+    .ic_img {
+        height: 60px;
+    }
+
+    .sub_btn{
+        font-size: 19px;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+
+    * {
+        font-size: 15px;
+    }
+
+    .icon {
+        height: 22px;
+    }
+
+    .ic_img {
+        height: 58px;
+    }
+
+    .sub_btn{
+        font-size: 18px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+
+    * {
+        font-size: 15px;
+    }
+    .icon {
+        height: 22px;
+    }
+
+    .ic_img {
+        height: 58px;
+    }
+
+    .sub_btn{
+        font-size: 17px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+
+    * {
+        font-size: 14px;
+    }
+
+    .ic_img {
+        height: 56px;
+    }
+
+    .icon {
+        height: 21px;
+    }
+    .sub_btn{
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    * {
+        font-size: 14px;
+    }
+
+    .ic_img {
+        height: 56px;
+    }
+
+    .icon {
+        height: 20px;
+    }
+
+    .sub_btn{
+        font-size: 15px;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+
+    * {
+        font-size: 14px;
+    }
+    .ic_img {
+        height: 56px;
+    }
+
+    .icon {
+        height: 20px;
+    }
+
+    .sub_btn{
+        font-size: 14px;
+    }
+}
+
+
+
+
+/*整体div 布局*/
+.data_box {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.data_top, .data_center, .data_bottom {
+    width: 100%;
+    clear: both;
+    margin: 0 auto;
+    background-color: #FFF;
+}
+
+.data_top {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #CCC;
+}
+
+.data_center {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.data_bottom {
+    height: 200px;
+    border-top: 1px solid #CCC;
+    padding-top: 10px;
+}
+
+/*top 信息布局*/
+
+.top_text {
+    width: 50%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.top_text img {
+    width: 18px;
+    vertical-align: text-bottom;
+}
+
+/*data_center 信息布局*/
+
+
+
+
+.center_top, .center_bottom {
+    width: 100%;
+    padding-top: 10px;
+}
+
+.center_top {
+    height: 80px;
+    border-bottom: 1px solid #CCC;
+}
+
+.ct_left {
+    width: 25%;
+    text-align: right;
+}
+.ct_left div {
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+.ct_left img{
+    margin: 7px 0;
+}
+
+.ct_center {
+    width: 50%;
+}
+
+.ct_center .ct_lf{
+    height: 35px;
+    line-height:35px;
+}
+
+
+
+.ct_right {
+    width: 25%;
+}
+
+.ct_right img{
+    margin: 7px 0;
+}
+
+.split {
+    clear: both;
+    width: 100%;
+    border: 1px solid #CCC;
+}
+
+.ct_lf {
+    clear: both;
+    height: 50px;
+    line-height: 30px;
+    padding-left: 10%;
+}
+
+.ct_lf div {
+    float: left;
+}
+
+.ct_lf img {
+    vertical-align: text-top;
+}
+
+
+
+.ic_call {
+    width: 60px;
+    height: 60px;
+    margin: 7px 0;
+}
+
+.cb_tle {
+    width: 32.5%;
+    text-align: right;
+}
+
+.cb_val {
+    width: 60%;
+}
+
+.cb_val_rt {
+    width: 25%
+}
+
+.in_txt {
+    border-bottom: 1px solid  #CCC;
+    width:150px;
+    font-size:20px;
+    height:30px;
+    line-height: 30px;
+    text-align: center
+}
+
+.sub_btn {
+    width: 80%;
+    height: 50px;
+    text-align: center;
+    line-height: 45px;
+    margin: 10px auto;
+    font-weight: bold;
+    color: #FFF;
+    background-color: rgb(32, 134, 226);
+    letter-spacing: 10px;
+    clear: both;
+    border-radius:5px;
+}
+
+
+
+.data_bottom ol li {
+    list-style: decimal;
+    display: list-item;
+    line-height: 30px;
+}
+.ic_imgborder{
+	width:58px;
+	border-radius:5px;
+}

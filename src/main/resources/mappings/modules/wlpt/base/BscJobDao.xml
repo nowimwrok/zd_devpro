@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BscJobDao">
+    
+	<sql id="bscJobColumns">
+		a.job_id AS "id",
+		a.jobcode AS "jobcode",
+		a.jobtype AS "jobtype",
+		a.jobclass AS "jobclass",
+		a.execycle AS "execycle",
+		a.day_of_month AS "dayOfMonth",
+		a.day_of_week AS "dayOfWeek",
+		a.hour AS "hour",
+		a.minute AS "minute",
+		a.intervalhour AS "intervalhour",
+		a.intervalminute AS "intervalminute",
+		a.job_interval_unit AS "jobIntervalUnit",
+		a.cronexpression AS "cronexpression",
+		a.jobdescription AS "jobdescription",
+		a.userid AS "userid",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.isenable AS "isenable",
+		a.islog AS "islog"
+	</sql>
+	
+	<sql id="bscJobJoins">
+	</sql>
+    
+	<select id="get" resultType="BscJob">
+		SELECT
+			<include refid="bscJobColumns"/>
+		FROM bsc_job a
+		<include refid="bscJobJoins"/>
+		WHERE a.job_id = #{id}
+	</select>
+
+	<select id="findList" resultType="BscJob">
+		SELECT 
+			<include refid="bscJobColumns"/>
+		FROM bsc_job a
+		<include refid="bscJobJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.job_id = #{id}
+			</if>
+			<if test="jobcode != null and jobcode != ''">
+				AND a.jobcode = #{jobcode}
+			</if>
+			<if test="jobtype != null and jobtype != ''">
+				AND a.jobtype = #{jobtype}
+			</if>
+			<if test="jobclass != null and jobclass != ''">
+				AND a.jobclass = #{jobclass}
+			</if>
+			<if test="execycle != null and execycle != ''">
+				AND a.execycle = #{execycle}
+			</if>
+			<if test="dayOfMonth != null and dayOfMonth != ''">
+				AND a.day_of_month = #{dayOfMonth}
+			</if>
+			<if test="dayOfWeek != null and dayOfWeek != ''">
+				AND a.day_of_week = #{dayOfWeek}
+			</if>
+			<if test="hour != null and hour != ''">
+				AND a.hour = #{hour}
+			</if>
+			<if test="minute != null and minute != ''">
+				AND a.minute = #{minute}
+			</if>
+			<if test="intervalhour != null and intervalhour != ''">
+				AND a.intervalhour = #{intervalhour}
+			</if>
+			<if test="intervalminute != null and intervalminute != ''">
+				AND a.intervalminute = #{intervalminute}
+			</if>
+			<if test="jobIntervalUnit != null and jobIntervalUnit != ''">
+				AND a.job_interval_unit = #{jobIntervalUnit}
+			</if>
+			<if test="cronexpression != null and cronexpression != ''">
+				AND a.cronexpression = #{cronexpression}
+			</if>
+			<if test="jobdescription != null and jobdescription != ''">
+				AND a.jobdescription = #{jobdescription}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND a.userid = #{userid}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="updatetime != null and updatetime != ''">
+				AND a.updatetime = #{updatetime}
+			</if>
+			<if test="isenable != null and isenable != ''">
+				AND a.isenable = #{isenable}
+			</if>
+			<if test="islog != null and islog != ''">
+				AND a.islog = #{islog}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByCondition" resultType="BscJob">
+		SELECT 
+			<include refid="bscJobColumns"/>
+		FROM bsc_job a
+		<include refid="bscJobJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.job_id = #{id}
+			</if>
+			<if test="jobcode != null and jobcode != ''">
+				AND a.jobcode = #{jobcode}
+			</if>
+			<if test="jobtype != null and jobtype != ''">
+				AND a.jobtype = #{jobtype}
+			</if>
+			<if test="jobclass != null and jobclass != ''">
+				AND a.jobclass = #{jobclass}
+			</if>
+			<if test="execycle != null and execycle != ''">
+				AND a.execycle = #{execycle}
+			</if>
+			<if test="dayOfMonth != null and dayOfMonth != ''">
+				AND a.day_of_month = #{dayOfMonth}
+			</if>
+			<if test="dayOfWeek != null and dayOfWeek != ''">
+				AND a.day_of_week = #{dayOfWeek}
+			</if>
+			<if test="hour != null and hour != ''">
+				AND a.hour = #{hour}
+			</if>
+			<if test="minute != null and minute != ''">
+				AND a.minute = #{minute}
+			</if>
+			<if test="intervalhour != null and intervalhour != ''">
+				AND a.intervalhour = #{intervalhour}
+			</if>
+			<if test="intervalminute != null and intervalminute != ''">
+				AND a.intervalminute = #{intervalminute}
+			</if>
+			<if test="jobIntervalUnit != null and jobIntervalUnit != ''">
+				AND a.job_interval_unit = #{jobIntervalUnit}
+			</if>
+			<if test="cronexpression != null and cronexpression != ''">
+				AND a.cronexpression = #{cronexpression}
+			</if>
+			<if test="jobdescription != null and jobdescription != ''">
+				AND a.jobdescription = #{jobdescription}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND a.userid = #{userid}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="updatetime != null and updatetime != ''">
+				AND a.updatetime = #{updatetime}
+			</if>
+			<if test="isenable != null and isenable != ''">
+				AND a.isenable = #{isenable}
+			</if>
+			<if test="islog != null and islog != ''">
+				AND a.islog = #{islog}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BscJob">
+		SELECT 
+			<include refid="bscJobColumns"/>
+		FROM bsc_job a
+		<include refid="bscJobJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bsc_job(
+
+		<if test="jobcode != null and jobcode !='' ">
+			jobcode,
+		</if>
+		<if test="jobtype != null and jobtype !='' ">
+			jobtype,
+		</if>
+		<if test="jobclass != null and jobclass !='' ">
+			jobclass,
+		</if>
+		<if test="execycle != null and execycle !='' ">
+			execycle,
+		</if>
+		<if test="dayOfMonth != null and dayOfMonth !='' ">
+			day_of_month,
+		</if>
+		<if test="dayOfWeek != null and dayOfWeek !='' ">
+			day_of_week,
+		</if>
+		<if test="hour != null and hour !='' ">
+			hour,
+		</if>
+		<if test="minute != null and minute !='' ">
+			minute,
+		</if>
+		<if test="intervalhour != null and intervalhour !='' ">
+			intervalhour,
+		</if>
+		<if test="intervalminute != null and intervalminute !='' ">
+			intervalminute,
+		</if>
+		<if test="jobIntervalUnit != null and jobIntervalUnit !='' ">
+			job_interval_unit,
+		</if>
+		<if test="cronexpression != null and cronexpression !='' ">
+			cronexpression,
+		</if>
+		<if test="jobdescription != null and jobdescription !='' ">
+			jobdescription,
+		</if>
+		<if test="userid != null and userid !='' ">
+			userid,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="isenable != null and isenable !='' ">
+			isenable,
+		</if>
+		<if test="islog != null and islog !='' ">
+			islog,
+		</if>
+			job_id
+		) VALUES (
+		<if test="jobcode != null and jobcode !='' ">
+			#{jobcode},
+		</if>
+		<if test="jobtype != null and jobtype !='' ">
+			#{jobtype},
+		</if>
+		<if test="jobclass != null and jobclass !='' ">
+			#{jobclass},
+		</if>
+		<if test="execycle != null and execycle !='' ">
+			#{execycle},
+		</if>
+		<if test="dayOfMonth != null and dayOfMonth !='' ">
+			#{dayOfMonth},
+		</if>
+		<if test="dayOfWeek != null and dayOfWeek !='' ">
+			#{dayOfWeek},
+		</if>
+		<if test="hour != null and hour !='' ">
+			#{hour},
+		</if>
+		<if test="minute != null and minute !='' ">
+			#{minute},
+		</if>
+		<if test="intervalhour != null and intervalhour !='' ">
+			#{intervalhour},
+		</if>
+		<if test="intervalminute != null and intervalminute !='' ">
+			#{intervalminute},
+		</if>
+		<if test="jobIntervalUnit != null and jobIntervalUnit !='' ">
+			#{jobIntervalUnit},
+		</if>
+		<if test="cronexpression != null and cronexpression !='' ">
+			#{cronexpression},
+		</if>
+		<if test="jobdescription != null and jobdescription !='' ">
+			#{jobdescription},
+		</if>
+		<if test="userid != null and userid !='' ">
+			#{userid},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="isenable != null and isenable !='' ">
+			#{isenable},
+		</if>
+		<if test="islog != null and islog !='' ">
+			#{islog},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bsc_job SET 	
+			<if test="jobcode != null and jobcode !='' ">
+				jobcode = #{jobcode},
+			</if>
+			<if test="jobtype != null and jobtype !='' ">
+				jobtype = #{jobtype},
+			</if>
+			<if test="jobclass != null and jobclass !='' ">
+				jobclass = #{jobclass},
+			</if>
+			<if test="execycle != null and execycle !='' ">
+				execycle = #{execycle},
+			</if>
+			<if test="dayOfMonth != null and dayOfMonth !='' ">
+				day_of_month = #{dayOfMonth},
+			</if>
+			
+			<if test="dayOfWeek != null and dayOfWeek !='' ">
+				day_of_week = #{dayOfWeek},
+			</if>
+			
+			
+			<if test="hour != null and hour !='' ">
+				hour = #{hour},
+			</if>
+			
+			<if test="minute != null and minute !='' ">
+				minute = #{minute},
+			</if>
+			<if test="intervalhour != null and intervalhour !='' ">
+				intervalhour = #{intervalhour},
+			</if>
+			<if test="intervalminute != null and intervalminute !='' ">
+				intervalminute = #{intervalminute},
+			</if>
+			<if test="jobIntervalUnit != null and jobIntervalUnit !='' ">
+				job_interval_unit = #{jobIntervalUnit},
+			</if>
+			<if test="cronexpression != null and cronexpression !='' ">
+				cronexpression = #{cronexpression},
+			</if>
+			<if test="jobdescription != null and jobdescription !='' ">
+				jobdescription = #{jobdescription},
+			</if>
+			<if test="userid != null and userid !='' ">
+				userid = #{userid},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="isenable != null and isenable !='' ">
+				isenable = #{isenable},
+			</if>
+			<if test="islog != null and islog !='' ">
+				islog = #{islog},
+			</if>
+			job_id = #{id}
+		WHERE job_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM bsc_job
+		WHERE job_id = #{id}
+	</update>
+	
+</mapper>

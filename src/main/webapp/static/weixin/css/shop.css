@@ -1,0 +1,198 @@
+@CHARSET "utf-8";
+body{
+	font-family: "Microsoft YaHei";
+}
+.clearfix{
+	*zoom:1;
+}
+.clearfix:after{
+	content: "";
+	display: table;
+	clear: both;
+}
+/*头部样式*/
+.top{
+	height: 50px;
+	width: 100%;
+	line-height: 50px;
+	background-color: #1e1e1f;
+	color: #fff;
+}
+.top>div{
+	width: 98%;
+	margin: 0px auto;
+}
+.top_center{
+	display: inherit;
+}
+.top_left img{
+	width: 28px;
+	float: left;
+	margin-top: 11px;
+}
+
+
+
+
+
+/*提交成功*/
+.allr_wrap{
+	width: 100%;
+	background: #fff;
+}
+.allr_wrap .content_wrap{
+	width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.allr_wrap .allright{
+	margin:40px auto;
+}
+.allr_wrap .allright img{
+	width: 80px;
+}
+.allr_wrap>p{
+	width: 100%;
+	clear: both;
+}
+.allr_wrap button{
+	width: 100%;
+	border-radius: 5px;
+	height: 45px;
+	line-height: 45px;
+	font-weight: normal;
+	letter-spacing: 0px;
+}
+
+
+
+
+/*提交订单*/
+.content_wrap .order_list{
+	line-height: 45px;
+	width: 98%;
+	margin:30px auto 8px;
+	border-bottom: 1px dashed #000;
+}
+.content_wrap .order_list .title{
+	width: 35%;
+	text-align: right;
+}
+.order_list li .frt{
+	padding-right: 15px;
+}
+.total_price{
+	text-align: right;
+	width: 94.5%;
+	padding-right: 15px;
+}
+.buy_know{
+	color: #a4a4a4;
+	height: 25px;
+	line-height: 25px;
+	margin-top:30px;
+}
+.buy_know h3{
+	/*font-weight: normal;*/
+	height: 40px;
+    line-height: 40px;
+	font-size: 1rem;
+}
+.buy_know>p{
+	line-height: 35px;
+	font-size: 0.8rem;
+}
+.buy_know>p>span.know_details{
+	
+}
+
+
+
+/*首页*/
+.shop_menu{
+	width: 95%;
+	margin: 0 auto;
+}
+.shop_menu .header-info{
+	height: 80px;
+	line-height: 80px;
+	float: left;
+	width: 36%;
+}
+.shop_menu .header-info .header{
+	float: left;
+}
+.shop_menu .header-info span{
+	color: #bac0c6;
+	padding-left: 5px;
+	font-size: 0.9rem;
+}
+.shop_menu .header-info .header img{
+	width: 50px;
+	padding-top: 15px;
+}
+.shop_menu .menu{
+	width: 63%;
+	float: right;
+}
+.shop_menu .menu li p{
+	height: 40px;
+	line-height: 45px;
+	text-align: center;
+	font-size: 0.8rem;
+}
+.shop_menu .menu .total_num{
+	text-align: center;
+	height: 40px;
+	line-height: 35px;
+	font-weight: bold;
+}
+.shop_menu .menu li{
+	float: right;
+	width: 33.33%;
+}
+.shop_banner img{
+	width: 100%;
+	height: auto;
+}
+.shop_introduce{
+	width: 95%;
+	margin: 15px auto;
+}
+.Buynow_left img{
+	width: 100px;
+}
+.Buynow_left{
+	float: left;
+	width: 35%;
+}
+.Buynow_right{
+	float: left;
+	width: 64%;
+	font-size: 0.9rem;
+	margin-top: 10px;
+}
+.Buynow_right .line{
+	height: 40px;
+	line-height: 40px;
+	font-size: 0.8rem;
+}
+.Buynow_right .line>div{
+	float: left;
+	line-height: 40px;
+	height: 40px;
+	margin-right: 8px;
+}
+.Buynow_right .line strong{
+	padding-right: 8px;
+}
+.Buynow_right .line strong i{
+	color: #48bbef;
+}
+.Buynow_right .line>div img{
+	width: 35px;
+	height: 35px;
+	float: left;
+	padding-top: 3px;
+	padding-right: 3px;
+}

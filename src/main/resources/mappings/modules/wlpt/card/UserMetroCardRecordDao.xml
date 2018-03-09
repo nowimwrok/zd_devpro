@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.thinkgem.jeesite.modules.wlpt.dao.card.UserMetroCardRecordDao">
+	<!-- 应付金额 -->
+	<sql id="totalmoneyAccountColumns">
+		SUM(
+		CASE
+		WHEN 1=1
+		<if test="beginOperateDate !=null and beginOperateDate !=''">
+			and a.operatetime &gt;= #{beginOperateDate}
+		</if>
+		<if test="endOperateDate !=null and endOperateDate !=''">
+			and a.operatetime &lt;= #{endOperateDate}
+		</if>
+		THEN
+		a.totalmoney
+		ELSE
+		0
+		END
+
+		)
+		totalmoneyAccount,
+	</sql>
+	<!-- 实付金额 -->
+	<sql id="totalpaidAccountColumns">
+		SUM(
+		CASE
+		WHEN 1=1
+		<if test="beginOperateDate !=null and beginOperateDate !=''">
+			and a.operatetime &gt;= #{beginOperateDate}
+		</if>
+		<if test="endOperateDate !=null and endOperateDate !=''">
+			and a.operatetime &lt;= #{endOperateDate}
+		</if>
+		THEN
+		a.totalpaid
+		ELSE
+		0
+		END)
+		totalpaidAccount,
+	</sql>
+	<!-- 现金支付 -->
+	<sql id="paidmoneyAccountColumns">
+		SUM(
+		CASE
+		WHEN 1=1
+		<if test="beginOperateDate !=null and beginOperateDate !=''">
+			and a.operatetime &gt;= #{beginOperateDate}
+		</if>
+		<if test="endOperateDate !=null and endOperateDate !=''">
+			and a.operatetime &lt;= #{endOperateDate}
+		</if>
+		THEN
+		a.paidmoney
+		ELSE
+		0
+		END)
+		paidmoneyAccount,
+	</sql>
+	<!-- 储值支付 -->
+	<sql id="paidvalueAccountColumns">
+		SUM(
+		CASE
+		WHEN 1=1
+		<if test="beginOperateDate !=null and beginOperateDate !=''">
+			and a.operatetime &gt;= #{beginOperateDate}
+		</if>
+		<if test="endOperateDate !=null and endOperateDate !=''">
+			and a.operatetime &lt;= #{endOperateDate}
+		</if>
+		THEN
+		a.paidvalue
+		ELSE
+		0
+		END)
+		paidvalueAccount,
+	</sql>
+	<!-- 积分支付 -->
+	<sql id="paidpointAccountColumns">
+		SUM(
+		CASE
+		WHEN 1=1
+		<if test="beginOperateDate !=null and beginOperateDate !=''">
+			and a.operatetime &gt;= #{beginOperateDate}
+		</if>
+		<if test="endOperateDate !=null and endOperateDate !=''">
+			and a.operatetime &lt;= #{endOperateDate}
+		</if>
+		THEN
+		a.paidpoint
+		ELSE
+		0
+		END)
+		paidpointAccount,
+	</sql>
+	<!-- 获得积分 -->
+	<sql id="pointAccountColumns">
+		SUM(
+		CASE
+		WHEN 1=1
+		<if test="beginOperateDate !=null and beginOperateDate !=''">
+			and a.operatetime &gt;= #{beginOperateDate}
+		</if>
+		<if test="endOperateDate !=null and endOperateDate !=''">
+			and a.operatetime &lt;= #{endOperateDate}
+		</if>
+		THEN
+		a.point
+		ELSE
+		0
+		END)
+		pointAccount,
+	</sql>
+
+	<select id="findPOSAccountList"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.card.AccountUserMetroCard">
+		SELECT
+		a.way AS "way",
+		a.type AS "type",
+		<include refid="totalmoneyAccountColumns" />
+		<include refid="totalpaidAccountColumns" />
+		<include refid="paidmoneyAccountColumns" />
+		<include refid="paidvalueAccountColumns" />
+		<include refid="paidpointAccountColumns" />
+		<include refid="pointAccountColumns" />
+		a.useraccount AS "useraccount"
+		FROM user_metro_card_record a
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="useraccount != null and useraccount != ''">
+				AND a.useraccount =#{useraccount}
+			</if>
+			<if test="way != null and way !='' ">
+				<if test="way == 1 ">
+					AND IFNULL(a.way,0) !=2
+				</if>
+				<if test="way == 2  ">
+					AND a.way=2
+				</if>
+				
+			</if>
+			<if test="type != null and type !='' ">
+				AND a.type=#{type}
+			</if>
+		</where>
+		group by a.useraccount
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+
+	</select>
+
+
+
+	<select id="findAccountList"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.card.AccountUserMetroCard">
+		SELECT
+		a.cardid AS "cardid",
+		a.truename AS "truename",
+		a.useraccount AS "useraccount",
+		a.way AS "way",
+		a.type AS "type",
+		<include refid="totalmoneyAccountColumns" />
+		<include refid="totalpaidAccountColumns" />
+		<include refid="paidmoneyAccountColumns" />
+		<include refid="paidvalueAccountColumns" />
+		<include refid="paidpointAccountColumns" />
+		<include refid="pointAccountColumns" />
+		suser.login_name AS "user.loginName"
+		FROM user_metro_card_record a
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="useraccount != null and useraccount != ''">
+				AND a.useraccount =#{useraccount}
+			</if>
+			<if test="way != null and way !='' ">
+				<if test="way == 1 ">
+					AND IFNULL(a.way,0) !=2
+				</if>
+				<if test="way == 2  ">
+					AND a.way=2
+				</if>
+				
+			</if>
+			<if test="type != null and type !='' ">
+				AND a.type=#{type}
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (suser.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.useraccount LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.cardid LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+			</if>
+		</where>
+		group by a.user
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+
+	</select>
+
+
+	<sql id="userMetroCardRecordColumns">
+		a.id AS "id",
+		a.guid AS "guid",
+		a.cardid AS "cardid",
+		a.isundo AS "isundo",
+		a.billnumber AS "billnumber",
+		a.meno AS "meno",
+		a.truename AS "truename",
+		a.totalmoney AS "totalmoney",
+		a.totalpaid AS
+		"totalpaid",
+		a.paidmoney AS "paidmoney",
+		a.paidvalue AS "paidvalue",
+		a.paidpoint AS "paidpoint",
+		a.point AS "point",
+		a.storename AS
+		"storename",
+		a.useraccount AS "useraccount",
+		a.operatetime AS
+		"operatetime",
+		a.create_by AS "createBy.id",
+		a.create_date AS
+		"createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS
+		"updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.user AS "user.id",
+		a.status AS "status",
+		a.way AS "way",
+		a.type AS "type",
+		suser.login_name AS "user.loginName"
+	</sql>
+	<sql id="userMetroCardRecorditemColumns">
+		,item.id AS "recorditem.id",
+		item.guid AS "recorditem.guid",
+		item.goodsitemguid AS "recorditem.goodsitemguid",
+		item.barcode AS "recorditem.barcode",
+		item.gooditemname AS "recorditem.gooditemname",
+		item.totalmoney AS "recorditem.totalmoney",
+		item.number AS "recorditem.number",
+		item.oldprice AS "recorditem.oldprice",
+		IFNULL(CASE WHEN NOT ISNULL(item.paidmoney) THEN item.paidmoney ELSE a.totalpaid END,0) AS "recorditem.paidmoney",
+		item.discount AS "recorditem.discount",
+		item.point AS "recorditem.point",
+		item.meno AS "recorditem.meno"
+	</sql>
+
+	<sql id="userMetroCardRecordJoins">
+	</sql>
+	<sql id="userMetroCardRecorditemJoins">
+		LEFT JOIN user_metro_card_recorditem item
+		ON item.record_guid=a.guid
+	</sql>
+	<sql id="userMetroCardJoinsUser">
+		INNER JOIN sys_user suser ON suser.id=a.user
+		INNER
+		JOIN sys_user_role surole
+		ON surole.user_id=suser.id
+		INNER JOIN
+		sys_role srole ON
+		srole.id=surole.role_id
+		INNER JOIN sys_userinfo
+		sysuinfo ON
+		sysuinfo.user_id=suser.id
+	</sql>
+	<sql id="userMetroposJoinsUser">
+		LEFT JOIN user_metro_pos p on p.USERACCOUNT = a.USERACCOUNT and p.DEL_FLAG=0
+	</sql>
+	<select id="get" resultType="UserMetroCardRecord">
+		SELECT
+		<include refid="userMetroCardRecordColumns" />
+		FROM user_metro_card_record a
+		<include refid="userMetroCardRecordJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="finditemList" resultType="UserMetroCardRecord">
+		SELECT
+		<include refid="userMetroCardRecordColumns" />
+		<include refid="userMetroCardRecorditemColumns" />
+		
+		FROM user_metro_card_record a
+		<include refid="userMetroCardRecordJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<include refid="userMetroCardRecorditemJoins" />
+		<if test="posuser != null and posuser !='' ">
+		<include refid="userMetroposJoinsUser" />
+		</if>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="guid != null and guid !='' ">
+				AND a.guid=#{guid}
+			</if>
+			<if test="way != null and way !='' ">
+				<if test="way == 1 ">
+					AND IFNULL(a.way,0) !=2
+				</if>
+				<if test="way == 2  ">
+					AND a.way=2
+				</if>
+				
+			</if>
+			<if test="user != null and user.id != null and user.id !='' ">
+				AND a.user=#{user.id}
+			</if>
+			<if test="beginOperateDate !=null and beginOperateDate !=''">
+				and a.operatetime &gt;= #{beginOperateDate}
+			</if>
+			<if test="endOperateDate !=null and endOperateDate !=''">
+				and a.operatetime &lt;= #{endOperateDate}
+			</if>
+			<if test="recorditem != null and recorditem.gooditemname != null and recorditem.gooditemname != ''">
+				AND item.gooditemname LIKE
+				<if test="dbName == 'oracle'">'%'||#{recorditem.gooditemname}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{recorditem.gooditemname}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{recorditem.gooditemname},'%')</if>
+				
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (suser.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.useraccount LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.cardid LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+			</if>
+			<if test="posuser != null and posuser !='' ">
+				and p.USER_ID=#{posuser}
+			</if>
+			<if test="status !=null and status !=''">
+				<choose>
+					<when test="status == 0 ">
+						and (a.status != 4 and a.status != 1 and a.status != 3)
+					</when>
+					<otherwise>
+						and a.status = #{status}
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="finditembyexportList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserMetroCardRecordVO">
+		SELECT
+		<include refid="userMetroCardRecordColumns" />
+		<include refid="userMetroCardRecorditemColumns" />
+		
+		FROM user_metro_card_record a
+		<include refid="userMetroCardRecordJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<include refid="userMetroCardRecorditemJoins" />
+		<if test="posuser != null and posuser !='' ">
+		<include refid="userMetroposJoinsUser" />
+		</if>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="guid != null and guid !='' ">
+				AND a.guid=#{guid}
+			</if>
+			<if test="user != null and user.id != null and user.id !='' ">
+				AND a.user=#{user.id}
+			</if>
+			<if test="way != null and way !='' ">
+				<if test="way == 1 ">
+					AND IFNULL(a.way,0) !=2
+				</if>
+				<if test="way == 2  ">
+					AND a.way=2
+				</if>
+				
+			</if>
+			<if test="type != null and type !='' ">
+				AND a.type=#{type}
+			</if>
+			<if test="beginOperateDate !=null and beginOperateDate !=''">
+				and a.operatetime &gt;= #{beginOperateDate}
+			</if>
+			<if test="endOperateDate !=null and endOperateDate !=''">
+				and a.operatetime &lt;= #{endOperateDate}
+			</if>
+			
+			<if test="recorditem != null and recorditem.gooditemname != null and recorditem.gooditemname != ''">
+				AND item.gooditemname LIKE
+				<if test="dbName == 'oracle'">'%'||#{recorditem.gooditemname}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{recorditem.gooditemname}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{recorditem.gooditemname},'%')</if>
+				
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (suser.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.useraccount LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.cardid LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+			</if>
+			<if test="posuser != null and posuser !='' ">
+				and p.USER_ID=#{posuser}
+			</if>
+		</where>
+		ORDER BY a.update_date DESC
+		
+	</select>
+
+	<select id="findList" resultType="UserMetroCardRecord">
+		SELECT
+		<include refid="userMetroCardRecordColumns" />
+		FROM user_metro_card_record a
+		<include refid="userMetroCardRecordJoins" />
+		<include refid="userMetroCardJoinsUser" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="guid != null and guid !='' ">
+				AND a.guid=#{guid}
+			</if>
+			<if test="billnumber != null and billnumber !='' ">
+				AND a.billnumber=#{billnumber}
+			</if>
+			<if test="way != null and way !='' ">
+				<if test="way == 1 ">
+					AND IFNULL(a.way,0) !=2
+				</if>
+				<if test="way == 2  ">
+					AND a.way=2
+				</if>
+				
+			</if>
+			<if test="type != null and type !='' ">
+				AND a.type=#{type}
+			</if>
+			<if test="beginOperateDate !=null and beginOperateDate !=''">
+				and a.operatetime &gt;= #{beginOperateDate}
+			</if>
+			<if test="endOperateDate !=null and endOperateDate !=''">
+				and a.operatetime &lt;= #{endOperateDate}
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (suser.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				suser.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.useraccount LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR a.cardid LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+			</if>
+			<if test="status !=null and status !=''">
+				<choose>
+					<when test="status == '0' ">
+						and (a.status != 4 and a.status != 1 and a.status != 3)
+					</when>
+					<otherwise>
+						and a.status = #{status}
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="UserMetroCardRecord">
+		SELECT
+		<include refid="userMetroCardRecordColumns" />
+		FROM user_metro_card_record a
+		<include refid="userMetroCardRecordJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO user_metro_card_record(
+
+		<if test="guid != null and guid !='' ">
+			guid,
+		</if>
+		<if test="cardid != null and cardid !='' ">
+			cardid,
+		</if>
+		<if test="isundo != null and isundo !='' ">
+			isundo,
+		</if>
+		<if test="billnumber != null and billnumber !='' ">
+			billnumber,
+		</if>
+		<if test="meno != null and meno !='' ">
+			meno,
+		</if>
+		<if test="truename != null and truename !='' ">
+			truename,
+		</if>
+		<if test="totalmoney != null and totalmoney !='' ">
+			totalmoney,
+		</if>
+		<if test="totalpaid != null and totalpaid !='' ">
+			totalpaid,
+		</if>
+		<if test="paidmoney != null and paidmoney !='' ">
+			paidmoney,
+		</if>
+		<if test="paidvalue != null and paidvalue !='' ">
+			paidvalue,
+		</if>
+		<if test="paidpoint != null and paidpoint !='' ">
+			paidpoint,
+		</if>
+		<if test="point != null and point !='' ">
+			point,
+		</if>
+		<if test="storename != null and storename !='' ">
+			storename,
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			useraccount,
+		</if>
+		<if test="operatetime != null and operatetime !='' ">
+			operatetime,
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="user != null and user.id !='' and user.id != null">
+			user,
+		</if>
+		<if test="status !='' and status != null">
+			status,
+		</if>
+		<if test="way !='' and way != null">
+			way,
+		</if>
+		<if test="type !='' and type != null">
+			type,
+		</if>
+		
+		id
+		) VALUES (
+		<if test="guid != null and guid !='' ">
+			#{guid},
+		</if>
+		<if test="cardid != null and cardid !='' ">
+			#{cardid},
+		</if>
+		<if test="isundo != null and isundo !='' ">
+			#{isundo},
+		</if>
+		<if test="billnumber != null and billnumber !='' ">
+			#{billnumber},
+		</if>
+		<if test="meno != null and meno !='' ">
+			#{meno},
+		</if>
+		<if test="truename != null and truename !='' ">
+			#{truename},
+		</if>
+		<if test="totalmoney != null and totalmoney !='' ">
+			#{totalmoney},
+		</if>
+		<if test="totalpaid != null and totalpaid !='' ">
+			#{totalpaid},
+		</if>
+		<if test="paidmoney != null and paidmoney !='' ">
+			#{paidmoney},
+		</if>
+		<if test="paidvalue != null and paidvalue !='' ">
+			#{paidvalue},
+		</if>
+		<if test="paidpoint != null and paidpoint !='' ">
+			#{paidpoint},
+		</if>
+		<if test="point != null and point !='' ">
+			#{point},
+		</if>
+		<if test="storename != null and storename !='' ">
+			#{storename},
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			#{useraccount},
+		</if>
+		<if test="operatetime != null and operatetime !='' ">
+			#{operatetime},
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="user != null and user.id !='' and user.id != null">
+			#{user.id},
+		</if>
+		<if test="status !='' and status != null">
+			#{status},
+		</if>
+		<if test="way !='' and way != null">
+			#{way},
+		</if>
+		<if test="type !='' and type != null">
+			#{type},
+		</if>
+		#{id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE user_metro_card_record SET
+		<if test="guid != null and guid !='' ">
+			guid = #{guid},
+		</if>
+		<if test="cardid != null and cardid !='' ">
+			cardid = #{cardid},
+		</if>
+		<if test="isundo != null and isundo !='' ">
+			isundo = #{isundo},
+		</if>
+		<if test="billnumber != null and billnumber !='' ">
+			billnumber = #{billnumber},
+		</if>
+		<if test="meno != null and meno !='' ">
+			meno = #{meno},
+		</if>
+		<if test="truename != null and truename !='' ">
+			truename = #{truename},
+		</if>
+		<if test="totalmoney != null and totalmoney !='' ">
+			totalmoney = #{totalmoney},
+		</if>
+		<if test="totalpaid != null and totalpaid !='' ">
+			totalpaid = #{totalpaid},
+		</if>
+		<if test="paidmoney != null and paidmoney !='' ">
+			paidmoney = #{paidmoney},
+		</if>
+		<if test="paidvalue != null and paidvalue !='' ">
+			paidvalue = #{paidvalue},
+		</if>
+		<if test="paidpoint != null and paidpoint !='' ">
+			paidpoint = #{paidpoint},
+		</if>
+		<if test="point != null and point !='' ">
+			point = #{point},
+		</if>
+		<if test="storename != null and storename !='' ">
+			storename = #{storename},
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			useraccount = #{useraccount},
+		</if>
+		<if test="operatetime != null and operatetime !='' ">
+			operatetime = #{operatetime},
+		</if>
+		<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+			update_by = #{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date = #{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		<if test="user!=null and user.id != null and user.id !='' ">
+			user = #{user.id},
+		</if>
+		<if test="status != null and status !='' ">
+			status = #{status},
+		</if>
+		<if test="way != null and way !='' ">
+			way = #{way},
+		</if>
+		<if test="tyep != null and tyep !='' ">
+			tyep = #{tyep},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE user_metro_card_record SET	
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+		<update id="updateCarId">
+		UPDATE user_metro_card_record SET
+		cardid = #{cardid}
+		WHERE cardid = #{searchinfo}
+	</update>
+
+</mapper>

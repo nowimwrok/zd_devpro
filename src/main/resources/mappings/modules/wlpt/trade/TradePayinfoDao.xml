@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.trade.TradePayinfoDao">
+
+    <sql id="tradePayinfoColumns">
+		a.id AS "id",
+		a.order_id AS "orderinfo.id",
+		a.paystatus AS "paystatus",
+		a.totalcost AS "totalcost",
+		a.onlineamount AS "onlineamount",
+		a.lineamount AS "lineamount",
+		a.onlineratio AS "onlineratio",
+		a.preraio AS "preraio",
+		a.preamount AS "preamount",
+		a.onlinebalance AS "onlinebalance",
+		a.disputeamount AS "disputeamount",
+		a.actualamount AS "actualamount",
+		a.coinamount AS  "coinamount",
+		a.coinprepaio AS  "coinprepaio",
+		a.coinpreamount AS "coinpreamount",
+		a.coinactualpay AS "coinactualpay",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="tradePayinfoJoins">
+    </sql>
+
+    <select id="get" resultType="TradePayinfo">
+        SELECT
+        <include refid="tradePayinfoColumns"/>
+        FROM trade_payinfo a
+        <include refid="tradePayinfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <!-- 根据orderid获取运单支付信息 -->
+    <select id="getByorderId" resultType="TradePayinfo">
+        SELECT
+        <include refid="tradePayinfoColumns"/>
+        FROM trade_payinfo a
+        <include refid="tradePayinfoJoins"/>
+        WHERE a.order_id = #{orderid}
+    </select>
+
+    <select id="findList" resultType="TradePayinfo">
+        SELECT
+        <include refid="tradePayinfoColumns"/>
+        FROM trade_payinfo a
+        <include refid="tradePayinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="orderinfo != null and orderinfo.id != null and orderinfo.id != ''">
+                AND a.order_id = #{orderinfo.id}
+            </if>
+            <if test="paystatus != null and paystatus != ''">
+                AND a.paystatus = #{paystatus}
+            </if>
+            <if test="totalcost != null and totalcost != ''">
+                AND a.totalcost = #{totalcost}
+            </if>
+            <if test="onlineamount != null and onlineamount != ''">
+                AND a.onlineamount LIKE
+                <if test="dbName == 'oracle'">'%'||#{onlineamount}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{onlineamount}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{onlineamount},'%')</if>
+            </if>
+            <if test="lineamount != null and lineamount != ''">
+                AND a.lineamount = #{lineamount}
+            </if>
+            <if test="onlineratio != null and onlineratio != ''">
+                AND a.onlineratio = #{onlineratio}
+            </if>
+            <if test="preraio != null and preraio != ''">
+                AND a.preraio = #{preraio}
+            </if>
+            <if test="preamount != null and preamount != ''">
+                AND a.preamount = #{preamount}
+            </if>
+            <if test="onlinebalance != null and onlinebalance != ''">
+                AND a.onlinebalance = #{onlinebalance}
+            </if>
+            <if test="disputeamount != null and disputeamount != ''">
+                AND a.disputeamount LIKE
+                <if test="dbName == 'oracle'">'%'||#{disputeamount}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{disputeamount}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{disputeamount},'%')</if>
+            </if>
+            <if test="actualamount != null and actualamount != ''">
+                AND a.actualamount LIKE
+                <if test="dbName == 'oracle'">'%'||#{actualamount}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{actualamount}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{actualamount},'%')</if>
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND a.del_flag = #{delFlag}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="TradePayinfo">
+        SELECT
+        <include refid="tradePayinfoColumns"/>
+        FROM trade_payinfo a
+        <include refid="tradePayinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO trade_payinfo(
+
+        <if test="orderinfo.id != null and orderinfo.id !='' ">
+            order_id,
+        </if>
+        <if test="paystatus != null and paystatus !='' ">
+            paystatus,
+        </if>
+        <if test="totalcost != null and totalcost !='' ">
+            totalcost,
+        </if>
+        <if test="onlineamount != null and onlineamount !='' ">
+            onlineamount,
+        </if>
+        <if test="lineamount != null and lineamount !='' ">
+            lineamount,
+        </if>
+        <if test="onlineratio != null and onlineratio !='' ">
+            onlineratio,
+        </if>
+        <if test="preraio != null and preraio !='' ">
+            preraio,
+        </if>
+        <if test="preamount != null and preamount !='' ">
+            preamount,
+        </if>
+        <if test="onlinebalance != null and onlinebalance !='' ">
+            onlinebalance,
+        </if>
+        <if test="disputeamount != null and disputeamount !='' ">
+            disputeamount,
+        </if>
+        <if test="actualamount != null and actualamount !='' ">
+            actualamount,
+        </if>
+
+        <if test="coinamount != null and coinamount !='' ">
+            coinamount,
+        </if>
+        <if test="coinprepaio != null and coinprepaio !='' ">
+            coinprepaio,
+        </if>
+        <if test="coinpreamount != null and coinpreamount !='' ">
+            coinpreamount,
+        </if>
+
+        <if test="coinactualpay != null and coinactualpay !='' ">
+            coinactualpay,
+        </if>
+
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        id
+        ) VALUES (
+        <if test="orderinfo.id != null and orderinfo.id !='' ">
+            #{orderinfo.id},
+        </if>
+        <if test="paystatus != null and paystatus !='' ">
+            #{paystatus},
+        </if>
+        <if test="totalcost != null and totalcost !='' ">
+            #{totalcost},
+        </if>
+        <if test="onlineamount != null and onlineamount !='' ">
+            #{onlineamount},
+        </if>
+        <if test="lineamount != null and lineamount !='' ">
+            #{lineamount},
+        </if>
+        <if test="onlineratio != null and onlineratio !='' ">
+            #{onlineratio},
+        </if>
+        <if test="preraio != null and preraio !='' ">
+            #{preraio},
+        </if>
+        <if test="preamount != null and preamount !='' ">
+            #{preamount},
+        </if>
+        <if test="onlinebalance != null and onlinebalance !='' ">
+            #{onlinebalance},
+        </if>
+        <if test="disputeamount != null and disputeamount !='' ">
+            #{disputeamount},
+        </if>
+        <if test="actualamount != null and actualamount !='' ">
+            #{actualamount},
+        </if>
+        <if test="coinamount != null and coinamount !='' ">
+            #{coinamount},
+        </if>
+        <if test="coinprepaio != null and coinprepaio !='' ">
+            #{coinprepaio},
+        </if>
+        <if test="coinpreamount != null and coinpreamount !='' ">
+            #{coinpreamount},
+        </if>
+
+        <if test="coinactualpay != null and coinactualpay !='' ">
+            #{coinactualpay},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="createBy !=null and createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE trade_payinfo SET
+        <if test="orderinfo !=null and orderinfo.id != null and orderinfo.id !='' ">
+            order_id = #{orderinfo.id},
+        </if>
+        <if test="paystatus != null and paystatus !='' ">
+            paystatus = #{paystatus},
+        </if>
+        <if test="totalcost != null and totalcost !='' ">
+            totalcost = #{totalcost},
+        </if>
+        <if test="onlineamount != null and onlineamount !='' ">
+            onlineamount = #{onlineamount},
+        </if>
+        <if test="lineamount != null and lineamount !='' ">
+            lineamount = #{lineamount},
+        </if>
+        <if test="onlineratio != null and onlineratio !='' ">
+            onlineratio = #{onlineratio},
+        </if>
+        <if test="preraio != null and preraio !='' ">
+            preraio = #{preraio},
+        </if>
+        <if test="preamount != null and preamount !='' ">
+            preamount = #{preamount},
+        </if>
+        <if test="onlinebalance != null and onlinebalance !='' ">
+            onlinebalance = #{onlinebalance},
+        </if>
+        <if test="disputeamount != null and disputeamount !='' ">
+            disputeamount = #{disputeamount},
+        </if>
+        <if test="actualamount != null and actualamount !='' ">
+            actualamount = #{actualamount},
+        </if>
+
+        <if test="coinamount != null and coinamount !='' ">
+            coinamount = #{coinamount},
+        </if>
+        <if test="coinprepaio != null and coinprepaio !='' ">
+            coinprepaio = #{coinprepaio},
+        </if>
+        <if test="coinpreamount != null and coinpreamount !='' ">
+            coinpreamount = #{coinpreamount},
+        </if>
+        <if test="coinactualpay != null and coinactualpay !='' ">
+            coinactualpay = #{coinactualpay},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE trade_payinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

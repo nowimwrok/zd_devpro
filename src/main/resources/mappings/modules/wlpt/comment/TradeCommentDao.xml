@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.comment.TradeCommentDao">
+    <sql id="tradeCommentColumns">
+		a.id AS "id",
+		a.orderno AS "orderno",
+		a.buyeriscomment AS "buyeriscomment",
+		a.buyercomment AS "buyercomment",
+		a.buyercommentlv AS "buyercommentlv",
+		a.buyercommenttime AS "buyercommenttime",
+		a.selleriscomment AS "selleriscomment",
+		a.sellercomment AS "sellercomment",
+		a.sellercommentlv AS "sellercommentlv",
+		a.sellercommenttime AS "sellercommenttime",
+		a.serviceattitudepoint AS "serviceattitudepoint",
+		a.transportationcostpoint AS "transportationcostpoint",
+		a.transportlimitationpoint AS "transportlimitationpoint",
+		a.goodssafetypoint AS "goodssafetypoint",
+		a.comprehensivepoint AS "comprehensivepoint",
+		u.login_Name AS "user.name"
+	</sql>
+	
+	<sql id="tradeCommentJoins">
+	inner join TRADE_ORDERINFO tradeorder ON tradeorder.ORDERNO=a.ORDERNO
+	inner join SYS_USER  u ON u.ID=tradeorder.SELLER_Id
+	</sql>
+    
+	<select id="get" resultType="TradeComment">
+		SELECT
+			<include refid="tradeCommentColumns"/>
+		FROM trade_comment a
+		<include refid="tradeCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="TradeComment">
+		SELECT 
+			<include refid="tradeCommentColumns"/>
+		FROM trade_comment a
+		<include refid="tradeCommentJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="orderno != null and orderno != ''">
+				AND a.orderno = #{orderno}
+			</if>
+			<if test="buyeriscomment != null and buyeriscomment != ''">
+				AND a.buyeriscomment = #{buyeriscomment}
+			</if>
+			<if test="buyercomment != null and buyercomment != ''">
+				AND a.buyercomment = #{buyercomment}
+			</if>
+			<if test="buyercommentlv != null and buyercommentlv != ''">
+				AND a.buyercommentlv = #{buyercommentlv}
+			</if>
+			<if test="buyercommenttime != null and buyercommenttime != ''">
+				AND a.buyercommenttime = #{buyercommenttime}
+			</if>
+			<if test="selleriscomment != null and selleriscomment != ''">
+				AND a.selleriscomment = #{selleriscomment}
+			</if>
+			<if test="sellercomment != null and sellercomment != ''">
+				AND a.sellercomment = #{sellercomment}
+			</if>
+			<if test="sellercommentlv != null and sellercommentlv != ''">
+				AND a.sellercommentlv = #{sellercommentlv}
+			</if>
+			<if test="sellercommenttime != null and sellercommenttime != ''">
+				AND a.sellercommenttime = #{sellercommenttime}
+			</if>
+			<if test="serviceattitudepoint != null and serviceattitudepoint != ''">
+				AND a.serviceattitudepoint = #{serviceattitudepoint}
+			</if>
+			<if test="transportationcostpoint != null and transportationcostpoint != ''">
+				AND a.transportationcostpoint = #{transportationcostpoint}
+			</if>
+			<if test="transportlimitationpoint != null and transportlimitationpoint != ''">
+				AND a.transportlimitationpoint = #{transportlimitationpoint}
+			</if>
+			<if test="goodssafetypoint != null and goodssafetypoint != ''">
+				AND a.goodssafetypoint = #{goodssafetypoint}
+			</if>
+			<if test="comprehensivepoint != null and comprehensivepoint != ''">
+				AND a.comprehensivepoint = #{comprehensivepoint}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TradeComment">
+		SELECT 
+			<include refid="tradeCommentColumns"/>
+		FROM trade_comment a
+		<include refid="tradeCommentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO trade_comment(
+
+		<if test="orderno != null and orderno !='' ">
+			orderno,
+		</if>
+		<if test="buyeriscomment != null and buyeriscomment !='' ">
+			buyeriscomment,
+		</if>
+		<if test="buyercomment != null and buyercomment !='' ">
+			buyercomment,
+		</if>
+		<if test="buyercommentlv != null and buyercommentlv !='' ">
+			buyercommentlv,
+		</if>
+		<if test="buyercommenttime != null and buyercommenttime !='' ">
+			buyercommenttime,
+		</if>
+		<if test="selleriscomment != null and selleriscomment !='' ">
+			selleriscomment,
+		</if>
+		<if test="sellercomment != null and sellercomment !='' ">
+			sellercomment,
+		</if>
+		<if test="sellercommentlv != null and sellercommentlv !='' ">
+			sellercommentlv,
+		</if>
+		<if test="sellercommenttime != null and sellercommenttime !='' ">
+			sellercommenttime,
+		</if>
+		<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+			serviceattitudepoint,
+		</if>
+		<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+			transportationcostpoint,
+		</if>
+		<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+			transportlimitationpoint,
+		</if>
+		<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+			goodssafetypoint,
+		</if>
+		<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+			comprehensivepoint,
+		</if>
+			id
+		) VALUES (
+		<if test="orderno != null and orderno !='' ">
+			#{orderno},
+		</if>
+		<if test="buyeriscomment != null and buyeriscomment !='' ">
+			#{buyeriscomment},
+		</if>
+		<if test="buyercomment != null and buyercomment !='' ">
+			#{buyercomment},
+		</if>
+		<if test="buyercommentlv != null and buyercommentlv !='' ">
+			#{buyercommentlv},
+		</if>
+		<if test="buyercommenttime != null and buyercommenttime !='' ">
+			#{buyercommenttime},
+		</if>
+		<if test="selleriscomment != null and selleriscomment !='' ">
+			#{selleriscomment},
+		</if>
+		<if test="sellercomment != null and sellercomment !='' ">
+			#{sellercomment},
+		</if>
+		<if test="sellercommentlv != null and sellercommentlv !='' ">
+			#{sellercommentlv},
+		</if>
+		<if test="sellercommenttime != null and sellercommenttime !='' ">
+			#{sellercommenttime},
+		</if>
+		<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+			#{serviceattitudepoint},
+		</if>
+		<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+			#{transportationcostpoint},
+		</if>
+		<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+			#{transportlimitationpoint},
+		</if>
+		<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+			#{goodssafetypoint},
+		</if>
+		<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+			#{comprehensivepoint},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trade_comment SET 	
+			<if test="orderno != null and orderno !='' ">
+				orderno = #{orderno},
+			</if>
+			<if test="buyeriscomment != null and buyeriscomment !='' ">
+				buyeriscomment = #{buyeriscomment},
+			</if>
+			<if test="buyercomment != null and buyercomment !='' ">
+				buyercomment = #{buyercomment},
+			</if>
+			<if test="buyercommentlv != null and buyercommentlv !='' ">
+				buyercommentlv = #{buyercommentlv},
+			</if>
+			<if test="buyercommenttime != null and buyercommenttime !='' ">
+				buyercommenttime = #{buyercommenttime},
+			</if>
+			<if test="selleriscomment != null and selleriscomment !='' ">
+				selleriscomment = #{selleriscomment},
+			</if>
+			<if test="sellercomment != null and sellercomment !='' ">
+				sellercomment = #{sellercomment},
+			</if>
+			<if test="sellercommentlv != null and sellercommentlv !='' ">
+				sellercommentlv = #{sellercommentlv},
+			</if>
+			<if test="sellercommenttime != null and sellercommenttime !='' ">
+				sellercommenttime = #{sellercommenttime},
+			</if>
+			<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+				serviceattitudepoint = #{serviceattitudepoint},
+			</if>
+			<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+				transportationcostpoint = #{transportationcostpoint},
+			</if>
+			<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+				transportlimitationpoint = #{transportlimitationpoint},
+			</if>
+			<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+				goodssafetypoint = #{goodssafetypoint},
+			</if>
+			<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+				comprehensivepoint = #{comprehensivepoint},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM trade_comment
+		WHERE id = #{id}
+	</update>
+	<!-- 列表 -->
+	<select id="findByUser" resultType="TradeComment">
+		select
+		a.id AS "id",
+		a.orderno AS "orderno",
+		a.buyeriscomment AS "buyeriscomment",
+		a.buyercomment AS "buyercomment",
+		a.buyercommentlv AS "buyercommentlv",
+		a.buyercommenttime AS "buyercommenttime",
+		a.selleriscomment AS "selleriscomment",
+		a.sellercomment AS "sellercomment",
+		a.sellercommentlv AS "sellercommentlv",
+		a.sellercommenttime AS "sellercommenttime",
+        tradeorder.TOTALCOST  AS "tradeorder.totalcost",
+        u.login_Name AS "user.name"
+		from
+		TRADE_COMMENT a
+		inner join TRADE_ORDERINFO tradeorder ON tradeorder.ORDERNO=a.ORDERNO
+		inner join SYS_USER  user ON user.ID=tradeorder.BUYER_Id
+		inner join SYS_USER  u ON u.ID=tradeorder.SELLER_Id
+		where
+           user.id = #{id}
+	</select>
+</mapper>

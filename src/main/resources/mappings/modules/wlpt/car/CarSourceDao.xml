@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.CarSourceDao">
+    
+	<sql id="csCarSourceColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.carnumber AS "carnumber",
+		a.mainroad AS "mainroad",
+		a.contactname AS "contactname",
+		a.contactmobile AS "contactmobile",
+		a.departuretime AS "departuretime",
+		a.effectday AS "effectday",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u2.login_name AS "user.loginName",
+		u2.phone AS  "user.phone",
+		u2.name AS "user.name",
+		u2.photo As "user.photo",
+		uinfo.POINTLEVLE 	   AS "user.userinfo.pointlevle",
+		a.car_id AS "car.id",
+		car.ismembercar AS "car.ismembercar",
+		car.cartype AS "car.cartype",
+		car.carlength AS "car.carlength",
+		car.lengthunit AS "car.lengthunit",
+		car.loadweight AS "car.loadweight",
+		car.weightunit AS "car.weightunit",
+		car.status     AS "car.status",
+		car.carnumber AS "car.carnumber",
+		car.issocialcar AS "car.issocialcar",
+		car.travellicimg AS "car.travellicimg",
+		car.carsurfaceimg AS "car.carsurfaceimg",
+		car.owneridcardnum AS "car.owneridcardnum",
+		car.owneridcardimg AS "car.owneridcardimg",
+		car.transportcardimg AS "car.transportcardimg"
+	</sql>
+	
+	<sql id="csCarSourceJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = u2.id
+		LEFT JOIN cs_car car ON car.id = a.car_id
+	</sql>
+    
+	<select id="get" resultType="CarSource">
+		SELECT
+			<include refid="csCarSourceColumns"/>
+		FROM cs_car_source a
+		<include refid="csCarSourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="CarSource">
+		SELECT 
+			<include refid="csCarSourceColumns"/>
+		FROM cs_car_source a
+		<include refid="csCarSourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (a.carnumber LIKE 
+					<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+	                OR
+	                a.contactmobile LIKE
+	                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+	                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+	                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+	                OR
+	                u2.phone LIKE
+	                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+	                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+	                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+	                )
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="car != null and car.id != null and car.id != ''">
+				AND a.car_id = #{car.id}
+			</if>
+			<if test="carnumber != null and carnumber != ''">
+				AND a.carnumber = #{carnumber}
+			</if>
+			<if test="mainroad != null and mainroad != ''">
+				AND a.mainroad = #{mainroad}
+			</if>
+			<if test="contactname != null and contactname != ''">
+				AND a.contactname = #{contactname}
+			</if>
+			<if test="contactmobile != null and contactmobile != ''">
+				AND a.contactmobile = #{contactmobile}
+			</if>
+			<if test="departuretime != null and departuretime != ''">
+				AND a.departuretime = #{departuretime}
+			</if>
+			<if test="effectday != null and effectday != ''">
+				AND a.effectday = #{effectday}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CarSource">
+		SELECT 
+			<include refid="csCarSourceColumns"/>
+		FROM cs_car_source a
+		<include refid="csCarSourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cs_car_source(
+
+		<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="car != null and car.id != null and car.id !='' ">
+			car_id,
+		</if>
+		<if test="carnumber != null and carnumber !='' ">
+			carnumber,
+		</if>
+		<if test="mainroad != null and mainroad !='' ">
+			mainroad,
+		</if>
+		<if test="contactname != null and contactname !='' ">
+			contactname,
+		</if>
+		<if test="contactmobile != null and contactmobile !='' ">
+			contactmobile,
+		</if>
+		<if test="departuretime != null and departuretime !='' ">
+			departuretime,
+		</if>
+		<if test="effectday != null and effectday !='' ">
+			effectday,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="car != null and car.id != null and car.id !='' ">
+			#{car.id},
+		</if>
+		<if test="carnumber != null and carnumber !='' ">
+			#{carnumber},
+		</if>
+		<if test="mainroad != null and mainroad !='' ">
+			#{mainroad},
+		</if>
+		<if test="contactname != null and contactname !='' ">
+			#{contactname},
+		</if>
+		<if test="contactmobile != null and contactmobile !='' ">
+			#{contactmobile},
+		</if>
+		<if test="departuretime != null and departuretime !='' ">
+			#{departuretime},
+		</if>
+		<if test="effectday != null and effectday !='' ">
+			#{effectday},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cs_car_source SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="car != null and car.id != null and car.id !='' ">
+				car_id = #{car.id},
+			</if>
+			<if test="carnumber != null and carnumber !='' ">
+				carnumber = #{carnumber},
+			</if>
+			<if test="mainroad != null and mainroad !='' ">
+				mainroad = #{mainroad},
+			</if>
+			<if test="contactname != null and contactname !='' ">
+				contactname = #{contactname},
+			</if>
+			<if test="contactmobile != null and contactmobile !='' ">
+				contactmobile = #{contactmobile},
+			</if>
+			<if test="departuretime != null and departuretime !='' ">
+				departuretime = #{departuretime},
+			</if>
+			<if test="effectday != null and effectday !='' ">
+				effectday = #{effectday},
+			</if>
+			<if test="status != null and status !='' ">
+				status = #{status},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	<!-- 修改到期的数据为已过期 -->
+	<update id="updateStatus">
+		UPDATE cs_car_source set `STATUS`= 2 where status =1 and DEPARTURETIME &lt; CURDATE();
+	</update>
+	<update id="delete">
+		UPDATE cs_car_source SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

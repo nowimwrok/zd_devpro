@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.goods.GoodsDao">
+
+    <sql id="goodsColumns">
+		 a.id                 AS "id",
+  a.user_id            AS "user.id",
+  a.goodsname          AS "goodsname",
+  a.goodstype          AS "goodstype",
+  a.gsoddtype          AS "gsoddtype",
+  a.transportway       AS "transportway",
+  a.cartype            AS "cartype",
+  a.carlength          AS "carlength",
+  a.lengthunit         AS "lengthunit",
+  a.freightvolume      AS "freightvolume",
+  a.residualvolume     AS "residualvolume",
+  a.freightunit        AS "freightunit",
+  a.piecenumber        AS "piecenumber",
+  a.stevedore          AS "stevedore",
+  a.packageway         AS "packageway",
+  a.worth              AS "worth",
+  a.expectedprice      AS "expectedprice",
+  a.sendtime           AS "sendtime",
+  date_format(a.sendtime, '%Y-%m-%d') AS "ymdDate",
+  a.arrivetime         AS "arrivetime",
+  a.tradestatus        AS "tradestatus",
+  a.effectdays         AS "effectdays",
+  a.datasource         AS "datasource",
+  a.scannum            AS "scannum",
+  a.praisenumber       AS "praisenumber",
+  a.ship_id            AS "shipAddress.id",
+  a.consign_id         AS "consignAddress.id",
+  a.create_by          AS "createBy.id",
+  a.create_date        AS "createDate",
+  a.update_by          AS "updateBy.id",
+  a.update_date        AS "updateDate",
+  a.remarks            AS "remarks",
+  a.del_flag           AS "delFlag",
+  a.quotecount         AS "quotecount",
+  a.ISINSUR		       AS "isinsur",
+  a.PAY_PEOPLE		   AS "paypeople",
+  u2.name              AS "user.name",
+  u2.login_name        AS "user.loginName",
+  u2.phone             as "user.phone",
+  u2.email             as "user.email",
+  u2.photo             as "user.photo",
+  uinfo.status         AS "user.userinfo.status",
+  uinfo.POINTLEVLE 	   AS "user.userinfo.pointlevle",
+  ship.PROVINCE        AS 'shipAddress.province',
+  ship.CITY            AS 'shipAddress.city',
+  ship.DISTRICT        AS 'shipAddress.district',
+  ship.ADDRESS         AS 'shipAddress.address',
+  ship.LINKMAN         AS 'shipAddress.linkman',
+  ship.LINKCOMPANY     AS 'shipAddress.linkcompany',
+  ship.LINKMOBILE      AS 'shipAddress.linkmobile',
+  ship.LINKTELPHONE    AS 'shipAddress.linktelphone',
+  ship.LINKEMAIL       AS 'shipAddress.linkemail',
+  consign.PROVINCE     AS 'consignAddress.province',
+  consign.CITY         AS 'consignAddress.city',
+  consign.DISTRICT     AS 'consignAddress.district',
+  consign.ADDRESS      AS 'consignAddress.address',
+  consign.LINKMAN      AS 'consignAddress.linkman',
+  consign.LINKCOMPANY  AS 'consignAddress.linkcompany',
+  consign.LINKMOBILE   AS 'consignAddress.linkmobile',
+  consign.LINKTELPHONE AS 'consignAddress.linktelphone',
+  consign.LINKEMAIL    AS 'consignAddress.linkemail'
+	</sql>
+	<!-- 用于统计 -->
+	<sql id="quoteColumns">
+	sum(a.freightvolume)     AS "freightvolume",
+	SUM(a.residualvolume)    AS "residualvolume",
+	sum(a.worth)             AS worth,
+	count(toinfo.orderno)    AS "ordernum",
+	SUM(toinfo.totalcost)    AS "sumtotalcost",
+	sum(quote.oddloadweight) AS "sumoddloadweight",
+	u2.name                  AS "user.name",
+  	u2.login_name            AS "user.loginName",
+    u2.phone                 as "user.phone"
+	</sql>
+    <sql id="goodsJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = u2.id
+        LEFT JOIN user_address ship ON a.SHIP_ID = ship.ID
+        LEFT JOIN user_address consign ON a.CONSIGN_ID = consign.ID
+	</sql>
+	<sql id="quoteJoins">
+		LEFT JOIN gds_quoteinfo quote on a.ID = quote.GOODSID
+		LEFT JOIN trade_orderinfo toinfo on quote.ID = toinfo.QUOTE_ID 
+	</sql>
+    <select id="get" resultType="Goods">
+        SELECT
+        <include refid="goodsColumns"/>
+        FROM gds_goods a
+        <include refid="goodsJoins"/>
+        WHERE a.id = #{id}
+    </select>
+	 <select id="findSumGoodsList" resultType="Goods">
+	 	SELECT
+	 	<include refid="quoteColumns"/>
+        FROM gds_goods a
+        <include refid="goodsJoins"/>
+        LEFT JOIN gds_quoteinfo quote on a.ID = quote.GOODSID
+		LEFT JOIN trade_orderinfo toinfo on quote.ID = toinfo.QUOTE_ID 
+		<if test="istrading != null and istrading != '' ">
+			<if test="istrading == 1">
+             	AND toinfo.orderstatus in (1,3,4,6)
+            </if>
+            <if test="istrading == 2">
+             	AND toinfo.orderstatus = 4
+            </if>
+            <if test="istrading == 3">
+             	AND toinfo.orderstatus =5
+            </if>
+        </if>
+        <where>
+        quote.QUOTESTATUS = 2
+        <if test="user != null and user.id != null and user.id != ''">
+            AND a.user_id = #{user.id}
+        </if>
+        <if test="user != null and user.phone != null and user.phone != ''">
+            AND u2.phone = #{user.phone}
+        </if>
+        <if test="gsoddtype != null and gsoddtype != ''">
+            AND a.gsoddtype = #{gsoddtype}
+        </if>
+        </where>
+        GROUP BY a.USER_ID
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY freightvolume DESC
+            </otherwise>
+        </choose>
+	 </select>
+
+
+    <select id="findList" resultType="Goods">
+        SELECT
+        <include refid="goodsColumns"/>
+        FROM gds_goods a
+        <include refid="goodsJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            
+            AND a.datasource != '3'
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="searchType != null and searchType != '' and searchType == 1">
+                AND a.tradestatus in (0,1)
+            </if>
+            <if test="goodsname != null and goodsname != ''">
+                AND a.goodsname LIKE
+                <if test="dbName == 'oracle'">'%'||#{goodsname}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{goodsname}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{goodsname},'%')</if>
+            </if>
+
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (u2.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u2.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                a.goodsname LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+
+            <if test="addressStart !=null and addressStart !='' ">
+                and (ship.PROVINCE LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressStart}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressStart}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressStart},'%')</if>
+                OR
+                ship.CITY LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressStart}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressStart}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressStart},'%')</if>
+                OR
+                ship.DISTRICT LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressStart}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressStart}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressStart},'%')</if>
+                OR concat(ship.PROVINCE,ship.CITY,ship.DISTRICT) LIKE concat('%',#{addressStart},'%')
+                )
+            </if>
+
+            <if test="addressEnd !=null and addressEnd !='' ">
+                and ( consign.PROVINCE LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressEnd}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressEnd}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressEnd},'%')</if>
+                OR
+                consign.CITY LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressEnd}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressEnd}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressEnd},'%')</if>
+                OR
+                consign.DISTRICT LIKE
+                <if test="dbName == 'oracle'">'%'||#{addressEnd}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{addressEnd}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{addressEnd},'%')</if>
+                OR concat(consign.PROVINCE,consign.CITY,consign.DISTRICT) LIKE concat('%',#{addressEnd},'%')
+                )
+            </if>
+
+            <if test="goodstype != null and goodstype != ''">
+                AND a.goodstype = #{goodstype}
+            </if>
+            <if test="gsoddtype != null and gsoddtype != ''">
+                AND a.gsoddtype = #{gsoddtype}
+            </if>
+            <if test="transportway != null and transportway != ''">
+                AND a.transportway = #{transportway}
+            </if>
+            <if test="cartype != null and cartype != ''">
+                AND a.cartype = #{cartype}
+            </if>
+            <if test="carlength != null and carlength != ''">
+                AND a.carlength = #{carlength}
+            </if>
+            <if test="beginCarlength != null and beginCarlength != ''">
+                AND a.carlength &gt;= #{beginCarlength}
+            </if>
+            <if test="endCarlength != null and endCarlength != ''">
+                AND a.carlength &lt;= #{endCarlength}
+            </if>
+            <if test="lengthunit != null and lengthunit != ''">
+                AND a.lengthunit = #{lengthunit}
+            </if>
+            <if test="freightvolume != null and freightvolume != ''">
+                AND a.freightvolume = #{freightvolume}
+            </if>
+            <if test="beginFreightvolume != null and beginFreightvolume != ''">
+                AND a.freightvolume &gt;= #{beginFreightvolume}
+            </if>
+            <if test="endFreightvolume != null and endFreightvolume != ''">
+                AND a.freightvolume &lt;= #{endFreightvolume}
+            </if>
+            <if test="beginResidualvolume != null and beginResidualvolume != ''">
+                AND a.residualvolume &gt;= #{beginResidualvolume}
+            </if>
+            <if test="endResidualvolume != null and endResidualvolume != ''">
+                AND a.residualvolume &lt;= #{endResidualvolume}
+            </if>
+            <!--<if test="beginFreightvolume != null and endFreightvolume != null and beginFreightvolume != '' and endFreightvolume != ''">
+                AND a.freightvolume BETWEEN #{beginFreightvolume} AND #{endFreightvolume}
+            </if>-->
+<!--            <if test="beginResidualvolume != null and endResidualvolume != null and beginResidualvolume != '' and endResidualvolume != ''">
+                AND a.residualvolume BETWEEN #{beginResidualvolume} AND #{endResidualvolume}
+            </if>-->
+            <if test="freightunit != null and freightunit != ''">
+                AND a.freightunit = #{freightunit}
+            </if>
+            <if test="piecenumber != null and piecenumber != ''">
+                AND a.piecenumber = #{piecenumber}
+            </if>
+            <if test="stevedore != null and stevedore != ''">
+                AND a.stevedore = #{stevedore}
+            </if>
+            <if test="packageway != null and packageway != ''">
+                AND a.packageway = #{packageway}
+            </if>
+            <if test="worth != null and worth != ''">
+                AND a.worth = #{worth}
+            </if>
+            <if test="expectedprice != null and expectedprice != ''">
+                AND a.expectedprice = #{expectedprice}
+            </if>
+            <if test="beginSendtime != null and endSendtime != null and beginSendtime != '' and endSendtime != ''">
+                AND a.sendtime BETWEEN #{beginSendtime} AND #{endSendtime}
+            </if>
+            <if test="beginSendtime != null  and beginSendtime != '' and (endSendtime == '' or endSendtime == null) ">
+                AND a.sendtime &gt;= #{beginSendtime}
+            </if>
+            <if test=" endSendtime != null and endSendtime != '' and  (beginSendtime == null and beginSendtime == '')  ">
+                AND a.sendtime &lt;= #{endSendtime}
+            </if>
+            <if test="arrivetime_start != null and arrivetime_start != '' and arrivetime_end != null and arrivetime_end != ''">
+                AND a.arrivetime &gt;= #{arrivetime_start} and a.arrivetime &lt;= #{arrivetime_end}
+            </if>
+            <if test="tradestatus != null and tradestatus != ''">
+                AND a.tradestatus = #{tradestatus}
+            </if>
+            <if test="nottradestatus != null and nottradestatus != ''">
+                AND a.tradestatus != #{nottradestatus}
+            </if>
+            <if test="effectdays != null and effectdays != ''">
+                AND a.effectdays = #{effectdays}
+            </if>
+
+            <if test="scannum != null and scannum != ''">
+                AND a.scannum = #{scannum}
+            </if>
+            <if test="praisenumber != null and praisenumber != ''">
+                AND a.praisenumber = #{praisenumber}
+            </if>
+            <if test="shipAddress!=null and shipAddress.id != null and shipAddress.id != ''">
+                AND a.ship_id = #{shipAddress.id}
+            </if>
+            <if test="consignAddress != null and consignAddress.id !=null and consignAddress.id !=''">
+                AND a.consign_id  = #{consignAddress.id}
+            </if>
+            <if test="shipAddress!=null and shipAddress.province!= null and shipAddress.province != ''">
+                AND ship.PROVINCE = #{shipAddress.province}
+            </if>
+            <if test="consignAddress != null and consignAddress.province !=null and consignAddress.province !=''">
+                AND consign.PROVINCE = #{consignAddress.province}
+            </if>
+            <if test="shipAddress!=null and shipAddress.city != null and shipAddress.city != ''">
+                AND ship.CITY= #{shipAddress.city}
+            </if>
+            <if test="consignAddress != null and consignAddress.city !=null and consignAddress.city !=''">
+                AND consign.CITY= #{consignAddress.city}
+            </if>
+            <if test="shipAddress!=null and shipAddress.district != null and shipAddress.district != ''">
+                AND ship.district= #{shipAddress.district}
+            </if>
+            <if test="consignAddress != null and consignAddress.district !=null and consignAddress.district !=''">
+                AND consign.district= #{consignAddress.district}
+            </if>
+            <if test="quotecount != null and quotecount != ''">
+                AND a.quotecount = #{quotecount}
+            </if>
+            <if test="sendtime != null and sendtime !='' ">
+               AND a.sendtime=#{sendtime}
+            </if>
+            <if test="isinsur != null and isinsur !='' ">
+               AND a.ISINSUR=#{isinsur}
+            </if>
+            <if test="paypeople != null and paypeople !='' ">
+               AND a.PAY_PEOPLE=#{paypeople}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Goods">
+        SELECT
+        <include refid="goodsColumns"/>
+        FROM gds_goods a
+        <include refid="goodsJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO gds_goods(
+
+        <if test="user !=null and user.id != null and user.id !='' ">
+            user_id,
+        </if>
+        <if test="goodsname != null and goodsname !='' ">
+            goodsname,
+        </if>
+        <if test="goodstype != null and goodstype !='' ">
+            goodstype,
+        </if>
+        <if test="gsoddtype != null and gsoddtype !='' ">
+            gsoddtype,
+        </if>
+        <if test="transportway != null and transportway !='' ">
+            transportway,
+        </if>
+        <if test="cartype != null and cartype !='' ">
+            cartype,
+        </if>
+        <if test="carlength != null and carlength !='' ">
+            carlength,
+        </if>
+        <if test="lengthunit != null and lengthunit !='' ">
+            lengthunit,
+        </if>
+        <if test="freightvolume != null and freightvolume !='' ">
+            freightvolume,
+        </if>
+        <if test="residualvolume != null and residualvolume !='' ">
+            residualvolume,
+        </if>
+        <if test="freightunit != null and freightunit !='' ">
+            freightunit,
+        </if>
+        <if test="piecenumber != null and piecenumber !='' ">
+            piecenumber,
+        </if>
+        <if test="stevedore != null and stevedore !='' ">
+            stevedore,
+        </if>
+        <if test="packageway != null and packageway !='' ">
+            packageway,
+        </if>
+        <if test="worth != null and worth !='' ">
+            worth,
+        </if>
+        <if test="expectedprice != null and expectedprice !='' ">
+            expectedprice,
+        </if>
+        <if test="sendtime != null and sendtime !='' ">
+            sendtime,
+        </if>
+        <if test="arrivetime != null and arrivetime !='' ">
+            arrivetime,
+        </if>
+        <if test="tradestatus != null and tradestatus !='' ">
+            tradestatus,
+        </if>
+        <if test="effectdays != null and effectdays !='' ">
+            effectdays,
+        </if>
+        <if test="datasource != null and datasource !='' ">
+            datasource,
+        </if>
+        <if test="scannum != null and scannum !='' ">
+            scannum,
+        </if>
+        <if test="praisenumber != null and praisenumber !='' ">
+            praisenumber,
+        </if>
+        <if test="shipAddress !=null and shipAddress.id != null and shipAddress.id !='' ">
+            SHIP_ID,
+        </if>
+        <if test="consignAddress !=null and consignAddress.id != null and consignAddress.id !='' ">
+            CONSIGN_ID,
+        </if>
+        <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        <if test="quotecount != null and quotecount !='' ">
+            quotecount,
+        </if>
+        <if test="isinsur != null and isinsur !='' ">
+            ISINSUR,
+        </if>
+        <if test="paypeople != null and paypeople !='' ">
+            PAY_PEOPLE,
+        </if>
+        id
+        ) VALUES (
+        <if test="user !=null and user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="goodsname != null and goodsname !='' ">
+            #{goodsname},
+        </if>
+        <if test="goodstype != null and goodstype !='' ">
+            #{goodstype},
+        </if>
+        <if test="gsoddtype != null and gsoddtype !='' ">
+            #{gsoddtype},
+        </if>
+        <if test="transportway != null and transportway !='' ">
+            #{transportway},
+        </if>
+        <if test="cartype != null and cartype !='' ">
+            #{cartype},
+        </if>
+        <if test="carlength != null and carlength !='' ">
+            #{carlength},
+        </if>
+        <if test="lengthunit != null and lengthunit !='' ">
+            #{lengthunit},
+        </if>
+        <if test="freightvolume != null and freightvolume !='' ">
+            #{freightvolume},
+        </if>
+        <if test="residualvolume != null and residualvolume !='' ">
+            #{residualvolume},
+        </if>
+        <if test="freightunit != null and freightunit !='' ">
+            #{freightunit},
+        </if>
+        <if test="piecenumber != null and piecenumber !='' ">
+            #{piecenumber},
+        </if>
+        <if test="stevedore != null and stevedore !='' ">
+            #{stevedore},
+        </if>
+        <if test="packageway != null and packageway !='' ">
+            #{packageway},
+        </if>
+        <if test="worth != null and worth !='' ">
+            #{worth},
+        </if>
+        <if test="expectedprice != null and expectedprice !='' ">
+            #{expectedprice},
+        </if>
+        <if test="sendtime != null and sendtime !='' ">
+            #{sendtime},
+        </if>
+        <if test="arrivetime != null and arrivetime !='' ">
+            #{arrivetime},
+        </if>
+        <if test="tradestatus != null and tradestatus !='' ">
+            #{tradestatus},
+        </if>
+        <if test="effectdays != null and effectdays !='' ">
+            #{effectdays},
+        </if>
+        <if test="datasource != null and datasource !='' ">
+            #{datasource},
+        </if>
+        <if test="scannum != null and scannum !='' ">
+            #{scannum},
+        </if>
+        <if test="praisenumber != null and praisenumber !='' ">
+            #{praisenumber},
+        </if>
+        <if test="shipAddress != null and shipAddress.id !=null and shipAddress.id !='' ">
+            #{shipAddress.id},
+        </if>
+        <if test="consignAddress !=null and consignAddress.id != null and consignAddress.id !='' ">
+            #{consignAddress.id},
+        </if>
+        <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        <if test="quotecount != null and quotecount !='' ">
+            #{quotecount},
+        </if>
+        <if test="isinsur != null and isinsur !='' ">
+            #{isinsur},
+        </if>
+        <if test="paypeople != null and paypeople !='' ">
+            #{paypeople},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE gds_goods SET
+        <if test="user != null and user.id != null and user.id !='' ">
+            user_id = #{user.id},
+        </if>
+        <if test="goodsname != null and goodsname !='' ">
+            goodsname = #{goodsname},
+        </if>
+        <if test="goodstype != null and goodstype !='' ">
+            goodstype = #{goodstype},
+        </if>
+        <if test="gsoddtype != null and gsoddtype !='' ">
+            gsoddtype = #{gsoddtype},
+        </if>
+        <if test="transportway != null and transportway !='' ">
+            transportway = #{transportway},
+        </if>
+        <if test="cartype != null and cartype !='' ">
+            cartype = #{cartype},
+        </if>
+        <if test="carlength != null and carlength !='' ">
+            carlength = #{carlength},
+        </if>
+        <if test="lengthunit != null and lengthunit !='' ">
+            lengthunit = #{lengthunit},
+        </if>
+        <if test="freightvolume != null and freightvolume !='' ">
+            freightvolume = #{freightvolume},
+        </if>
+        <if test="residualvolume != null and residualvolume !='' ">
+            residualvolume = #{residualvolume},
+        </if>
+        <if test="freightunit != null and freightunit !='' ">
+            freightunit = #{freightunit},
+        </if>
+        <if test="piecenumber != null and piecenumber !='' ">
+            piecenumber = #{piecenumber},
+        </if>
+        <if test="stevedore != null and stevedore !='' ">
+            stevedore = #{stevedore},
+        </if>
+        <if test="packageway != null and packageway !='' ">
+            packageway = #{packageway},
+        </if>
+        <if test="worth != null and worth !='' ">
+            worth = #{worth},
+        </if>
+        <if test="expectedprice != null and expectedprice !='' ">
+            expectedprice = #{expectedprice},
+        </if>
+        <if test="sendtime != null and sendtime !='' ">
+            sendtime = #{sendtime},
+        </if>
+        <if test="arrivetime != null and arrivetime !='' ">
+            arrivetime = #{arrivetime},
+        </if>
+        <if test="tradestatus != null and tradestatus !='' ">
+            tradestatus = #{tradestatus},
+        </if>
+        <if test="effectdays != null and effectdays !='' ">
+            effectdays = #{effectdays},
+        </if>
+        <if test="datasource != null and datasource !='' ">
+            datasource = #{datasource},
+        </if>
+        <if test="scannum != null and scannum !='' ">
+            scannum = #{scannum},
+        </if>
+        <if test="praisenumber != null and praisenumber !='' ">
+            praisenumber = #{praisenumber},
+        </if>
+        <if test="shipAddress != null and shipAddress.id !=null and shipAddress.id !='' ">
+            ship_id = #{shipAddress.id},
+        </if>
+        <if test="consignAddress != null and consignAddress.id !=null and consignAddress.id !='' ">
+            consign_id = #{consignAddress.id},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        <if test="quotecount != null and quotecount !='' ">
+            quotecount = #{quotecount},
+        </if>
+        <if test="isinsur != null and isinsur !='' ">
+            ISINSUR = #{isinsur},
+        </if>
+        <if test="paypeople != null and paypeople !='' ">
+            PAY_PEOPLE = #{paypeople},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+    <!-- 更新点击率 -->
+    <update id="updatePageViews" parameterType="Goods">
+        update
+        gds_goods
+        SET
+        SCANNUM=IFNULL(SCANNUM,0)+1
+        where
+        id = #{id}
+    </update>
+
+    <!-- 更新点赞率 -->
+    <update id="updatePraiseNumber" parameterType="Goods">
+        update
+        gds_goods
+        SET
+        PRAISENUMBER=IFNULL(PRAISENUMBER,0)+1
+        where
+        id = #{id}
+    </update>
+    <!-- 更新报价次数 -->
+    <update id="updateQuoteCount" parameterType="Goods">
+        update
+        gds_goods
+        SET
+        QUOTECOUNT=IFNULL(QUOTECOUNT,0)+1
+        where
+        id = #{id}
+    </update>
+    <update id="delete">
+		UPDATE gds_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 根据选中的提货单IDS 获取招标货源详情内容到发布零担货源页面 -->
+		<select id="getBLgoodsData" resultType="Goods" >
+		select a.GOODSNAME,
+		a.SENDTIME,
+		a.CARLENGTH,
+		a.CARTYPE,
+		b.NAME,
+		b.PHONE
+		from gds_goods a,sys_user b
+		<where>
+			<if test="GOODSID!=null and GOODSID!=''">
+				and
+				a.GOODSID=#{GOODSID}
+			</if>
+			<if test="USERID!=null and USERID!=''">
+				and
+				b.ID=#{USERID}
+			</if>
+		</where>
+				limit 0,1
+	</select>
+</mapper>

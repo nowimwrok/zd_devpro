@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.lbs.LbsWhitelistDao">
+    
+	<sql id="lbsWhitelistColumns">
+		a.whitelistid AS "id",
+		a.companyid AS "companyid",
+		a.companypwd AS "companypwd",
+		a.mobile AS "mobile",
+		a.registertime AS "registertime",
+		a.isreply AS "isreply",
+		a.replytime AS "replytime",
+		a.isdelete AS "isdelete",
+		a.createtime AS "createtime",
+		a.username AS "username",
+		a.userip AS "userip"
+	</sql>
+	
+	<sql id="lbsWhitelistJoins">
+	</sql>
+    
+	<select id="get" resultType="LbsWhitelist">
+		SELECT
+			<include refid="lbsWhitelistColumns"/>
+		FROM lbs_whitelist a
+		<include refid="lbsWhitelistJoins"/>
+		WHERE a.whitelistid = #{id}
+	</select>
+
+	<select id="findList" resultType="LbsWhitelist">
+		SELECT 
+			<include refid="lbsWhitelistColumns"/>
+		FROM lbs_whitelist a
+		<include refid="lbsWhitelistJoins"/>
+		<where>
+			
+			<if test="whitelistid != null and whitelistid != ''">
+				AND a.whitelistid = #{whitelistid}
+			</if>
+			<if test="companyid != null and companyid != ''">
+				AND a.companyid = #{companyid}
+			</if>
+			<if test="companypwd != null and companypwd != ''">
+				AND a.companypwd = #{companypwd}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="isreply != null and isreply != ''">
+				AND a.isreply = #{isreply}
+			</if>
+			<if test="replytime != null and replytime != ''">
+				AND a.replytime = #{replytime}
+			</if>
+			<if test="isdelete != null and isdelete != ''">
+				AND a.isdelete = #{isdelete}
+			</if>
+			<if test="username != null and username != ''">
+				AND a.username = #{username}
+			</if>
+			<if test="userip != null and userip != ''">
+				AND a.userip = #{userip}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LbsWhitelist">
+		SELECT 
+			<include refid="lbsWhitelistColumns"/>
+		FROM lbs_whitelist a
+		<include refid="lbsWhitelistJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO lbs_whitelist(
+
+		<if test="companyid != null and companyid !='' ">
+			companyid,
+		</if>
+		<if test="companypwd != null and companypwd !='' ">
+			companypwd,
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			mobile,
+		</if>
+		<if test="registertime != null and registertime !='' ">
+			registertime,
+		</if>
+		<if test="isreply != null and isreply !='' ">
+			isreply,
+		</if>
+		<if test="replytime != null and replytime !='' ">
+			replytime,
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			isdelete,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="username != null and username !='' ">
+			username,
+		</if>
+		<if test="userip != null and userip !='' ">
+			userip,
+		</if>
+			whitelistid
+		) VALUES (
+		<if test="companyid != null and companyid !='' ">
+			#{companyid},
+		</if>
+		<if test="companypwd != null and companypwd !='' ">
+			#{companypwd},
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			#{mobile},
+		</if>
+		<if test="registertime != null and registertime !='' ">
+			#{registertime},
+		</if>
+		<if test="isreply != null and isreply !='' ">
+			#{isreply},
+		</if>
+		<if test="replytime != null and replytime !='' ">
+			#{replytime},
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			#{isdelete},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="username != null and username !='' ">
+			#{username},
+		</if>
+		<if test="userip != null and userip !='' ">
+			#{userip},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE lbs_whitelist SET 	
+			<if test="companyid != null and companyid !='' ">
+				companyid = #{companyid},
+			</if>
+			<if test="companypwd != null and companypwd !='' ">
+				companypwd = #{companypwd},
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				mobile = #{mobile},
+			</if>
+			<if test="registertime != null and registertime !='' ">
+				registertime = #{registertime},
+			</if>
+			<if test="isreply != null and isreply !='' ">
+				isreply = #{isreply},
+			</if>
+			<if test="replytime != null and replytime !='' ">
+				replytime = #{replytime},
+			</if>
+			<if test="isdelete != null and isdelete !='' ">
+				isdelete = #{isdelete},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="username != null and username !='' ">
+				username = #{username},
+			</if>
+			<if test="userip != null and userip !='' ">
+				userip = #{userip},
+			</if>
+			whitelistid = #{id}
+		WHERE whitelistid = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM lbs_whitelist
+		WHERE whitelistid = #{id}
+	</update>
+	
+</mapper>

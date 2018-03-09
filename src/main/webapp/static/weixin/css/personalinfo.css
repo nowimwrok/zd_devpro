@@ -1,0 +1,174 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0 auto;
+	width: 100%;
+	background-color: #DBDBDB;
+	font-family: Microsoft YaHei;
+	min-width: 320px;
+	min-height: 480px;
+}
+
+#title {
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	background-color: rgb(32, 134, 226);
+}
+
+.title {
+	font-size: 1.8em;
+	color: white;
+	line-height: 50px;
+}
+
+.divPart {
+	height: 3px;
+	background-color: #DBDBDB;
+}
+
+.divMargin {
+	margin: 15px 0; padding 10px 10px;
+	background-color: white;
+}
+
+.userInfo {
+	height: 70px;
+	font-size: 0.8em;
+	background-color: #FDFDFD;
+}
+
+.left {
+	width: 90%;
+	float: left;
+}
+
+.imgHead {
+	width: 56px;
+	height: 56px;
+	margin: 7px 10px;
+	float: left;
+	border-radius: 50%;
+}
+
+.infoDetail {
+	margin: 16px 0;
+}
+
+.imgLevel {
+	margin-left: 5px;
+	margin-bottom: -2px;
+}
+
+.pMargin {
+	margin-top: 3px;
+}
+
+.phone {
+	color: blue;
+}
+
+.right {
+	width: 10%;
+	float: right;
+	text-align: right;
+}
+
+.editMore {
+	height: 14px;
+	margin: 28px 10px;
+}
+
+.divAttr {
+	height: auto;
+	padding-left: 10px;
+	background-color: #FDFDFD;
+}
+
+.divAuth,.divPwd {
+	height: 45px;
+	border-bottom: 1px #EBEBEB solid;
+}
+
+.authLeft {
+	width: 35%;
+	float: left;
+}
+
+.authMiddle {
+	width: 55%;
+	float: left;
+	text-align: right;
+	padding: 12px 0;
+}
+
+.authRight {
+	width: 10%;
+	float: right;
+}
+
+.imgMargin {
+	margin-bottom: -10px;
+}
+
+.attr {
+	line-height: 45px;
+	margin-left: 3px;
+}
+
+.divider {
+	height: 1px;
+	background-color: #BDBDBD;
+}
+
+.editAuthPwd {
+	height: 14px;
+	float: right;
+	margin: 14px 10px;
+}
+
+.pwdLeft {
+	width: 90%;
+	float: left;
+}
+
+.pwdRight {
+	width: 10%;
+	float: right;
+}
+
+.divBorder {
+	border-bottom: 1px #EBEBEB solid;
+}
+
+.attrValue {
+	float: right;
+	margin-right: 20px;
+	padding: 12px 0;
+}
+
+.divPoint {
+	height: 45px;
+	padding-left: 10px;
+	background-color: #FDFDFD;
+}
+#prompt{
+	width:100%;
+	height:100%;
+	position:absolute;
+	top:0;
+	left:0;
+	text-align:center;
+	z-index:999;
+	background: rgba(0, 0, 0, 0.38);
+	display:none;
+}
+.prompttext{
+	margin-top:240px;
+	color: #FFF; 
+}

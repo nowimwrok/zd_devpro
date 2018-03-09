@@ -1,0 +1,222 @@
+@charset "utf-8";
+/* CSS Document */
+.head_center{width:1000px;margin:0 auto;}
+.head {
+	width:100%;
+	height: 2em;
+	background: #F5F5F5;
+	font-size: 12px;
+	color: #999;
+	border-bottom: solid 1px #CCCCCC;
+}
+
+.head a {
+	color: #999;
+	text-decoration: none;
+}
+
+.head a:hover {
+	color: #F00;
+}
+
+.head_left {
+	/* width: 15%; */
+	height: 2em;
+	float: left;
+}
+
+.head_right {
+	height: 2em;
+	float: right;
+}
+
+.head_left ul li {
+	list-style: none;
+	width: auto;
+	line-height: 2em;
+	height: 2em;
+	margin-left: 0.1em;
+	float: left;
+	color: #F00;
+}
+
+.head_right ul li {
+	list-style: none;
+	line-height: 2em;
+	height: 2em;
+	float: left;
+}
+
+.head_right ul li img {
+	width: 2em;
+	height: 2em;
+	float: left;
+}
+/*脚部 foot*/
+.foot {
+	width: 100%;
+	padding-top: 4px;
+	text-align: center;
+	clear: both;
+	color:#666;
+	height: 110px;
+}
+
+.foot .foot_top {
+	width: 1000px;
+	height: 36px;
+	margin: auto;
+	border-bottom: solid 1px #CCCCCC;
+	border-top: solid 1px #CCCCCC;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.foot .foot_top a {
+	color: #666;
+	text-decoration: none;
+}
+
+.foot_top ul li {
+	float: left;
+	list-style: none;
+	height: 3em;
+	line-height: 3em;
+	margin-right: 8px;
+}
+
+.foot_center {
+	width: 790px;
+	margin: auto;
+	font-size: 12px;
+}
+
+.foot_center ul li {
+	float: left;
+	list-style: none;
+	color: #666;
+	text-algin: center;
+	margin-right: 1em;
+	margin-top: 10px;
+}
+
+.foot_center ul li a {
+	text-decoration: none;
+	text-algin: left;
+	color: #666;
+}
+.search {
+	width: 30%;
+	height: 3em;
+	float: right;
+}
+
+.searchtxt {
+	width: 20em;
+	height: 2em;
+	margin-top: 1em;
+	float: left;
+}
+
+.searchbt {
+	width: 5em;
+	height: 2.0em;
+	margin-top: 1em;
+	float: left;
+	color: #666;
+}
+
+/*警告信息的隐藏类*/
+.hidwr {
+	display: none;
+}
+/*导航栏*/
+.navbox {
+	backgroun:#fff;
+  	width: 100%;
+  	-webkit-box-shadow: 0px 0px 5px #CCC;
+	border-bottom:1px solid #eee\9;        /* For IE8+ */
+}
+.navbox1 {
+	backgroun:#fff;
+  	width: 100%;
+	border-bottom:1px solid #eee\9;        /* For IE8+ */
+}
+.navbox2 {
+	backgroun:#fff;
+  	width: 100%;
+	border-bottom:2px solid #d8d8d8;        /* For IE8+ */
+}
+.nav{clear:both;
+	width:1100px;
+	height:100px;
+	line-height:100px;
+	text-align:center;
+	margin:0 auto;
+	font-weight:500;
+	
+}
+.nav li {
+    float: left;
+    list-style: none;
+    height: 99px;
+    font-size: 18px;
+}
+.lessnav:hover{
+	border-bottom:solid 3px #F74000;
+	background-color:rgb(255,247,244);
+}
+.lessnav2:hover{
+	background-color:#CC0000;
+}
+.nav a{
+	color:#000;
+}
+.nav2{clear:both;
+	width:400px;
+	height:50px;
+	line-height:50px;
+	text-align:center;
+	margin:0 auto;
+	font-weight:500;
+	
+}
+.nav2 li {
+    float: left;
+    list-style: none;
+    height: 50px;
+    font-size: 16px;
+}
+.nav2 a{
+	color:#000;
+}
+.shortnav {
+	width: 70px;
+}
+.longnav{
+width:100px;
+/* padding:0px 15px; */
+}
+.nav_selected{border-bottom:solid 3px #F74000;
+	background-color:rgb(255,247,244);
+	color:rgb(255,81,0);
+	}
+.nav2_selected{
+	background-color:#CC0000;
+	color:white;
+	}
+.inputtext{
+	width: 180px;
+	margin-left: 25px;
+	font-size: 16px;
+}
+.inputbutton{
+	width: 120px;
+	margin-left: 15px;
+	font-size: 16px;
+	color:rgb(128,128,128);
+	border: 1px solid rgb(128,128,128);
+	background-color: white;
+	border-radius:8px;
+	-moz-border-radius:8px; /* old Firefox */
+}

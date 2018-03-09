@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.exchange.UserPetrolExchangeRecordDao">
+    
+	<sql id="userPetrolExchangeRecordColumns">
+		a.id AS "id",
+		a.exchange_no AS "exchangeNo",
+		a.recorditemid AS "recorditem.id",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="userPetrolExchangeRecordJoins">
+		LEFT JOIN user_metro_card_record cr on cr.id = a.recorditemid
+	</sql>
+	<sql id="userMetroCardRecorditemJoins">
+		LEFT JOIN user_metro_card_recorditem item
+		ON item.record_guid=cr.guid
+	</sql>
+	<sql id="userMetroCardRecordColumns">
+		,cr.guid        AS "recorditem.guid",
+		cr.cardid      AS "recorditem.cardid",
+		cr.isundo      AS "recorditem.isundo",
+		cr.billnumber  AS "recorditem.billnumber",
+		cr.meno        AS "recorditem.meno",
+		cr.truename    AS "recorditem.truename",
+		cr.totalmoney  AS "recorditem.totalmoney",
+		cr.totalpaid   AS "recorditem.totalpaid",
+		cr.paidmoney   AS "recorditem.paidmoney",
+		cr.paidvalue   AS "recorditem.paidvalue",
+		cr.paidpoint   AS "recorditem.paidpoint",
+		cr.point       AS "recorditem.point",
+		cr.storename   AS "recorditem.storename",
+		cr.useraccount AS "recorditem.useraccount",
+		cr.operatetime AS "recorditem.operatetime",
+		cr.create_date AS "recorditem.createDate",
+		cr.update_date AS "recorditem.updateDate",
+		cr.remarks     AS "recorditem.remarks",
+		cr.del_flag    AS "recorditem.delFlag",
+		cr.user        AS "recorditem.user.id",
+		cr.status      AS "recorditem.status"
+	</sql>
+	
+    <sql id="userMetroCardRecordColumns2">
+    	cr.id        AS "id",
+		cr.guid        AS "guid",
+		cr.cardid      AS "cardid",
+		cr.isundo      AS "isundo",
+		cr.billnumber  AS "billnumber",
+		cr.meno        AS "meno",
+		cr.truename    AS "truename",
+		cr.totalmoney  AS "totalmoney",
+		cr.totalpaid   AS "totalpaid",
+		cr.paidmoney   AS "paidmoney",
+		cr.paidvalue   AS "paidvalue",
+		cr.paidpoint   AS "paidpoint",
+		cr.point       AS "point",
+		cr.storename   AS "storename",
+		cr.useraccount AS "useraccount",
+		cr.operatetime AS "operatetime",
+		cr.create_date AS "createDate",
+		cr.update_date AS "updateDate",
+		cr.remarks     AS "remarks",
+		cr.del_flag    AS "delFlag",
+		cr.user        AS "user.id",
+		cr.status      AS "status"
+	</sql>
+	<sql id="userMetroCardRecorditemColumns">
+		,item.id AS "recorditem.id",
+		item.guid AS "recorditem.guid",
+		item.goodsitemguid AS "recorditem.goodsitemguid",
+		item.barcode AS "recorditem.barcode",
+		item.gooditemname AS "recorditem.gooditemname",
+		item.totalmoney AS "recorditem.totalmoney",
+		item.number AS "recorditem.number",
+		item.oldprice AS "recorditem.oldprice",
+		IFNULL(CASE WHEN NOT ISNULL(item.paidmoney) THEN item.paidmoney ELSE cr.totalpaid END,0) AS "recorditem.paidmoney",
+		item.discount AS "recorditem.discount",
+		item.point AS "recorditem.point",
+		item.meno AS "recorditem.meno"
+	</sql>
+	
+	<select id="get" resultType="UserPetrolExchangeRecord">
+		SELECT
+			<include refid="userPetrolExchangeRecordColumns"/>
+			<include refid="userMetroCardRecordColumns"/>
+		FROM user_petrol_exchange_record a
+		<include refid="userPetrolExchangeRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getPetrolExchangeRecordInfo" resultType="com.thinkgem.jeesite.modules.wlpt.entity.card.UserMetroCardRecord">
+		SELECT DISTINCT 
+			<include refid="userMetroCardRecordColumns2"/>
+			<include refid="userMetroCardRecorditemColumns"/>
+		FROM user_petrol_exchange_record a
+		<include refid="userPetrolExchangeRecordJoins"/>
+		<include refid="userMetroCardRecorditemJoins"/>
+		WHERE a.exchange_no = #{exchangeNo}
+	</select>
+	<select id="getPetrolExchangeRecordbyExportList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserMetroCardRecordVO">
+		SELECT DISTINCT 
+			<include refid="userMetroCardRecordColumns2"/>
+			<include refid="userMetroCardRecorditemColumns"/>
+		FROM user_petrol_exchange_record a
+		<include refid="userPetrolExchangeRecordJoins"/>
+		<include refid="userMetroCardRecorditemJoins"/>
+		WHERE a.exchange_no = #{exchangeNo}
+	</select>
+	
+	<select id="findList" resultType="UserPetrolExchangeRecord">
+		SELECT 
+			<include refid="userPetrolExchangeRecordColumns"/>
+		FROM user_petrol_exchange_record a
+		<include refid="userPetrolExchangeRecordJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="exchangeNo != null and exchangeNo != ''">
+				AND a.exchange_no = #{exchangeNo}
+			</if>
+			<if test="recorditemid != null and recorditemid != ''">
+				AND a.recorditemid = #{recorditemid}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserPetrolExchangeRecord">
+		SELECT 
+			<include refid="userPetrolExchangeRecordColumns"/>
+		FROM user_petrol_exchange_record a
+		<include refid="userPetrolExchangeRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_petrol_exchange_record(
+
+		<if test="exchangeNo != null and exchangeNo !='' ">
+			exchange_no,
+		</if>
+		<if test="recorditemid != null and recorditemid !='' ">
+			recorditemid,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+			id
+		) VALUES (
+		<if test="exchangeNo != null and exchangeNo !='' ">
+			#{exchangeNo},
+		</if>
+		<if test="recorditemid != null and recorditemid !='' ">
+			#{recorditemid},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<insert id="insertExchange">
+		INSERT INTO user_petrol_exchange_record(id, exchange_no,recorditemid,status)
+		<foreach collection="cardRecordList" item="recorditem" separator=" union all ">
+			SELECT getShortUuid(), #{exchangeNo},#{recorditem.id},#{status}
+			<if test="dbName != 'mssql'">
+			FROM dual
+			</if>
+		</foreach>
+	</insert>
+	<update id="updateUserCardStatus">
+		UPDATE user_metro_card_record SET 	
+			status = #{status}
+		WHERE id in (<foreach collection="cardRecordList" item="cardRecord" separator=" union all ">
+			SELECT #{cardRecord.id}
+			<if test="dbName != 'mssql'">
+			FROM dual
+			</if>
+		</foreach>)
+	</update>
+	
+	<update id="update">
+		UPDATE user_petrol_exchange_record SET 	
+			<if test="exchangeNo != null and exchangeNo !='' ">
+				exchange_no = #{exchangeNo},
+			</if>
+			<if test="recorditemid != null and recorditemid !='' ">
+				recorditemid = #{recorditemid},
+			</if>
+			<if test="status != null and status !='' ">
+				status = #{status},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateStatus">
+		UPDATE user_petrol_exchange_record SET 	
+			status = #{status}
+		WHERE exchange_no = #{exchangeNo}
+	</update>
+	
+	
+	<update id="delete">
+		DELETE FROM user_petrol_exchange_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

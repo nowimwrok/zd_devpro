@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsTradeflowDao">
+    
+	<sql id="statisticsTradeflowColumns">
+		a.id AS "id",
+		a.startaddress AS "startaddress",
+		a.endaddress AS "endaddress",
+		a.everycount AS "everycount",
+		a.money AS "money",
+		a.createtime AS "createtime",
+		a.tradeweight AS "tradeweight"
+	</sql>
+	
+	<sql id="statisticsTradeflowJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsTradeflow">
+		SELECT
+			<include refid="statisticsTradeflowColumns"/>
+		FROM statistics_tradeflow a
+		<include refid="statisticsTradeflowJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsTradeflow">
+		SELECT 
+			<include refid="statisticsTradeflowColumns"/>
+		FROM statistics_tradeflow a
+		<include refid="statisticsTradeflowJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+			<if test="startaddress != null and startaddress !='' ">
+			AND  a.startaddress=#{startaddress}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsTradeflow">
+		SELECT 
+			<include refid="statisticsTradeflowColumns"/>
+		FROM statistics_tradeflow a
+		<include refid="statisticsTradeflowJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_tradeflow(
+
+		<if test="startaddress != null and startaddress !='' ">
+			startaddress,
+		</if>
+		<if test="endaddress != null and endaddress !='' ">
+			endaddress,
+		</if>
+		<if test="everycount != null and everycount !='' ">
+			everycount,
+		</if>
+		<if test="money != null and money !='' ">
+			money,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="tradeweight != null and tradeweight !='' ">
+			tradeweight,
+		</if>
+			id
+		) VALUES (
+		<if test="startaddress != null and startaddress !='' ">
+			#{startaddress},
+		</if>
+		<if test="endaddress != null and endaddress !='' ">
+			#{endaddress},
+		</if>
+		<if test="everycount != null and everycount !='' ">
+			#{everycount},
+		</if>
+		<if test="money != null and money !='' ">
+			#{money},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="tradeweight != null and tradeweight !='' ">
+			#{tradeweight},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_tradeflow SET 	
+			<if test="startaddress != null and startaddress !='' ">
+				startaddress = #{startaddress},
+			</if>
+			<if test="endaddress != null and endaddress !='' ">
+				endaddress = #{endaddress},
+			</if>
+			<if test="everycount != null and everycount !='' ">
+				everycount = #{everycount},
+			</if>
+			<if test="money != null and money !='' ">
+				money = #{money},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="tradeweight != null and tradeweight !='' ">
+				tradeweight = #{tradeweight},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_tradeflow
+		WHERE id = #{id}
+	</update>
+	<select id="editTradeflow" statementType="CALLABLE">
+			{call SP_Statistics_Tradeflow()}
+	</select>
+</mapper>

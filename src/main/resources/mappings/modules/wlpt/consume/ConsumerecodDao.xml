@@ -1,0 +1,3234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.consume.ConsumerecodDao">
+
+	<sql id="consumerecodColumns">
+		a.id AS "id",
+		a.account_id AS "account.id",
+		a.sysaccount_id
+		AS "sysaccount.id",
+		a.target_id AS "target.id",
+		a.order_id AS
+		"orderinfo.id",
+		a.consumecode AS "consumecode",
+		a.paycode AS "paycode",
+		a.consumetype AS "consumetype",
+		a.consumeway AS "consumeway",
+		a.consumewaydesp AS "consumewaydesp",
+		a.consumestatus AS
+		"consumestatus",
+		a.scantype AS "scantype",
+		a.consumemony AS
+		"consumemony",
+		a.beforemony AS "beforemony",
+		a.aftermony AS "aftermony",
+		a.flowafter AS "flowafter",
+		a.flowbefore AS "flowbefore",
+		a.trade_model
+		AS "trademodel",
+		a.issysrecode AS "issysrecode",
+		account.login_name AS
+		"account.loginName",
+		account.phone AS "account.phone",
+		account.name AS
+		"account.name",
+		sysaccount.login_name AS "sysaccount.loginName",
+		sysaccount.phone AS "sysaccount.phone",
+		sysaccount.name AS
+		"sysaccount.name",
+		target.login_name AS "target.loginName",
+		target.phone AS "target.phone",
+		target.name AS "target.name",
+		orderinfo.ORDERNO AS "orderinfo.orderno",
+		a.isplus AS "isplus",
+		a.beforeAvliable AS "beforeAvliable",
+		a.beforeFreeze AS "beforeFreeze",
+		a.afterAvliable AS "afterAvliable",
+		a.afterFreeze AS "afterFreeze",
+		a.create_date AS
+		"createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS
+		"updateDate",
+		a.update_by AS "updateBy.id",
+		a.del_flag
+		AS "delFlag",
+		a.bank_id AS "userBankinfo.id",
+		a.remarks AS "remarks",
+		a.awardno AS "awardno",
+		a.tradeSettlementId  AS "tradeSettlementId"
+
+	</sql>
+	
+	<sql id="metroCardRecordColumns">
+	,m.CARDID     AS "cardid",
+	m.BILLNUMBER  AS "billnumber",
+	m.MENO        AS "meno",
+	m.TOTALMONEY  AS "totalmoney",
+	m.STORENAME   AS "storename",
+	m.USERACCOUNT AS "useraccount"
+	</sql>
+	<sql id="metroCardRecordJoins">
+	LEFT JOIN user_metro_card_record m ON m.GUID = a.PAYCODE
+	</sql>
+	<sql id="consumerecodJoins">
+		LEFT JOIN sys_user account ON a.ACCOUNT_ID = account.id
+		LEFT JOIN sys_user sysaccount ON a.SYSACCOUNT_ID = sysaccount.id
+		LEFT
+		JOIN sys_user target ON a.TARGET_ID = target.id
+		LEFT JOIN
+		trade_orderinfo orderinfo ON a.ORDER_ID = orderinfo.ID
+	</sql>
+
+	<select id="get" resultType="Consumerecod">
+		SELECT
+		<include refid="consumerecodColumns" />
+		FROM user_consumerecod a
+		<include refid="consumerecodJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Consumerecod" useCache="false" flushCache="false">
+        SELECT
+        <include refid="consumerecodColumns"/>
+        FROM user_consumerecod a
+        <include refid="consumerecodJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="issysrecode != null and issysrecode != ''">
+                AND a.issysrecode = #{issysrecode}
+            </if>
+            <if test="search != null and search != ''">
+                AND (a.account_id = #{search} or a.target_id =
+                #{search}
+                or
+                a.sysaccount_id = #{search})
+            </if>
+            <if test="searchinfo != null and searchinfo != ''">
+                AND (target.login_name = #{searchinfo} or target.name =
+                #{searchinfo} or
+                target.phone = #{searchinfo})
+            </if>
+            <if test="account != null and account.id != null and account.id != ''">
+                AND (a.account_id = #{account.id} or a.target_id =
+                #{account.id} or
+                a.sysaccount_id = #{account.id})
+            </if>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.create_date &lt;= #{endCreateDate}
+            </if>
+            <if test="account != null and account.loginName != null and account.loginName != ''">
+                AND (account.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{account.loginName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{account.loginName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{account.loginName},'%')</if>
+                OR account.phone=#{account.loginName})
+            </if>
+            <if test="target != null and target.loginName != null and target.loginName != ''">
+                AND (target.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{target.loginName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{target.loginName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{target.loginName},'%')</if>
+                OR target.phone=#{target.loginName})
+            </if>
+            <if
+                    test="orderinfo != null and orderinfo.id != null and orderinfo.id != ''">
+                AND a.order_id = #{orderinfo.id}
+            </if>
+            <if test="consumecode != null and consumecode != ''">
+                AND a.consumecode LIKE
+                <if test="dbName == 'oracle'">'%'||#{consumecode}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{consumecode}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{consumecode},'%')</if>
+            </if>
+            <if test="paycode != null and paycode != ''">
+                AND a.paycode = #{paycode}
+            </if>
+
+            <if test="trademodel != null and trademodel != ''">
+                AND a.trade_model = #{trademodel}
+            </if>
+            <if test="consumetype != null and consumetype != ''">
+                AND a.consumetype = #{consumetype}
+            </if>
+            <if test="consumeway != null and consumeway != ''">
+                AND a.consumeway = #{consumeway}
+            </if>
+            <if test="consumewaydesp != null and consumewaydesp != ''">
+                AND a.consumewaydesp LIKE
+                <if test="dbName == 'oracle'">'%'||#{consumewaydesp}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{consumewaydesp}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{consumewaydesp},'%')</if>
+            </if>
+            <if test="consumestatus != null and consumestatus != ''">
+                AND a.consumestatus = #{consumestatus}
+            </if>
+            <if test="scantype != null and scantype != ''">
+                AND a.scantype = #{scantype}
+            </if>
+            <if test="consumemony != null and consumemony != ''">
+                AND a.consumemony LIKE
+                <if test="dbName == 'oracle'">'%'||#{consumemony}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{consumemony}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{consumemony},'%')</if>
+            </if>
+            <if test="beforemony != null and beforemony != ''">
+                AND a.beforemony LIKE
+                <if test="dbName == 'oracle'">'%'||#{beforemony}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{beforemony}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{beforemony},'%')</if>
+            </if>
+            <if test="aftermony != null and aftermony != ''">
+                AND a.aftermony LIKE
+                <if test="dbName == 'oracle'">'%'||#{aftermony}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{aftermony}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{aftermony},'%')</if>
+            </if>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.create_date &lt;= #{endCreateDate}
+            </if>
+            <!--<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate
+                != '' and endCreateDate != ''"> AND a.create_date BETWEEN #{beginCreateDate}
+                AND #{endCreateDate} </if> -->
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                AND a.update_date = #{updateDate}
+            </if>
+
+            <if
+                    test="sysaccount != null and sysaccount.id != null and sysaccount.id != ''">
+                AND a.sysaccount_id = #{sysaccount.id}
+            </if>
+            <!-- 交易类型 0全部 1收入 2支出 -->
+            <if test="searchType != null and searchType != '' and searchType ==1">
+                AND a.consumetype
+                IN('0001','0002','0003','0004','0102','0103','0106','0107','0111','0113','0114','0115','0117','0118','0120','0122','0202','0205','0302','0303','0402','0403','0502','0504','0506','0508','0601','0701','0703','0704','0706','0707,''0801')
+            </if>
+            <if test="searchType != null and searchType != '' and searchType ==2">
+                AND a.consumetype
+                IN('0101','0104','0105','0108','0109','0110','0112','0119','0121','0201','0203','0204','0301','0401','0501','0503','0505','0507','0602','0603','0702','0705','0708','0802')
+            </if>
+            <!-- 交易类型 15转账16收到转账 -->
+            <if test="searchType != null and searchType != '' and searchType ==3">
+                AND a.consumetype IN(0501)
+            </if>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+        <if test="islimt != null and islimt != '' and islimt ==1">
+            LIMIT 1
+        </if>
+    </select>
+
+	<select id="findAllList" resultType="Consumerecod">
+		SELECT
+		<include refid="consumerecodColumns" />
+		FROM user_consumerecod a
+		<include refid="consumerecodJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findDetailById" resultType="Consumerecod">
+		SELECT
+		<include refid="consumerecodColumns" />
+		FROM user_consumerecod a
+		<include refid="consumerecodJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id !=null and id !=''">
+				AND(a.account_id = #{id} OR a.target_id = #{id} OR
+				a.sysaccount_id = #{id})
+			</if>
+			<if test="searchinfo != null and searchinfo != '' and searchinfo =='bid'">
+				AND a.consumetype IN (20,21,22,23)
+			</if>
+			<if
+				test="searchinfo != null and searchinfo != '' and searchinfo =='account'">
+				AND a.consumetype IN (3,4,5)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findWebDetailById" resultType="Consumerecod">
+		SELECT
+		<include refid="consumerecodColumns" />
+		FROM user_consumerecod a
+		<include refid="consumerecodJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id !=null and id !=''">
+				AND(a.account_id = #{id} OR a.target_id = #{id} OR
+				a.sysaccount_id = #{id}) and a.CONSUMEWAY!='10'
+			</if>
+			<if test="searchinfo != null and searchinfo != '' and searchinfo =='bid'">
+				AND a.consumetype IN (20,21,22,23)
+			</if>
+			<if
+				test="searchinfo != null and searchinfo != '' and searchinfo =='account'">
+				AND a.consumetype IN (3,4,5)
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<!--通过searchinfo参数来获取对应流水数据 -->
+	<select id="findDetailBySearchinfo" resultType="Consumerecod">
+		SELECT
+		<include refid="consumerecodColumns" />
+		FROM user_consumerecod a
+		<include refid="consumerecodJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id !=null and id !=''">
+				AND(a.account_id = #{id} OR a.target_id = #{id} OR
+				a.sysaccount_id = #{id})
+			</if>
+			<if test=" target !=null and target.loginName != null and target.loginName != ''">
+                AND (
+                target.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{target.loginName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{target.loginName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{target.loginName},'%')</if>
+                OR target.phone LIKE 
+                <if test="dbName == 'oracle'">'%'||#{target.loginName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{target.loginName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{target.loginName},'%')</if>
+                )
+            </if>
+            <if test="account !=null and account.loginName != null and account.loginName != ''">
+                AND ( account.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{account.loginName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{account.loginName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{account.loginName},'%')</if>
+                OR account.phone LIKE 
+                <if test="dbName == 'oracle'">'%'||#{account.loginName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{account.loginName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{account.loginName},'%')</if>
+                )
+            </if>
+			<if test="trademodel != null and trademodel != ''">
+				AND a.trade_model =#{trademodel}
+			</if>
+			<if test="consumeway != null and consumeway != ''">
+				AND a.consumeway =#{consumeway}
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.create_date &lt;= #{endCreateDate}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--通过searchinfo参数来获取对应油气流水数据 -->
+	<select id="findPetrolDetailBySearchinfo" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.ConsumerecodPetrolVO">
+		SELECT
+		<include refid="consumerecodColumns" />
+		<include refid="metroCardRecordColumns"/>
+		 ,count(distinct a.PAYCODE,a.CONSUMEWAYDESP)
+		FROM user_consumerecod a
+		<include refid="consumerecodJoins" />
+		<include refid="metroCardRecordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id !=null and id !=''">
+				AND(a.account_id = #{id} OR a.target_id = #{id} OR
+				a.sysaccount_id = #{id})
+			</if>
+			<if test="trademodel != null and trademodel != ''">
+				AND a.trade_model =#{trademodel}
+			</if>
+			<if test="consumeway != null and consumeway != ''">
+				AND a.consumeway =#{consumeway}
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.create_date &lt;= #{endCreateDate}
+            </if>
+		</where>
+		AND a.consumeway =6
+ 		group by a.PAYCODE,a.CONSUMEWAYDESP
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!-- 统计用户充值记录 -->
+	<select id="findCountConsumerecod" resultType="Consumerecod">
+		SELECT
+		sum(a.consumemony) AS "consumemony",
+		sum(a.beforemony) AS
+		"beforemony",
+		sum(a.aftermony) AS "aftermony",
+		sum(a.flowafter) AS
+		"flowafter"
+		FROM user_consumerecod a
+		<where>
+			a.del_flag = 0
+			and ISSYSRECODE=0
+			<if test="target != null and target.id != null and target.id != ''">
+				AND a.target_id = #{target.id}
+			</if>
+			<if
+				test="searchinfo != null and searchinfo != '' and searchinfo =='account'">
+				AND a.consumetype IN (0,1,2)
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO user_consumerecod(
+        <if test="userBankinfo != null and userBankinfo.id != null and userBankinfo.id !='' ">
+			bank_id,
+		</if>
+		<if test="account != null and account.id != null and account.id !='' ">
+			account_id,
+		</if>
+		<if test="target != null and target.id != null and target.id !='' ">
+			target_id,
+		</if>
+		<if
+			test="orderinfo != null and orderinfo.id != null and orderinfo.id !='' ">
+			order_id,
+		</if>
+		<if test="consumecode != null and consumecode !='' ">
+			consumecode,
+		</if>
+		<if test="paycode != null and paycode !='' ">
+			paycode,
+		</if>
+		<if test="consumetype != null and consumetype !='' ">
+			consumetype,
+		</if>
+		<if test="consumeway != null and consumeway !='' ">
+			consumeway,
+		</if>
+		<if test="consumewaydesp != null and consumewaydesp !='' ">
+			consumewaydesp,
+		</if>
+		<if test="consumestatus != null and consumestatus !='' ">
+			consumestatus,
+		</if>
+		<if test="scantype != null and scantype !='' ">
+			scantype,
+		</if>
+		<if test="consumemony != null and consumemony !='' ">
+			consumemony,
+		</if>
+		<if test="beforemony != null and beforemony !='' ">
+			beforemony,
+		</if>
+		<if test="aftermony != null and aftermony !='' ">
+			aftermony,
+		</if>
+		<if test="flowbefore != null and flowbefore !='' ">
+			flowbefore,
+		</if>
+		<if test="flowafter != null and flowafter !='' ">
+			flowafter,
+		</if>
+		<if test="trademodel != null and trademodel !='' ">
+			trade_model,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="issysrecode != null and issysrecode !='' ">
+			issysrecode,
+		</if>
+		<if test="sysaccount != null and sysaccount.id != null and sysaccount.id !='' ">
+			sysaccount_id,
+		</if>
+		<if test="tradeSettlementId != null and tradeSettlementId !='' ">
+			tradeSettlementId,
+		</if>
+		<if test="awardno != null and awardno !='' ">
+			awardno,
+		</if>
+		id
+		) VALUES (
+		<if test="userBankinfo !=null and userBankinfo.id != null and userBankinfo.id !='' ">
+			#{userBankinfo.id},
+		</if>
+		<if test="account !=null and account.id != null and account.id !='' ">
+			#{account.id},
+		</if>
+		<if test="target != null and target.id != null and target.id !='' ">
+			#{target.id},
+		</if>
+		<if test="orderinfo !=null and orderinfo.id != null and orderinfo.id !='' ">
+			#{orderinfo.id},
+		</if>
+		<if test="consumecode != null and consumecode !='' ">
+			#{consumecode},
+		</if>
+		<if test="paycode != null and paycode !='' ">
+			#{paycode},
+		</if>
+		<if test="consumetype != null and consumetype !='' ">
+			#{consumetype},
+		</if>
+		<if test="consumeway != null and consumeway !='' ">
+			#{consumeway},
+		</if>
+		<if test="consumewaydesp != null and consumewaydesp !='' ">
+			#{consumewaydesp},
+		</if>
+		<if test="consumestatus != null and consumestatus !='' ">
+			#{consumestatus},
+		</if>
+		<if test="scantype != null and scantype !='' ">
+			#{scantype},
+		</if>
+		<if test="consumemony != null and consumemony !='' ">
+			#{consumemony},
+		</if>
+		<if test="beforemony != null and beforemony !='' ">
+			#{beforemony},
+		</if>
+		<if test="aftermony != null and aftermony !='' ">
+			#{aftermony},
+		</if>
+		<if test="flowbefore != null and flowbefore !='' ">
+			#{flowbefore},
+		</if>
+		<if test="flowafter != null and flowafter !='' ">
+			#{flowafter},
+		</if>
+		<if test="trademodel != null and trademodel !='' ">
+			#{trademodel},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="issysrecode != null and issysrecode !='' ">
+			#{issysrecode},
+		</if>
+		<if test="sysaccount != null and sysaccount.id != null and sysaccount.id !='' ">
+			#{sysaccount.id},
+		</if>
+		<if test="tradeSettlementId != null and tradeSettlementId !='' ">
+			#{tradeSettlementId},
+		</if>
+		<if test="awardno != null and awardno !='' ">
+			#{awardno},
+		</if>
+		#{id}
+		)
+	</insert>
+
+	<!--修改交易状态通过交易编号 -->
+	<update id="updateByConsumeStatus">
+		UPDATE user_consumerecod SET
+		<if test="consumestatus != null and consumestatus !='' ">
+			consumestatus = #{consumestatus},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date = #{updateDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_by = #{updateBy.id},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		ID = #{id}
+		WHERE ID = #{id}
+	</update>
+
+	<!--修改通过对象 -->
+	<update id="update">
+		UPDATE user_consumerecod SET
+		<!--<if test="account.id != null and account.id !='' "> account_id = #{account.id}, 
+			</if> <if test="target.id != null and target.id !='' "> target_id = #{target.id}, 
+			</if> <if test="orderinfo.id != null and orderinfo.id !='' "> order_id = 
+			#{orderinfo.id}, </if> -->
+		<if test="consumecode != null and consumecode !='' ">
+			consumecode = #{consumecode},
+		</if>
+		<if test="paycode != null and paycode !='' ">
+			paycode = #{paycode},
+		</if>
+		<if test="consumetype != null and consumetype !='' ">
+			consumetype = #{consumetype},
+		</if>
+		<if test="consumeway != null and consumeway !='' ">
+			consumeway = #{consumeway},
+		</if>
+		<if test="consumewaydesp != null and consumewaydesp !='' ">
+			consumewaydesp = #{consumewaydesp},
+		</if>
+		<if test="consumestatus != null and consumestatus !='' ">
+			consumestatus = #{consumestatus},
+		</if>
+		<if test="scantype != null and scantype !='' ">
+			scantype = #{scantype},
+		</if>
+		<!--<if test="consumemony != null and consumemony !='' "> consumemony = 
+			#{consumemony}, </if> <if test="beforemony != null and beforemony !='' "> 
+			beforemony = #{beforemony}, </if> <if test="aftermony != null and aftermony 
+			!='' "> aftermony = #{aftermony}, </if> -->
+		<if test="trademodel != null and trademodel !='' ">
+			trade_model = #{trademodel},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date = #{updateDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_by = #{updateBy.id},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		<!--<if test="sysaccount.id != null and sysaccount.id !='' "> sysaccount_id 
+			= #{sysaccount.id}, </if> -->
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE user_consumerecod SET
+		del_flag =
+		#{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 钱包信息列表 -->
+	<sql id="UserAccountColumns">
+		a.login_name AS "user.loginName",
+		a.member_id AS "user.memberId",
+		a.name AS "user.name",
+		a.phone AS "user.phone",
+		a.mobile AS "user.mobile",
+		upur.WEBBALANCE AS
+		"user.userPurse.webbalance",
+		upur.AVAILABLEBALANCE AS
+		"user.userPurse.availablebalance",
+		upur.FREEZEMONEY AS
+		"user.userPurse.freezemoney",
+		upur.BIDDINGMONEY AS
+		"user.userPurse.biddingmoney",
+		upur.GUARANTEEMONE AS
+		"user.userPurse.guaranteemone",
+		upur.PETROLBALANCE AS
+		"user.userPurse.petrolbalance",
+		upur.REDPACKET AS
+		"user.userPurse.redpacket",
+		upur.SETTLEMONEY AS
+		"user.userPurse.settlemoney",
+		upur.SETTLESTATUS AS
+		"user.userPurse.settlestatus",
+		upur.INSURANCE AS
+		"user.userPurse.insurance",
+		upur.CREDITMONEY AS
+		"user.userPurse.creditmoney",
+
+		upur.WEBCOIN AS
+		"user.userPurse.webcoin",
+		upur.AVAILABLECOIN AS
+		"user.userPurse.availablecoin",
+		upur.FREEZECOIN AS
+		"user.userPurse.freezecoin",
+
+		ulr.name AS "user.role.name",
+	</sql>
+
+	<!-- ***************充值模块***************** -->
+	<!--余额充值 -->
+	<sql id="balanaceColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0001' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		balanace,
+	</sql>
+	<sql id="balanaceColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0001' and
+		r.consumestatus=1     
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		balanace,
+	</sql>
+	<!--卓币充值 -->
+	<sql id="coinbalanaceColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0002' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		coinbalanace,
+	</sql>
+	<sql id="coinbalanaceColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0002' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		coinbalanace,
+	</sql>
+	<!--保证金充值 -->
+	<sql id="guenalanaceColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0003' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		guenalanace,
+	</sql>
+	<sql id="guenalanaceColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0003' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		guenalanace,
+	</sql>
+	<!-- ***************充值模块***************** -->
+
+
+	<!--购买卓币系统收到服务费 -->
+	<sql id="getconsumeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0004' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getconsume,
+	</sql>
+<sql id="getconsumeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0004' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getconsume,
+	</sql>
+
+	<!-- ***************运单交易模块***************** -->
+	<!--运费支出 -->
+	<sql id="forzenonlineColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0101' and
+		r.consumestatus=3
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		forzenonline,
+	</sql>
+	<!-- 新冻结运费 -->
+	<sql id="newforzenonlineColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0101' and
+		r.consumestatus=3 and (o.ORDERSTATUS = 1 or o.ORDERSTATUS =3)
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		newforzenonline,
+	</sql>
+	<sql id="forzenonlineColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0101' and
+		r.consumestatus=3  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		forzenonline,
+	</sql>
+	<!--运费返款 -->
+	<sql id="returnforzenColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0102' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		returnforzen,
+	</sql>
+	<sql id="returnforzenColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0102' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		returnforzen,
+	</sql>
+	<!--运费收到预付 -->
+	<sql id="getpremoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0103' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getpremoney,
+	</sql>
+	<sql id="getpremoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0103' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getpremoney,
+	</sql>
+	<!--运费预付支出 -->
+	<sql id="paypremoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0104' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		paypremoney,
+	</sql>
+	<sql id="paypremoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0104' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		paypremoney,
+	</sql>
+	<!--运费余款支付 -->
+	<sql id="payonlienmoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0105' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		payonlienmoney,
+	</sql>
+	<sql id="payonlienmoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0105' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		payonlienmoney,
+	</sql>
+	<!--运费收到余款 -->
+	<sql id="getonlinemoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0106' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getonlinemoney,
+	</sql>
+	<sql id="getonlinemoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0106' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getonlinemoney,
+	</sql>
+	<!--运费争议退款 -->
+	<sql id="disputemoneyreturnColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0107' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		disputemoneyreturn,
+	</sql>
+	<sql id="disputemoneyreturnColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0107' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		disputemoneyreturn,
+	</sql>
+	<!--争议余款支付 -->
+	<sql id="disputepaymoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0108' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		disputepaymoney,
+	</sql>
+	<sql id="disputepaymoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0108' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		disputepaymoney,
+	</sql>
+	<!--卓币运费冻结 -->
+	<sql id="forzenonlinecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0109' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		forzenonlinecoin,
+	</sql>
+	<!--卓币运费冻结 -->
+	<sql id="newforzenonlinecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0109' and
+		r.consumestatus=1 and (o.ORDERSTATUS = 1 or o.ORDERSTATUS =3)
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		newforzenonlinecoin,
+	</sql>
+	<sql id="forzenonlinecoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0109' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		forzenonlinecoin,
+	</sql>
+	<!--卓币运费预付 -->
+	<sql id="payprecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0110' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		payprecoin,
+	</sql>
+	<sql id="payprecoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0110' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		payprecoin,
+	</sql>
+	<!--卓币运费收到预付 -->
+	<sql id="getprecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0111' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getprecoin,
+	</sql>
+	<sql id="getprecoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0111' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getprecoin,
+	</sql>
+	<!--卓币运费支付余款 -->
+	<sql id="payonliencoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0112' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		payonliencoin,
+	</sql>
+	<sql id="payonliencoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0112' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		payonliencoin,
+	</sql>
+	<!--卓币运费收到余款 -->
+	<sql id="getonlinecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0113' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getonlinecoin,
+	</sql>
+	<sql id="getonlinecoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0113' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getonlinecoin,
+	</sql>
+	<!--运费收到冻结 -->
+	<sql id="getforzenonlineColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0114' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getforzenonline,
+	</sql>
+	<sql id="getforzenonlineColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0114' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getforzenonline,
+	</sql>
+	<!--卓币收到冻结 -->
+	<sql id="getforzenonlinecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0115' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getforzenonlinecoin,
+	</sql>
+	<sql id="getforzenonlinecoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0115' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getforzenonlinecoin,
+	</sql>
+	<!--打印提货单缴费 -->
+	<sql id="printpayColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0116' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		printpay,
+	</sql>
+	<sql id="printpayColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0116' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		printpay,
+	</sql>
+	<!--收到打印缴费 -->
+	<sql id="getprintpayColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0117' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getprintpay,
+	</sql>
+	<sql id="getprintpayColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0117' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getprintpay,
+	</sql>
+	<!--卓币收到冻结 -->
+	<sql id="conrefoundColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0118' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		conrefound,
+	</sql>
+	<sql id="conrefoundColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0118' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		conrefound,
+	</sql>
+
+	<!-- ***************运单交易模块***************** -->
+
+	
+	<!--余额支付运单LBS定位服务费 -->
+    <sql id="lbspaymoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0121'
+		AND r.consumestatus = 1 THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) lbspaymoney,
+	</sql>
+	<sql id="lbspaymoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0121'
+		AND r.consumestatus = 1    THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) lbspaymoney,
+	</sql>
+	<!--余额收到运单LBS定位服务费 -->
+    <sql id="getlbspaymoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0122'
+		AND r.consumestatus = 1 THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) getlbspaymoney,
+	</sql>
+	<!-- 定位服务费用包含LBS定位数据统计 -->
+	<sql id="locactionpaymoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype in ('0121','0123','0125' )
+		AND r.consumestatus = 1    THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) lbspaymoney,
+	</sql>
+	  <sql id="getlbspaymoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0122'
+		AND r.consumestatus = 1   THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) getlbspaymoney,
+	</sql>
+	<!--卓币支付运单LBS定位服务费 -->
+    <sql id="lbspaycoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0119'
+		AND r.consumestatus = 1 THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) lbspaycoin,
+	</sql>
+	 <sql id="lbspaycoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0119'
+		AND r.consumestatus = 1   THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) lbspaycoin,
+	</sql>
+	<!--卓币收到运单LBS定位服务费  -->
+    <sql id="getlbspaycoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0120'
+		AND r.consumestatus = 1 THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) getlbspaycoin,
+	</sql>
+	 <sql id="getlbspaycoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0120'
+		AND r.consumestatus = 1   THEN
+			r.consumemony
+		ELSE
+			0
+		END
+	) getlbspaycoin,
+	</sql>
+	
+	
+    <!-- ***************运单交易模块***************** -->
+
+	<!-- ***************招标模块***************** -->
+	<!--"0201";招标结算支付 -->
+	<sql id="settlepayColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0201' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		settlepay,
+	</sql>
+	<sql id="settlepayColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0201' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		settlepay,
+	</sql>
+	<!--"0202";招标收到结算 -->
+	<sql id="getsettleColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0202' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getsettle,
+	</sql>
+	<sql id="getsettleColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0202' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getsettle,
+	</sql>
+	<!--"0203";招标结算提现 -->
+	<sql id="settlecashColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0203' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		settlecash,
+	</sql>
+	<sql id="settlecashColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0203' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		settlecash,
+	</sql>
+	<!--"0204";招标结算卓币 -->
+	<sql id="settlepaycoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0204' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		settlepaycoin,
+	</sql>
+	<sql id="settlepaycoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0204' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		settlepaycoin,
+	</sql>
+	<!--"0205";收到结算卓币 -->
+	<sql id="getsettlecoinColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0205' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getsettlecoin,
+	</sql>
+	<sql id="getsettlecoinColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0205' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getsettlecoin,
+	</sql>
+	<!-- ***************招标模块***************** -->
+
+
+
+	<!-- ***************竞标模块***************** -->
+	<!--"0301";缴纳竞标保证金 -->
+	<sql id="bidingpayColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0301' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		bidingpay,
+	</sql>
+	<sql id="bidingpayColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0301' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		bidingpay,
+	</sql>
+	
+	<!--"0302";收到竞标保证金 -->
+	<sql id="bidinggetpayColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0302' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		bidinggetpay,
+	</sql>
+	<sql id="bidinggetpayColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0302' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		bidinggetpay,
+	</sql>
+	<!--"0303";退还竞标保证金 -->
+	<sql id="bidingreturnColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0303' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		bidingreturn,
+	</sql>
+	<sql id="bidingreturnColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0303' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		bidingreturn,
+	</sql>
+	<!-- ***************竞标模块***************** -->
+
+
+	<!-- ***************提现模块***************** -->
+	<!--"0401";余额提现 -->
+	<sql id="cashmoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0401' and
+		r.consumestatus=3
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		cashmoney,
+	</sql>
+	<sql id="cashmoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0401' and
+		r.consumestatus=3  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		cashmoney,
+	</sql>
+	<!--"0402";收到余额提现 -->
+	<sql id="getcashmoneyColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0401' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getcashmoney,
+	</sql>
+	<sql id="getcashmoneyColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0401' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getcashmoney,
+	</sql>
+	<!--"0403";余额提现 退款 -->
+	<sql id="cashmoneyreturnColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0401' and
+		r.consumestatus=2
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		cashmoneyreturn,
+	</sql>
+	<sql id="cashmoneyreturnColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0401' and
+		r.consumestatus=2  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		cashmoneyreturn,
+	</sql>
+	<!-- ***************提现模块***************** -->
+
+
+
+	<!-- ***************转账模块***************** -->
+	<!--"0501";余额转账 -->
+	<sql id="accounttransferColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0501' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		accounttransfer,
+	</sql>
+	<sql id="accounttransferColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0501' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		accounttransfer,
+	</sql>
+	<!--"0502";余额收到转账 -->
+	<sql id="receivedtransferColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0502' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		receivedtransfer,
+	</sql>
+	<sql id="receivedtransferColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0502' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		receivedtransfer,
+	</sql>
+	<!-- ***************转账模块***************** -->
+
+
+	<!-- ***************卓币模块***************** -->
+	<!--"0601";卓币充值记录 -->
+	<sql id="coinrechargeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0601' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		coinrecharge,
+	</sql>
+	<sql id="coinrechargeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0601' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		coinrecharge,
+	</sql>
+	<!--"0602";卓币购买油气 -->
+	<sql id="coinbuypetrolColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0602' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		coinbuypetrol,
+	</sql>
+	<sql id="coinbuypetrolColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0602' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		coinbuypetrol,
+	</sql>
+	<!--"0603";卓币消费 -->
+	<sql id="getcoinconsumeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0603' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getcoinconsume,
+	</sql>
+	<sql id="getcoinconsumeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0603' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getcoinconsume,
+	</sql>
+
+	<!--"0503";卓币转账 -->
+	<sql id="cointransferColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0503' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		cointransfer,
+	</sql>
+<sql id="cointransferColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0503' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		cointransfer,
+	</sql>
+	<!--"0504";卓币收到转账 -->
+	<sql id="getcointransferColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0504' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getcointransfer,
+	</sql>
+	<sql id="getcointransferColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0504' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		getcointransfer,
+	</sql>
+	<!-- ***************卓币模块***************** -->
+
+
+	<!-- ***************油气模块***************** -->
+	<!--"0701";油气充值记录 -->
+	<sql id="petrolrechargeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0701' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0701' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolrecharge,
+	</sql>
+	<sql id="petrolrechargeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0701' and
+		r.consumestatus=1 
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0701' and
+		r.consumestatus=1 
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolrecharge,
+	</sql>
+	<!--"0702";油气消费 -->
+	<sql id="petrolconsumeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0702' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0702' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolconsume,
+	</sql>
+	<sql id="petrolconsumeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0702' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0702' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolconsume,
+	</sql>
+	<!--"0703";油气支付充值 -->
+	<sql id="paypetrolrechargeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0703' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0703' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		paypetrolrecharge,
+	</sql>
+	<sql id="paypetrolrechargeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0703' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0703' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		paypetrolrecharge,
+	</sql>
+	<!--"0704";油气收到消费 -->
+	<sql id="getpetrolconsumeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0704' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0704' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		getpetrolconsume,
+	</sql>
+	<sql id="getpetrolconsumeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0704' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0704' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		getpetrolconsume,
+	</sql>
+	<!--"0707";油气支付兑换 -->
+	<sql id="petrolexchangeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0707' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0707' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolexchange,
+	</sql>
+	<sql id="petrolexchangeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0707' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0707' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolexchange,
+	</sql>
+	<!--"0708";油气收到兑换 -->
+	<sql id="receivedpetrolexchangeColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0708' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0708' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		receivedpetrolexchange,
+	</sql>
+	<sql id="receivedpetrolexchangeColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0708' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0708' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		receivedpetrolexchange,
+	</sql>
+	<!--"0507";油气支付转账 -->
+	<sql id="petrotransferColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0507' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0507' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrotransfer,
+	</sql>
+	<sql id="petrotransferColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0507' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0507' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrotransfer,
+	</sql>
+	<!--"0508";油气收到转账 -->
+	<sql id="receivedtransferpetroColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0508' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0508' and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		receivedtransferpetro,
+	</sql>
+	<sql id="receivedtransferpetroColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0508' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN r.consumetype ='0508' and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		receivedtransferpetro,
+	</sql>
+	
+	<!--"0701+0703";油气充值记录+油气支付充值 -->
+	<sql id="petrolrechargesumColumns">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0701' or r.consumetype ='0703') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0701' or r.consumetype ='0703') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolrechargesum,
+	</sql>
+	<sql id="petrolrechargesumColumns1">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0701' or r.consumetype ='0703') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0701' or r.consumetype ='0703') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolrechargesum,
+	</sql>
+	<!--"0702+0704";油气消费+油气收到消费 -->
+	<sql id="petrolconsumesumColumns">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0702' or r.consumetype ='0704') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0702' or r.consumetype ='0704') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolconsumesum,
+	</sql>
+	<sql id="petrolconsumesumColumns1">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0702' or r.consumetype ='0704') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0702' or r.consumetype ='0704') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolconsumesum,
+	</sql>
+	<!--"0705+0706";活动赠送油气+油气支付赠送 -->
+	<sql id="petrolgrantsumColumns">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0705' or r.consumetype ='0706') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0705' or r.consumetype ='0706') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolgrantsum,
+	</sql>
+	<sql id="petrolgrantsumColumns1">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0705' or r.consumetype ='0706') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0705' or r.consumetype ='0706') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolgrantsum,
+	</sql>
+	<!--0707+0708	油气支付兑换+油气收到兑换 -->
+	<sql id="petrolexchangesumColumns">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0707' or r.consumetype ='0708') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0707' or r.consumetype ='0708') and
+		r.consumestatus=1
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolexchangesum,
+	</sql>
+	<sql id="petrolexchangesumColumns1">
+		SUM(
+		CASE
+		WHEN (r.consumetype ='0707' or r.consumetype ='0708') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &gt; 0
+		THEN
+		r.consumemony
+		WHEN (r.consumetype ='0707' or r.consumetype ='0708') and
+		r.consumestatus=1  
+		and r.aftermony-r.beforemony &lt; 0
+		THEN
+		0-r.consumemony
+		ELSE
+		0
+		END
+		)
+		petrolexchangesum,
+	</sql>
+	<!-- ***************油气模块***************** -->
+    
+	<!-- ***************活动模块***************** -->
+	<!--"0705";活动赠送油气 -->
+	<sql id="petrolgrantColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0705'
+		AND r.consumestatus = 1 
+		and r.aftermony-r.beforemony &gt; 0 THEN
+			r.consumemony
+		WHEN r.consumetype = '0705'
+		AND r.consumestatus = 1 
+		and r.aftermony-r.beforemony &lt; 0 THEN
+			0-r.consumemony
+		ELSE
+			0
+		END
+	) petrolgrant,
+	</sql>
+	<sql id="petrolgrantColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0705'
+		AND r.consumestatus = 1   
+		and r.aftermony-r.beforemony &gt; 0 THEN
+			r.consumemony
+		WHEN r.consumetype = '0705'
+		AND r.consumestatus = 1   
+		and r.aftermony-r.beforemony &lt; 0 THEN
+			0-r.consumemony
+		ELSE
+			0
+		END
+	) petrolgrant,
+	</sql>
+	<!--"0706";油气支付赠送 -->
+	<sql id="paypetrolgrantColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0706'
+		AND r.consumestatus = 1 
+		and r.aftermony-r.beforemony &gt; 0 THEN
+			r.consumemony
+		WHEN r.consumetype = '0706'
+		AND r.consumestatus = 1 
+		and r.aftermony-r.beforemony &lt; 0 THEN
+			0-r.consumemony
+		ELSE
+			0
+		END
+	) paypetrolgrant,
+	</sql>
+	<sql id="paypetrolgrantColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype = '0706'
+		AND r.consumestatus = 1   
+		and r.aftermony-r.beforemony &gt; 0 THEN
+			r.consumemony
+		WHEN r.consumetype = '0706'
+		AND r.consumestatus = 1   
+		and r.aftermony-r.beforemony &lt; 0 THEN
+			0-r.consumemony
+		ELSE
+			0
+		END
+	) paypetrolgrant,
+	</sql>
+	<!-- ***************活动模块***************** --> 
+
+	<!-- ***************保证金模块***************** -->
+	<!--"0801";保证金充值 -->
+	<sql id="gunerechageColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0801' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		gunerechage,
+	</sql>
+	<sql id="gunerechageColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0801' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		gunerechage,
+	</sql>
+	<!--"0802";保证金提现 -->
+	<sql id="gunecashColumns">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0802' and
+		r.consumestatus=1
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		gunecash,
+	</sql>
+	<sql id="gunecashColumns1">
+		SUM(
+		CASE
+		WHEN r.consumetype ='0802' and
+		r.consumestatus=1  
+		THEN
+		r.consumemony
+		ELSE
+		0
+		END
+		)
+		gunecash,
+	</sql>
+	<!-- ***************保证金模块***************** -->
+
+
+
+
+<!-- 分页查询用户账单信息 -->
+    <select id="findUserAccount"
+            resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+        SELECT
+        <include refid="UserAccountColumns"/>
+
+        <include refid="balanaceColumns"/><!--余额充值 -->
+        <include refid="coinbalanaceColumns"/><!-- 卓币充值 -->
+        <include refid="guenalanaceColumns"/><!-- 保证金充值 -->
+
+        <include refid="getconsumeColumns"/><!-- 购买卓币系统收到服务费 -->
+
+        <include refid="forzenonlineColumns"/><!-- "0101";运费支出 -->
+        <include refid="returnforzenColumns"/><!-- "0102";运费返款 -->
+        <include refid="getpremoneyColumns"/><!-- "0103";运费收到预付 -->
+        <include refid="paypremoneyColumns"/><!-- "0104";运费预付支出 -->
+        <include refid="payonlienmoneyColumns"/> <!-- "0105";运费余款支付 -->
+        <include refid="getonlinemoneyColumns"/><!-- "0106";运费收到余款 -->
+        <include refid="disputemoneyreturnColumns"/><!-- "0107";运费争议退款 -->
+        <include refid="disputepaymoneyColumns"/><!-- "0108";争议余款支付 -->
+        <include refid="forzenonlinecoinColumns"/><!-- "0109";累计卓币运费冻结 -->
+        <include refid="newforzenonlinecoinColumns"/><!-- "0109";现有卓币运费冻结 -->
+
+        <include refid="payprecoinColumns"/><!-- "0110";卓币运费预付 -->
+        <include refid="getprecoinColumns"/><!-- "0111";卓币运费收到预付 -->
+        <include refid="payonliencoinColumns"/><!-- "0112";卓币运费支付余款 -->
+        <include refid="getonlinecoinColumns"/><!-- "0113";卓币运费收到余款 -->
+        <include refid="getforzenonlineColumns"/><!-- "0114";运费收到冻结 -->
+        <include refid="getforzenonlinecoinColumns"/><!-- "0115";卓币收到冻结 -->
+        <include refid="printpayColumns"/><!-- "0116";打印提货单缴费 -->
+        <include refid="getprintpayColumns"/><!-- "0117";收到打印缴费 -->
+        <include refid="conrefoundColumns"/><!-- "0118";卓币收到冻结 -->
+		<include refid="lbspaycoinColumns"/><!-- "0119";卓币支付运单LBS定位服务费 -->
+        <include refid="getlbspaycoinColumns"/><!-- "0120";卓币收到运单LBS定位服务费 -->
+        <include refid="lbspaymoneyColumns"/><!-- "0121";余额支付运单LBS定位服务费 -->
+        <include refid="getlbspaymoneyColumns"/><!-- "0122";余额收到运单LBS定位服务费 -->
+
+        <include refid="settlepayColumns"/><!-- "0201";招标结算支付 -->
+        <include refid="getsettleColumns"/><!-- "0202";招标收到结算 -->
+        <include refid="settlecashColumns"/><!-- "0203";招标结算提现 -->
+        <include refid="settlepaycoinColumns"/><!-- "0204";招标结算卓币 -->
+        <include refid="getsettlecoinColumns"/> <!-- "0205";收到结算卓币 -->
+
+        <include refid="bidingpayColumns"/><!-- "0301";缴纳竞标保证金 -->
+        <include refid="bidinggetpayColumns"/><!-- "0302";收到竞标保证金 -->
+        <include refid="bidingreturnColumns"/><!-- "0303";退还竞标保证金 -->
+
+        <include refid="cashmoneyColumns"/><!-- "0401";余额提现 -->
+        <include refid="getcashmoneyColumns"/><!-- "0402";收到余额提现 -->
+        <include refid="cashmoneyreturnColumns"/><!-- "0403";余额提现 退款 -->
+
+        <include refid="accounttransferColumns"/><!-- "0501";余额转账 -->
+        <include refid="receivedtransferColumns"/><!-- "0502";余额收到转账 -->
+
+        <include refid="cointransferColumns"/><!-- "0503";卓币转账 -->
+        <include refid="getcointransferColumns"/><!-- "0504";卓币收到转账 -->
+
+        <include refid="coinrechargeColumns"/><!-- "0601";卓币充值记录 -->
+        <include refid="coinbuypetrolColumns"/><!-- "0602";卓币购买油气 -->
+        <include refid="getcoinconsumeColumns"/><!-- "0603";卓币消费 -->
+
+        <include refid="petrolrechargeColumns"/><!-- "0701";油气充值记录 -->
+        <include refid="petrolconsumeColumns"/><!-- "0702";油气消费 -->
+        <include refid="paypetrolrechargeColumns"/><!-- "0703";油气支付充值 -->
+        <include refid="getpetrolconsumeColumns"/><!-- "0704";油气收到消费 -->
+        
+        <include refid="petrolgrantColumns"/><!-- "0705";活动赠送油气 -->
+        <include refid="paypetrolgrantColumns"/><!-- "0706";油气支付赠送 -->
+        
+        <include refid="petrotransferColumns"/><!-- "0507";油气转账 -->
+        <include refid="receivedtransferpetroColumns"/><!-- "0508";油气收到转账 -->
+        
+        <include refid="petrolexchangeColumns"/><!-- 0707;油气支付兑换 -->
+        <include refid="receivedpetrolexchangeColumns"/><!-- 0708;油气收到兑换 -->
+        
+        <include refid="petrolrechargesumColumns"/><!-- "0701+0703";油气充值记录+油气支付充值 -->
+        <include refid="petrolconsumesumColumns"/><!-- "0702+0704";油气消费+油气收到消费 -->
+        <include refid="petrolgrantsumColumns"/><!-- 0707;油气支付兑换 -->
+        <include refid="petrolexchangesumColumns"/><!-- 0707+0708	油气支付兑换+油气收到兑换 -->
+
+        <include refid="gunerechageColumns"/><!-- "0801";保证金充值 -->
+        <include refid="gunecashColumns"/><!-- "0802";保证金提现 -->
+
+
+        a.id AS "user.id"
+        FROM user_consumerecod r
+        <include refid="userJoins"/>
+
+        <include refid="SQLWhere"/>
+    </select>
+
+<!-- 分页查询用户账单信息 -->
+    <select id="findUserWebAccount"
+            resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+        SELECT
+        <include refid="UserAccountColumns"/>
+
+        <include refid="balanaceColumns1"/><!--余额充值 -->
+        <include refid="coinbalanaceColumns1"/><!-- 卓币充值 -->
+        <include refid="guenalanaceColumns1"/><!-- 保证金充值 -->
+
+        <include refid="getconsumeColumns1"/><!-- 购买卓币系统收到服务费 -->
+
+        <include refid="forzenonlineColumns1"/><!-- "0101";运费支出 -->
+        <include refid="newforzenonlineColumns"/><!-- "0101";最新运费支出 -->
+        
+        <include refid="returnforzenColumns1"/><!-- "0102";运费返款 -->
+        <include refid="getpremoneyColumns1"/><!-- "0103";运费收到预付 -->
+        <include refid="paypremoneyColumns1"/><!-- "0104";运费预付支出 -->
+        <include refid="payonlienmoneyColumns1"/> <!-- "0105";运费余款支付 -->
+        <include refid="getonlinemoneyColumns1"/><!-- "0106";运费收到余款 -->
+        <include refid="disputemoneyreturnColumns1"/><!-- "0107";运费争议退款 -->
+        <include refid="disputepaymoneyColumns1"/><!-- "0108";争议余款支付 -->
+        <include refid="forzenonlinecoinColumns1"/><!-- "0109";卓币运费冻结 -->
+        <include refid="payprecoinColumns1"/><!-- "0110";卓币运费预付 -->
+        <include refid="getprecoinColumns1"/><!-- "0111";卓币运费收到预付 -->
+        <include refid="payonliencoinColumns1"/><!-- "0112";卓币运费支付余款 -->
+        <include refid="getonlinecoinColumns1"/><!-- "0113";卓币运费收到余款 -->
+        <include refid="getforzenonlineColumns1"/><!-- "0114";运费收到冻结 -->
+        <include refid="getforzenonlinecoinColumns1"/><!-- "0115";卓币收到冻结 -->
+        <include refid="printpayColumns1"/><!-- "0116";打印提货单缴费 -->
+        <include refid="getprintpayColumns1"/><!-- "0117";收到打印缴费 -->
+        <include refid="conrefoundColumns1"/><!-- "0118";卓币收到冻结 -->
+		<include refid="lbspaycoinColumns1"/><!-- "0119";卓币支付运单LBS定位服务费 -->
+        <include refid="getlbspaycoinColumns1"/><!-- "0120";卓币收到运单LBS定位服务费 -->
+        <include refid="lbspaymoneyColumns1"/><!-- "0121";余额支付运单LBS定位服务费 -->
+        <include refid="getlbspaymoneyColumns1"/><!-- "0122";余额收到运单LBS定位服务费 -->
+
+        <include refid="settlepayColumns1"/><!-- "0201";招标结算支付 -->
+        <include refid="getsettleColumns1"/><!-- "0202";招标收到结算 -->
+        <include refid="settlecashColumns1"/><!-- "0203";招标结算提现 -->
+        <include refid="settlepaycoinColumns1"/><!-- "0204";招标结算卓币 -->
+        <include refid="getsettlecoinColumns1"/> <!-- "0205";收到结算卓币 -->
+
+        <include refid="bidingpayColumns1"/><!-- "0301";缴纳竞标保证金 -->
+        <include refid="bidinggetpayColumns1"/><!-- "0302";收到竞标保证金 -->
+        <include refid="bidingreturnColumns1"/><!-- "0303";退还竞标保证金 -->
+
+        <include refid="cashmoneyColumns1"/><!-- "0401";余额提现 -->
+        <include refid="getcashmoneyColumns1"/><!-- "0402";收到余额提现 -->
+        <include refid="cashmoneyreturnColumns1"/><!-- "0403";余额提现 退款 -->
+
+        <include refid="accounttransferColumns1"/><!-- "0501";余额转账 -->
+        <include refid="receivedtransferColumns1"/><!-- "0502";余额收到转账 -->
+
+        <include refid="cointransferColumns1"/><!-- "0503";卓币转账 -->
+        <include refid="getcointransferColumns1"/><!-- "0504";卓币收到转账 -->
+
+        <include refid="coinrechargeColumns1"/><!-- "0601";卓币充值记录 -->
+        <include refid="coinbuypetrolColumns1"/><!-- "0602";卓币购买油气 -->
+        <include refid="getcoinconsumeColumns1"/><!-- "0603";卓币消费 -->
+
+        <include refid="petrolrechargeColumns1"/><!-- "0701";油气充值记录 -->
+        <include refid="petrolconsumeColumns1"/><!-- "0702";油气消费 -->
+        <include refid="paypetrolrechargeColumns1"/><!-- "0703";油气支付充值 -->
+        <include refid="getpetrolconsumeColumns1"/><!-- "0704";油气收到消费 -->
+        
+        <include refid="petrolgrantColumns1"/><!-- "0705";活动赠送油气 -->
+        <include refid="paypetrolgrantColumns1"/><!-- "0706";油气支付赠送 -->
+        
+        <include refid="petrotransferColumns1"/><!-- "0507";油气转账 -->
+        <include refid="receivedtransferpetroColumns1"/><!-- "0508";油气收到转账 -->
+        
+        <include refid="petrolexchangeColumns1"/><!-- 0707;油气支付兑换 -->
+        <include refid="receivedpetrolexchangeColumns1"/><!-- 0708;油气收到兑换 -->
+        
+        <include refid="petrolrechargesumColumns1"/><!-- "0701+0703";油气充值记录+油气支付充值 -->
+        <include refid="petrolconsumesumColumns1"/><!-- "0702+0704";油气消费+油气收到消费 -->
+        <include refid="petrolgrantsumColumns1"/><!-- 0707;油气支付兑换 -->
+        <include refid="petrolexchangesumColumns1"/><!-- 0707+0708	油气支付兑换+油气收到兑换 -->
+
+        <include refid="gunerechageColumns1"/><!-- "0801";保证金充值 -->
+        <include refid="gunecashColumns1"/><!-- "0802";保证金提现 -->
+
+
+        a.id AS "user.id"
+        FROM user_consumerecod r
+        <include refid="userJoins"/>
+
+        <include refid="SQLWhere"/>
+    </select>
+	<sql id="userJoins">
+		INNER JOIN sys_user a ON a.id =
+		r.ACCOUNT_ID
+		INNER JOIN
+		sys_user_role ur ON
+		ur.user_id = a.id
+		INNER JOIN
+		sys_role ulr ON ulr.id =
+		ur.role_id
+		INNER JOIN user_purse upur ON
+		a.id = upur.USER_ID
+		LEFT JOIN trade_orderinfo o ON 
+		r.ORDER_ID=o.ID
+	</sql>
+	
+	<sql id="SQLWhere">
+		<where>
+			1=1
+			<if test="user !=null and user.id != null and user.id != ''">
+				AND a.id = #{user.id}
+			</if>
+			<if
+				test="user !=null and user.role != null and user.role.id != null and user.role.id != ''">
+				AND ur.role_id = #{user.role.id}
+			</if>
+			<if
+				test="user !=null and user.role != null and user.role.name != null and user.role.name != ''">
+				AND ulr.name = #{user.role.name}
+			</if>
+			<if test=" user !=null and user.phone != null and user.phone != ''">
+				AND a.phone LIKE
+				<if test="dbName == 'oracle'">'%'||#{user.phone}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{user.phone}+'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{user.phone}, '%')</if>
+			</if>
+			<if test=" isBid !=null and isBid != '' and isBid == true">
+				AND r.consumetype IN (0301,'0302','0303')
+			</if>
+			<if test=" isAccount !=null and isAccount != '' and isAccount == true">
+				AND r.consumetype IN ('0201','0202','0203')
+			</if>
+			<if test="user !=null and user.loginName != null and user.loginName != ''">
+				AND a.login_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{user.loginName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{user.loginName}+'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{user.loginName}, '%')</if>
+			</if>
+			<if test="user !=null and user.name != null and user.name != ''">
+				AND a.name like
+				<if test="dbName == 'oracle'">'%'||#{user.name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{user.name}+'%'</if>
+				<if test="dbName == 'mysql'">CONCAT('%', #{user.name}, '%')</if>
+			</if>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND r.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND r.create_date &lt;= #{endCreateDate}
+			</if>
+			<if test=" ismemberAccount !=null and ismemberAccount != ''">
+				<if test="ismemberAccount == 1">
+					AND not ISNULL(a.member_id) and a.member_id!='' and r.CONSUMEWAY='10'
+				</if>
+				<if test="ismemberAccount == 2">
+					AND r.CONSUMEWAY!='10'
+				</if>
+			</if>
+		</where>
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		GROUP BY
+		a.id
+		<choose>
+			<when
+				test="user !=null and page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY upur.WEBBALANCE DESC,upur.AVAILABLEBALANCE DESC
+			</otherwise>
+		</choose>
+	</sql>
+
+
+	<!-- 充值流水信息 -->
+	<select id="rechargeUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="balanaceColumns" /><!--余额充值 -->
+		<include refid="coinbalanaceColumns" /><!-- 卓币充值 -->
+		<include refid="guenalanaceColumns" /><!-- 保证金充值 -->
+
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 提现流水信息 -->
+	<select id="cashUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="cashmoneyColumns" /><!-- "0401";余额提现 -->
+		<include refid="getcashmoneyColumns" /><!-- "0402";收到余额提现 -->
+		<include refid="cashmoneyreturnColumns" /><!-- "0403";余额提现 退款 -->
+
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 运单交易流水信息 -->
+    <select id="tradeOrderUserAccount"
+            resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+        SELECT
+        <include refid="UserAccountColumns"/>
+
+        <include refid="forzenonlineColumns"/><!-- "0101";运费支出 -->
+        <include refid="returnforzenColumns"/><!-- "0102";运费返款 -->
+        <include refid="getpremoneyColumns"/><!-- "0103";运费收到预付 -->
+        <include refid="paypremoneyColumns"/><!-- "0104";运费预付支出 -->
+        <include refid="payonlienmoneyColumns"/> <!-- "0105";运费余款支付 -->
+        <include refid="getonlinemoneyColumns"/><!-- "0106";运费收到余款 -->
+        <include refid="disputemoneyreturnColumns"/><!-- "0107";运费争议退款 -->
+        <include refid="disputepaymoneyColumns"/><!-- "0108";争议余款支付 -->
+        <include refid="forzenonlinecoinColumns"/><!-- "0109";卓币运费冻结 -->
+        <include refid="payprecoinColumns"/><!-- "0110";卓币运费预付 -->
+        <include refid="getprecoinColumns"/><!-- "0111";卓币运费收到预付 -->
+        <include refid="payonliencoinColumns"/><!-- "0112";卓币运费支付余款 -->
+        <include refid="getonlinecoinColumns"/><!-- "0113";卓币运费收到余款 -->
+        <include refid="getforzenonlineColumns"/><!-- "0114";运费收到冻结 -->
+        <include refid="getforzenonlinecoinColumns"/><!-- "0115";卓币收到冻结 -->
+        <include refid="printpayColumns"/><!-- "0116";打印提货单缴费 -->
+        <include refid="getprintpayColumns"/><!-- "0117";收到打印缴费 -->
+        <include refid="conrefoundColumns"/><!-- "0118";卓币收到冻结 -->
+        <include refid="lbspaycoinColumns"/><!-- "0119";卓币支付运单LBS定位服务费 -->
+        <include refid="getlbspaycoinColumns"/><!-- "0120";卓币收到运单LBS定位服务费 -->
+        <include refid="lbspaymoneyColumns"/><!-- "0121";余额支付运单LBS定位服务费 -->
+        <include refid="getlbspaymoneyColumns"/><!-- "0122";余额收到运单LBS定位服务费 -->
+        
+        a.id AS "user.id"
+        FROM user_consumerecod r
+        <include refid="userJoins"/>
+
+        <include refid="SQLWhere"/>
+    </select>
+
+	<!-- 转账流水交易信息 -->
+	<select id="transferUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="accounttransferColumns" /><!-- "0501";余额转账 -->
+		<include refid="receivedtransferColumns" /><!-- "0502";余额收到转账 -->
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 竞标流水交易信息 -->
+	<select id="biddingUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="bidingpayColumns" /><!-- "0301";缴纳竞标保证金 -->
+		<include refid="bidinggetpayColumns" /><!-- "0302";收到竞标保证金 -->
+		<include refid="bidingreturnColumns" /><!-- "0303";退还竞标保证金 -->
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 招标交易流水信息 -->
+	<select id="bidUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="settlepayColumns" /><!-- "0201";招标结算支付 -->
+		<include refid="getsettleColumns" /><!-- "0202";招标收到结算 -->
+		<include refid="settlecashColumns" /><!-- "0203";招标结算提现 -->
+		<include refid="settlepaycoinColumns" /><!-- "0204";招标结算卓币 -->
+		<include refid="getsettlecoinColumns" /> <!-- "0205";收到结算卓币 -->
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 油气流水交易信息 -->
+	<select id="petrolUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="petrolrechargeColumns" /><!-- "0701";油气充值记录 -->
+		<include refid="petrolconsumeColumns" /><!-- "0702";油气消费 -->
+		<include refid="paypetrolrechargeColumns" /><!-- "0703";油气支付充值 -->
+		<include refid="getpetrolconsumeColumns" /><!-- "0704";油气收到消费 -->
+		<include refid="petrolgrantColumns" /><!-- "0704";油气收到赠送 -->
+		<include refid="paypetrolgrantColumns" /><!-- "0704";油气支付赠送 -->
+		
+        <include refid="petrotransferColumns"/><!-- "0507";油气转账 -->
+        <include refid="receivedtransferpetroColumns"/><!-- "0508";油气收到转账 -->
+        
+        <include refid="petrolexchangeColumns"/><!-- 0707;油气支付兑换 -->
+        <include refid="receivedpetrolexchangeColumns"/><!-- 0708;油气收到兑换 -->
+        
+        <include refid="petrolrechargesumColumns"/><!-- "0701+0703";油气充值记录+油气支付充值 -->
+        <include refid="petrolconsumesumColumns"/><!-- "0702+0704";油气消费+油气收到消费 -->
+        <include refid="petrolgrantsumColumns"/><!-- 0707;油气支付兑换 -->
+        <include refid="petrolexchangesumColumns"/><!-- 0707+0708	油气支付兑换+油气收到兑换 -->
+        
+		
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 卓币流水交易信息 -->
+	<select id="coinUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+
+		<include refid="coinbalanaceColumns" /><!-- 卓币充值 -->
+
+		<include refid="settlepaycoinColumns" /><!-- "0204";招标结算卓币 -->
+		<include refid="getsettlecoinColumns" /> <!-- "0205";收到结算卓币 -->
+
+		<include refid="forzenonlinecoinColumns" /><!-- "0109";卓币运费冻结 -->
+		<include refid="payprecoinColumns" /><!-- "0110";卓币运费预付 -->
+		<include refid="getprecoinColumns" /><!-- "0111";卓币运费收到预付 -->
+		<include refid="payonliencoinColumns" /><!-- "0112";卓币运费支付余款 -->
+		<include refid="getonlinecoinColumns" /><!-- "0113";卓币运费收到余款 -->
+		<include refid="conrefoundColumns" /><!-- "0118";卓币收到解冻 -->
+
+		<include refid="coinrechargeColumns" /><!-- "0601";卓币充值记录 -->
+		<include refid="coinbuypetrolColumns" /><!-- "0602";卓币购买油气 -->
+		<include refid="getcoinconsumeColumns" /><!-- "0603";卓币消费 -->
+
+		<include refid="cointransferColumns" /><!-- "0503";卓币转账 -->
+		<include refid="getcointransferColumns" /><!-- "0504";卓币收到转账 -->
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 其他类型流水交易信息 -->
+	<select id="otherUserAccount"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+		<include refid="getconsumeColumns" /><!-- 卓币服务费 -->
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+
+		<include refid="SQLWhere" />
+	</select>
+
+	<!-- 用户本月充值金额统计信息 -->
+	<select id="rechargeUserAccountByMonth"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.user.Account">
+		SELECT
+		<include refid="UserAccountColumns" />
+		<include refid="balanaceColumns" /><!--余额充值 -->
+		<include refid="coinbalanaceColumns" /><!-- 卓币充值 -->
+		<include refid="guenalanaceColumns" /><!-- 保证金充值 -->
+
+		a.id AS "user.id"
+		FROM user_consumerecod r
+		<include refid="userJoins" />
+		<where>
+			DATE_FORMAT( r.create_date, '%Y%m') = DATE_FORMAT( CURDATE( ) ,
+			'%Y%m')
+			<if test="account !=null and account.id != null and account.id != ''">
+				AND r.account_id=#{account.id} OR r.target_id =
+				#{account.id}
+			</if>
+		</where>
+	</select>
+	<!--获取每天的交易量 -->
+	<select id="daynum" resultType="int">
+		SELECT count(0) num
+		FROM user_consumerecod
+		WHERE
+		date_format(CREATE_DATE,"%Y-%m-%d") =
+		DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单 -->
+		<if test="consumetype!=null and consumetype!='' ">
+			and consumetype=#{consumetype}
+		</if>
+	</select>
+
+	<!-- 用户转账流水列表 -->
+	<select id="transferList"
+		resultType="com.thinkgem.jeesite.modules.wlpt.entity.consume.Transfer">
+		SELECT
+		IFNULL(SUM(a.consumemony),0) AS "consumemonyout",
+		c.consumemonyin AS "consumemonyin",
+		user.id AS "user.id",
+		user.login_name AS "user.loginName",
+		user.phone AS "user.phone",
+		user.name AS "user.name",
+		p.WEBBALANCE AS "webbalance",
+		p.AVAILABLEBALANCE AS "availablebalance"
+		FROM user_consumerecod a
+		LEFT JOIN sys_user user ON a.ACCOUNT_ID = user.id
+		LEFT JOIN (SELECT IFNULL(SUM(b.consumemony),0) AS "consumemonyin" ,u.phone
+		AS "phone"
+		FROM user_consumerecod b
+		LEFT JOIN sys_user u ON b.ACCOUNT_ID = u.id
+		WHERE b.del_flag = '0' AND b.consumetype='0502'
+		GROUP BY u.phone
+		) c ON c.phone=user.phone
+		LEFT JOIN user_purse p ON p.USER_ID=user.ID
+		<where>
+			a.del_flag = '0' AND a.consumetype='0501'
+			<if test="user !=null and user.phone != null and user.phone != ''">
+				AND user.phone=#{user.phone}
+			</if>
+		</where>
+		GROUP BY user.phone
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="cashDay" resultType="String">
+	SELECT SUM(CONSUMEMONY)
+    FROM user_consumerecod
+    WHERE 
+    CONSUMETYPE=#{consumetype} 
+    AND CONSUMESTATUS=#{consumestatus}
+    AND CONSUMEWAY=#{consumeway}
+    AND ACCOUNT_ID=#{account.id}
+    AND UPDATE_DATE LIKE 
+       <if test="dbName == 'oracle'">'%'||#{timeFlag}||'%'</if>
+	   <if test="dbName == 'mssql'">'%'+#{timeFlag}+'%'</if>
+	   <if test="dbName == 'mysql'">concat('%',#{timeFlag},'%')</if>
+	</select>
+	
+	<select id="findUserBalanceList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+        SELECT
+		d.value as "code",d.label AS "name",SUM(IFNULL(r.consumemony,0)) AS mony
+		FROM  sys_dict d
+		LEFT JOIN user_consumerecod r ON r.CONSUMETYPE = d.`value` and d.type='consumerecode_type'
+		<if test="userid != null and userid != ''">
+                AND (r.account_id = #{userid} or r.target_id =
+                #{userid}
+                or
+                r.sysaccount_id = #{userid})
+            </if>
+		LEFT JOIN sys_user a ON a.id = r.ACCOUNT_ID
+        <where>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND r.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND r.create_date &lt;= #{endCreateDate}
+            </if>
+           
+            <!-- 交易类型 0全部 1收入 2支出 -->
+            <if test="searchType != null and searchType != '' and searchType ==1">
+                AND d.value
+                IN('0001','0103','0106','0502','0705')
+            </if>
+            <if test="searchType != null and searchType != '' and searchType ==2">
+                AND d.`value`
+                IN('0101','0201','0401','0501','0507','0702')
+            </if>
+        </where>
+        GROUP BY
+			d.value
+		ORDER BY
+			d.value DESC
+    </select>
+    
+    
+    
+    	<select id="findUserBalanceInfoList" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+        SELECT
+		count("r.id") AS "count", d.value as "code",d.label AS "name",SUM(IFNULL(r.consumemony,0)) AS mony
+		FROM  sys_dict d
+		LEFT JOIN user_consumerecod r ON r.CONSUMETYPE = d.`value` and d.type='consumerecode_type'
+		<if test="userid != null and userid != ''">
+                AND (r.account_id = #{userid} or r.target_id =
+                #{userid}
+                or
+                r.sysaccount_id = #{userid})
+            </if>
+		LEFT JOIN sys_user a ON a.id = r.ACCOUNT_ID
+        <where>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND r.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND r.create_date &lt;= #{endCreateDate}
+            </if>
+           
+            <!-- 交易类型 0全部 1收入 2支出 -->
+            <if test="searchType != null and searchType != '' and searchType ==1">
+                AND d.value
+                IN('0001','0102','0103','0106','0502')
+            </if>
+            <if test="searchType != null and searchType != '' and searchType ==2">
+                AND d.`value`
+                IN('0101','0201','0401','0501','0006','0005','0002')
+            </if>
+            <if test="searchType != null and searchType != '' and searchType ==3">
+                AND d.`value`
+                IN('0001','0101','0103','0106','0502','0702','0121','0123','0125')
+            </if>
+			<if test="searchType != null and searchType != '' and searchType ==4">
+				AND d.`value`
+				IN('0101','0103','0106')
+			</if>
+			<if test="searchType != null and searchType != '' and searchType ==5">
+				AND d.`value`
+				IN('0116','0301')
+			</if>
+        </where>
+        GROUP BY
+			d.value
+		ORDER BY
+			d.value DESC
+    </select>
+
+
+	<select id="findUserBalanceCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.UserBalanceVO">
+		SELECT
+		count("r.id") AS "count", SUM(IFNULL(r.consumemony,0)) AS mony
+		FROM  user_consumerecod r
+		LEFT JOIN sys_user a ON a.id = r.ACCOUNT_ID
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+				AND r.create_date &gt;= #{beginCreateDate}
+			</if>
+			<if test="endCreateDate != null and endCreateDate != '' ">
+				AND r.create_date &lt;= #{endCreateDate}
+			</if>
+			<if test="userid != null and userid != ''">
+				AND (r.account_id = #{userid} or r.target_id =
+				#{userid}
+				or
+				r.sysaccount_id = #{userid})
+			</if>
+			<!-- 交易类型 0全部 1收入 2支出 -->
+			<if test="searchType != null and searchType != '' and searchType ==1">
+				AND r.consumetype
+				IN('0001','0002','0003','0004','0102','0103','0106','0107','0111','0113','0114','0115','0117','0118','0120','0122','0202','0205','0302','0303','0402','0403','0502','0504','0506','0508','0601','0701','0703','0704','0706','0707,''0801')
+			</if>
+			<if test="searchType != null and searchType != '' and searchType ==2">
+				AND r.consumetype
+				IN('0101','0104','0105','0108','0109','0110','0112','0119','0121','0201','0203','0204','0301','0401','0501','0503','0505','0507','0602','0603','0702','0705','0708','0802')
+			</if>
+		</where>
+	</select>
+
+</mapper>

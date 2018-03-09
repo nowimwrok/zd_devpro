@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserAccountDao">
+    
+	<sql id="userAccountColumns">
+		a.id AS "id",
+		a.member_id AS "memberId",
+		a.repayment_id AS "repaymentId",
+		a.borrower_id AS "borrowerId",
+		a.directpayment_id AS "directpaymentId",
+		a.wallet_id AS "walletId",
+		a.supervisor_id AS "supervisorId",
+		a.internal_id AS "internalId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="userAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="UserAccount">
+		SELECT
+			<include refid="userAccountColumns"/>
+		FROM user_account a
+		<include refid="userAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getUserAccount" resultType="UserAccount">
+		SELECT
+			<include refid="userAccountColumns"/>
+		FROM user_account a
+		<include refid="userAccountJoins"/>
+		WHERE a.member_id = #{memberId}
+		LIMIT 1
+	</select>
+
+	<select id="findList" resultType="UserAccount">
+		SELECT 
+			<include refid="userAccountColumns"/>
+		FROM user_account a
+		<include refid="userAccountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="memberId != null and memberId != ''">
+				AND a.member_id = #{memberId}
+			</if>
+			<if test="repaymentId != null and repaymentId != ''">
+				AND a.repayment_id = #{repaymentId}
+			</if>
+			<if test="borrowerId != null and borrowerId != ''">
+				AND a.borrower_id = #{borrowerId}
+			</if>
+			<if test="directpaymentId != null and directpaymentId != ''">
+				AND a.directpayment_id = #{directpaymentId}
+			</if>
+			<if test="walletId != null and walletId != ''">
+				AND a.wallet_id = #{walletId}
+			</if>
+			<if test="supervisorId != null and supervisorId != ''">
+				AND a.supervisor_id = #{supervisorId}
+			</if>
+			<if test="internalId != null and internalId != ''">
+				AND a.internal_id = #{internalId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserAccount">
+		SELECT 
+			<include refid="userAccountColumns"/>
+		FROM user_account a
+		<include refid="userAccountJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_account(
+
+		<if test="memberId != null and memberId !='' ">
+			member_id,
+		</if>
+		<if test="repaymentId != null and repaymentId !='' ">
+			repayment_id,
+		</if>
+		<if test="borrowerId != null and borrowerId !='' ">
+			borrower_id,
+		</if>
+		<if test="directpaymentId != null and directpaymentId !='' ">
+			directpayment_id,
+		</if>
+		<if test="walletId != null and walletId !='' ">
+			wallet_id,
+		</if>
+		<if test="supervisorId != null and supervisorId !='' ">
+			supervisor_id,
+		</if>
+		<if test="internalId != null and internalId !='' ">
+			internal_id,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="memberId != null and memberId !='' ">
+			#{memberId},
+		</if>
+		<if test="repaymentId != null and repaymentId !='' ">
+			#{repaymentId},
+		</if>
+		<if test="borrowerId != null and borrowerId !='' ">
+			#{borrowerId},
+		</if>
+		<if test="directpaymentId != null and directpaymentId !='' ">
+			#{directpaymentId},
+		</if>
+		<if test="walletId != null and walletId !='' ">
+			#{walletId},
+		</if>
+		<if test="supervisorId != null and supervisorId !='' ">
+			#{supervisorId},
+		</if>
+		<if test="internalId != null and internalId !='' ">
+			#{internalId},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and pdateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_account SET 	
+			<if test="memberId != null and memberId !='' ">
+				member_id = #{memberId},
+			</if>
+			<if test="repaymentId != null and repaymentId !='' ">
+				repayment_id = #{repaymentId},
+			</if>
+			<if test="borrowerId != null and borrowerId !='' ">
+				borrower_id = #{borrowerId},
+			</if>
+			<if test="directpaymentId != null and directpaymentId !='' ">
+				directpayment_id = #{directpaymentId},
+			</if>
+			<if test="walletId != null and walletId !='' ">
+				wallet_id = #{walletId},
+			</if>
+			<if test="supervisorId != null and supervisorId !='' ">
+				supervisor_id = #{supervisorId},
+			</if>
+			<if test="internalId != null and internalId !='' ">
+				internal_id = #{internalId},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_account SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

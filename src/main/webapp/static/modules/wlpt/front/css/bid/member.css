@@ -1,0 +1,366 @@
+@CHARSET "UTF-8";
+
+* {
+	font-family: "微软雅黑";
+	margin: 0;
+}
+
+.pagediv {
+	width: 100%;
+	height: 50px;
+	text-align: center;
+}
+
+.pagediv table {
+	float: right;
+	margin-right: 70px;
+}
+
+.pagediv table tr td {
+	height: 30px;
+	line-height: 30px;
+	padding: 10px;
+	text-align: center;
+}
+
+.pagediv_size {
+	color: #999;
+	font-size: 13px;
+	font-family: "微软雅黑";
+}
+
+img {
+	border: none;
+}
+
+.page-title {
+	border-left: solid 4px  #ffc52f;
+	width: 200px;
+	height: 1.5em;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 24px;
+	padding-left: 10px;
+	color: #555;
+	margin: 20px;
+	text-align: left;
+}
+
+.add-services {
+	width: 16px;
+	height: 16px;
+}
+
+.addmar {
+	margin-right: 5px;
+}
+
+.forradio {
+	/* 	vertical-align: middle;
+ */
+	
+}
+/**个人中心右侧容器**/
+.container {
+	margin-top: 25px;
+	width: 100%;
+	background: #fff;
+	display: inline-block;
+}
+
+/**
+表单左侧字段说明字体top
+**/
+.container,.formTd {
+	text-align: left;
+}
+/**
+表单中必填字段*号
+**/
+/* .container,.formTdLabel {
+	font-size: 13px;
+	text-align: right;
+	padding-bottom: 5px
+}
+
+.container,.star {
+	font-size: 13px;
+	color: red;
+	padding-right: 2px;
+} */
+/**
+金额文本输入框
+**/
+.container,.moneyTextbox {
+	width: 70px;
+}
+/**
+数字文本输入框
+**/
+.container,.numTextbox {
+	width: 70px;
+}
+/*公共部分按钮*/
+/*悬浮改色*/
+.altrow:hover {
+	background: rgba(255, 117, 0, 0.2);
+}
+/*按钮*/
+.regbt {
+	width: 200px;
+	height: 35px;
+	border: solid 1px;
+	color: #FFFFFF;
+	background: #F74000;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+}
+
+.smallsearch {
+	width: 100px;
+	height: 32px;
+}
+
+.onekeyfind {
+	line-height: 20px;
+	margin-bottom: 0px;
+	width: 70px;
+	height: 23px;
+	text-align: center;
+	color: #FFF;
+	cursor: pointer;
+	background: #F30;
+	padding: 0px;
+}
+
+.find_a {
+	color: #FFF;
+}
+
+.find_a:hover {
+	color: #FFF;
+}
+
+.addressformar {
+	margin-right: 50px;
+}
+
+.mgselect {
+	padding-left: 1px;
+	width: 100px;
+}
+
+.smes {
+	font-size: 10px;
+	color: #F74000;
+	display: none;
+}
+/*提交按钮的宽高*/
+.subtwh {
+	width: 200px;
+	height: 35px;
+}
+
+/*吨单位*/
+#Weight_Unit {
+	width: 60px;
+	padding-left: 10px;
+}
+/*单位*/
+.unit {
+	width: 70px;
+	padding-left: 10px; /* vertical-align: middle; */
+}
+/*类型*/
+.typetext {
+	width: 100px;
+}
+/*数字类型*/
+.numbertext {
+	width: 70px;
+}
+/*输入文本*/
+.inputtext {
+	width: 100px;
+}
+
+.linkinput {
+	width: 120px;
+	height: 28px;
+}
+/*获取短信验证码按钮*/
+#getphCode {
+	float: left;
+	width: 100px;
+	height: 32px;
+	color: #FFF;
+	background: #F74000;
+	box-shadow: 0 0 0 5px rgba(246, 246, 246, 0.3);
+	border-radius: 7%;
+	cursor: pointer;
+	border: 0;
+	border-radius: 0;
+	margin: 0;
+}
+
+input[type='text'],[type='password'] {
+	border: 1px solid #ccc;
+	font-size: 14px;
+	line-height: 25px;
+	height: 30px;
+}
+
+input[type='button'] {
+	display: inline-block;
+	font-size: 14px;
+	/*   line-height: 30px; */
+}
+
+select {
+	margin: 3px;
+	cursor: pointer;
+	font-weight: normal;
+	align-items: center;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	height: 25px;
+}
+
+textarea {
+	border: solid 1px #CCC;
+	width: 543px;
+	height: 70px;
+	margin-top: 10px;
+}
+
+/* 会员中心所有iframe内的操作下的a标签样式*/
+.link_a {
+	color: #005ea7;
+	font-size: 12px;
+	font-family: "微软雅黑";
+}
+/* 会员中心->车源管理操作下的a标签样式 */
+.carmg_a {
+	padding: 4px 10px;
+}
+
+/* 会员中心所有iframe内的操作下的input标签样式 */
+.link_input {
+	width: 70px;
+	height: 22px;
+	color: #fff;
+	background: #F74000;
+	border: 1px solid #F74000;
+	font-size: 14px;
+	font-weight: 400;
+	font-family: "微软雅黑";
+}
+
+/* 会员中心所有iframe内的表头样式 */
+.table-title {
+	list-style: none;
+	height: 30px;
+	line-height: 30px;
+	width: 757px;
+	padding: 0px;
+	background: #F5F5F5;
+	border: 1px solid #e8e8e8;
+	border-top: 2px solid #F74000;
+}
+
+.byusersearch {
+	width: 85px;
+	height: 34px;
+	color: #fff;
+	background: #F74000;
+	border: 1px solid #F74000;
+	font-family: "微软雅黑";
+}
+/* 车牌号码 */
+.cgs-key-text {
+	font-size: 18px;
+	font-weight: bold;
+	color: #3499D4;
+}
+/* 车辆的车主信息 */
+.carforcompany {
+	font-size: 14px;
+	font-weight: bold;
+	color: #3499D4;
+}
+
+.cd_list_zhong_ul>li {
+	font-size: 12px;
+}
+
+
+
+/* 努力加载中...的样式 */
+#loading {
+	font-size: 14px;
+	font-family: "微软雅黑";
+}
+/*上传图片*/
+#attachmentFld {
+	font: 12px/1.5 Microsoft YaHei UI, helvetica, clean, sans-serif;
+	width: 440px;
+}
+
+.attachmentBean {
+	position: absolute;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	width: 89px;
+	height: 32px;
+}
+/*发布信息按钮*/
+.pubbtn_a {
+	float: left;
+	border: solid 2px #E7CED8;
+	width: 65px;
+	height: 26px;
+	text-align: center;
+	line-height: 24px;
+	padding: 2px;
+}
+
+.pubbtn_a span {
+	font-size: 14px;
+	height: 24px;
+	color: #171010;
+	padding-bottom: 10px;
+	font-weight: 600;
+}
+
+.pubbtn_a img {
+	width: 25px;
+	height: 25px;
+	float: left;
+}
+
+.searchcount {
+	color: #988E8E;
+}
+/*上传图片提示*/
+.upmsg {
+	float: right;
+	height: 32px;
+	line-height: 32px;
+}
+
+#praisnumber {
+	color: #F74000;
+	font-weight: bold;
+	font-size: 12px;
+	position: absolute;
+	margin: -10px 0px 0px 20px;
+}
+/* 查找不到数据 */
+#notdata {
+	display: none;
+	line-height: 100px;
+	height: 100px;
+	text-align: center;
+	font-size:12px;
+}

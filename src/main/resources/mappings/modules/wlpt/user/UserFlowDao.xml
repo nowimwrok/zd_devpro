@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserFlowDao">
+
+    <select id="getByFlowId" resultType="UserFlow">
+         select a.flowId AS "flowId",a.content AS "content" from user_flowsms a where a.flowId=#{flowId}
+    </select>
+	
+	<insert id="saveFlow">
+		INSERT INTO user_flowsms(
+		flowId,content
+		) VALUES (
+		#{flowId},#{content}
+		)
+	</insert>
+	
+</mapper>

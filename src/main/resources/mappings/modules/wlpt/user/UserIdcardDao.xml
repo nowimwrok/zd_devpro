@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserIdcardDao">
+
+	<sql id="userIdcardColumns">
+		a.id AS "id",
+		a.imemberid AS "imemberid",
+		a.idcardnum AS
+		"idcardnum",
+		a.sname AS "sname",
+		a.isex AS "isex",
+		a.snation AS
+		"snation",
+		a.tbirthdate AS "tbirthdate",
+		a.saddress AS "saddress",
+		a.scardaddress AS "scardaddress",
+		a.tvaliddatebegin AS
+		"tvaliddatebegin",
+		a.tvaliddateend AS "tvaliddateend",
+		a.slocalphoto AS
+		"slocalphoto",
+		a.slocaltitle AS "slocaltitle",
+		a.tlocaltime AS
+		"tlocaltime",
+		a.suploader AS "suploader",
+		a.sinternetphoto AS
+		"sinternetphoto",
+		a.sinternettitle AS "sinternettitle",
+		a.tinternettime
+		AS "tinternettime",
+		a.bisinternet AS "bisinternet",
+		a.sinternetmobile AS
+		"sinternetmobile",
+		a.schecker AS "schecker",
+		a.icheckedtimes AS
+		"icheckedtimes",
+		a.create_by AS "createBy.id",
+		a.create_date AS
+		"createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS
+		"updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="userIdcardJoins">
+	</sql>
+
+	<select id="get" resultType="UserIdcard">
+		SELECT
+		<include refid="userIdcardColumns" />
+		FROM user_idcard a
+		<include refid="userIdcardJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByIdcard" resultType="UserIdcard">
+		SELECT
+		<include refid="userIdcardColumns" />
+		FROM user_idcard a
+		<include refid="userIdcardJoins" />
+		WHERE a.idcardnum = #{idcardnum}
+	</select>
+
+	<select id="findList" resultType="UserIdcard">
+		SELECT
+		<include refid="userIdcardColumns" />
+		FROM user_idcard a
+		<include refid="userIdcardJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="UserIdcard">
+		SELECT
+		<include refid="userIdcardColumns" />
+		FROM user_idcard a
+		<include refid="userIdcardJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO user_idcard(
+		<if test="imemberid != null and imemberid !='' ">
+			imemberid,
+		</if>
+		<if test="idcardnum != null and idcardnum !='' ">
+			idcardnum,
+		</if>
+		<if test="sname != null and sname !='' ">
+			sname,
+		</if>
+		<if test="isex != null and isex !='' ">
+			isex,
+		</if>
+		<if test="snation != null and snation !='' ">
+			snation,
+		</if>
+		<if test="tbirthdate != null and tbirthdate !='' ">
+			tbirthdate,
+		</if>
+		<if test="saddress != null and saddress !='' ">
+			saddress,
+		</if>
+		<if test="scardaddress != null and scardaddress !='' ">
+			scardaddress,
+		</if>
+		<if test="tvaliddatebegin != null and tvaliddatebegin !='' ">
+			tvaliddatebegin,
+		</if>
+		<if test="tvaliddateend != null and tvaliddateend !='' ">
+			tvaliddateend,
+		</if>
+		<if test="slocalphoto != null and slocalphoto !='' ">
+			slocalphoto,
+		</if>
+		<if test="slocaltitle != null and slocaltitle !='' ">
+			slocaltitle,
+		</if>
+		<if test="tlocaltime != null and tlocaltime !='' ">
+			tlocaltime,
+		</if>
+		<if test="suploader != null and suploader !='' ">
+			suploader,
+		</if>
+		<if test="sinternetphoto != null and sinternetphoto !='' ">
+			sinternetphoto,
+		</if>
+		<if test="sinternettitle != null and sinternettitle !='' ">
+			sinternettitle,
+		</if>
+		<if test="tinternettime != null and tinternettime !='' ">
+			tinternettime,
+		</if>
+		<if test="bisinternet != null and bisinternet !='' ">
+			bisinternet,
+		</if>
+		<if test="sinternetmobile != null and sinternetmobile !='' ">
+			sinternetmobile,
+		</if>
+		<if test="schecker != null and schecker !='' ">
+			schecker,
+		</if>
+		<if test="icheckedtimes != null and icheckedtimes !='' ">
+			icheckedtimes,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		id
+		) VALUES (
+		<if test="imemberid != null and imemberid !='' ">
+			#{imemberid},
+		</if>
+		<if test="idcardnum != null and idcardnum !='' ">
+			#{idcardnum},
+		</if>
+		<if test="sname != null and sname !='' ">
+			#{sname},
+		</if>
+		<if test="isex != null and isex !='' ">
+			#{isex},
+		</if>
+		<if test="snation != null and snation !='' ">
+			#{snation},
+		</if>
+		<if test="tbirthdate != null and tbirthdate !='' ">
+			#{tbirthdate},
+		</if>
+		<if test="saddress != null and saddress !='' ">
+			#{saddress},
+		</if>
+		<if test="scardaddress != null and scardaddress !='' ">
+			#{scardaddress},
+		</if>
+		<if test="tvaliddatebegin != null and tvaliddatebegin !='' ">
+			#{tvaliddatebegin},
+		</if>
+		<if test="tvaliddateend != null and tvaliddateend !='' ">
+			#{tvaliddateend},
+		</if>
+		<if test="slocalphoto != null and slocalphoto !='' ">
+			#{slocalphoto},
+		</if>
+		<if test="slocaltitle != null and slocaltitle !='' ">
+			#{slocaltitle},
+		</if>
+		<if test="tlocaltime != null and tlocaltime !='' ">
+			#{tlocaltime},
+		</if>
+		<if test="suploader != null and suploader !='' ">
+			#{suploader},
+		</if>
+		<if test="sinternetphoto != null and sinternetphoto !='' ">
+			#{sinternetphoto},
+		</if>
+		<if test="sinternettitle != null and sinternettitle !='' ">
+			#{sinternettitle},
+		</if>
+		<if test="tinternettime != null and tinternettime !='' ">
+			#{tinternettime},
+		</if>
+		<if test="bisinternet != null and bisinternet !='' ">
+			#{bisinternet},
+		</if>
+		<if test="sinternetmobile != null and sinternetmobile !='' ">
+			#{sinternetmobile},
+		</if>
+		<if test="schecker != null and schecker !='' ">
+			#{schecker},
+		</if>
+		<if test="icheckedtimes != null and icheckedtimes !='' ">
+			#{icheckedtimes},
+		</if>
+		<if test="createBy !=null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE user_idcard SET
+		<if test="imemberid != null and imemberid !='' ">
+			imemberid = #{imemberid},
+		</if>
+		<if test="idcardnum != null and idcardnum !='' ">
+			idcardnum = #{idcardnum},
+		</if>
+		<if test="sname != null and sname !='' ">
+			sname = #{sname},
+		</if>
+		<if test="isex != null and isex !='' ">
+			isex = #{isex},
+		</if>
+		<if test="snation != null and snation !='' ">
+			snation = #{snation},
+		</if>
+		<if test="tbirthdate != null and tbirthdate !='' ">
+			tbirthdate = #{tbirthdate},
+		</if>
+		<if test="saddress != null and saddress !='' ">
+			saddress = #{saddress},
+		</if>
+		<if test="scardaddress != null and scardaddress !='' ">
+			scardaddress = #{scardaddress},
+		</if>
+		<if test="tvaliddatebegin != null and tvaliddatebegin !='' ">
+			tvaliddatebegin = #{tvaliddatebegin},
+		</if>
+		<if test="tvaliddateend != null and tvaliddateend !='' ">
+			tvaliddateend = #{tvaliddateend},
+		</if>
+		<if test="slocalphoto != null and slocalphoto !='' ">
+			slocalphoto = #{slocalphoto},
+		</if>
+		<if test="slocaltitle != null and slocaltitle !='' ">
+			slocaltitle = #{slocaltitle},
+		</if>
+		<if test="tlocaltime != null and tlocaltime !='' ">
+			tlocaltime = #{tlocaltime},
+		</if>
+		<if test="suploader != null and suploader !='' ">
+			suploader = #{suploader},
+		</if>
+		<if test="sinternetphoto != null and sinternetphoto !='' ">
+			sinternetphoto = #{sinternetphoto},
+		</if>
+		<if test="sinternettitle != null and sinternettitle !='' ">
+			sinternettitle = #{sinternettitle},
+		</if>
+		<if test="tinternettime != null and tinternettime !='' ">
+			tinternettime = #{tinternettime},
+		</if>
+		<if test="bisinternet != null and bisinternet !='' ">
+			bisinternet = #{bisinternet},
+		</if>
+		<if test="sinternetmobile != null and sinternetmobile !='' ">
+			sinternetmobile = #{sinternetmobile},
+		</if>
+		<if test="schecker != null and schecker !='' ">
+			schecker = #{schecker},
+		</if>
+		<if test="icheckedtimes != null and icheckedtimes !='' ">
+			icheckedtimes = #{icheckedtimes},
+		</if>
+		<if test="createBy!=null and createBy.id != null and createBy.id !='' ">
+			create_by=#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date=#{createDate},
+		</if>
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+			update_by=#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date=#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks=#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag=#{delFlag},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM user_idcard
+		WHERE id = #{id}
+	</update>
+
+</mapper>

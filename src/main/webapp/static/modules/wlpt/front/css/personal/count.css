@@ -1,0 +1,418 @@
+@charset "utf-8";
+*{
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	font-family: "微软雅黑"
+}
+body{
+	font-family: "微软雅黑"
+}
+ul{
+	list-style: none;
+}
+input[type="text"]{
+	padding-left: 5px;
+}
+a{
+	text-decoration: none;
+}
+a:hover,a:active,a:focus{
+	text-decoration: none;
+}
+label{
+	margin-bottom: 0px;
+}
+ul p span a input td{
+	font-family: "微软雅黑";
+}
+
+
+/*左右横线的题目--样式*/
+.user_data{
+	width:100%;
+	margin:20px auto;
+}
+.title_blue{
+	color: #00A1E8;
+	padding-left: 25px;
+}
+.title_orange{
+	color: #FFC52E;
+	padding-right: 25px;
+}
+.user_data span{
+	font-size: 20px;
+}
+
+/*账户充值菜单--样式*/
+.count_menu_1{
+	border-bottom: 2px solid #00AFEB;
+}
+.count_menu li{
+	float: left;
+	margin-right: 4%;
+	cursor: pointer;
+}
+.count_menu li a:hover,.count_menu li a:active,.count_menu li a:focus{
+	color: #428bca;
+	text-decoration: none;
+}
+.count_menu{
+	padding: 0px;
+	float: right;
+	width: 93%;
+	font-size: 18px;
+	margin-left: 6%;
+	border-bottom: 1px solid #ACA8A3;
+	overflow: hidden;
+	color: #53534F;
+	margin-top: 2%;
+	margin-bottom: 3%;
+}
+
+
+
+/*账户充值--题目下的内容--样式*/
+.div1_line1,.div1_line2,.div1_line3{
+	text-align: center;
+	width: 100%;
+	line-height: 45px;
+}
+.div1_line1{
+	width: 60%;
+	margin: 0 auto;
+	text-align: center;
+	overflow: hidden;
+}
+.div1_line1 p{
+	display: inline-block;
+	float: left;
+	width: 50%;
+}
+.count_div1{
+	width: 100%;
+	text-align: center;
+	padding-bottom: 30px;
+	border-bottom: 1px solid #ccc;
+}
+.now_count,.count_price,.count_state,.count_green{
+	font-size: 18px;
+}
+.count_price{
+	color: #FFC52F;
+	font-weight: bold;
+	padding-left: 10px;
+}
+.count_green{
+	color: #00E13B;
+	font-weight: bold;
+}
+.agreement{
+	color: #000;
+	text-decoration: none;
+}
+.agreement:hover,.agreement:active,.agreement:focus{
+	/*color: #000;*/
+}
+.btn-warning{
+	width:150px
+}
+.bg_orange{
+	background: #FFC52F;
+	border: none;
+	margin-right: 10px;
+}
+.bg_orange:hover,.bg_orange:active,.bg_orange:focus{
+	background: #FFC52F;
+	border: none;
+	margin-right: 10px;
+}
+.bg_blue{
+	background: #00A2E9;
+	border: none;
+	margin-left: 10px;
+}
+.bg_blue:hover,.bg_blue:active,.bg_blue:focus{
+	background: #00A2E9;
+	border: none;
+	margin-left: 10px;
+}
+
+/*账户充值--搜索框--样式*/
+.select_title {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 40px;
+}
+.car_phone_search {
+	margin-right: 0px;
+	width: 16%;
+	height: 40px;
+}
+.btn-search{
+	width:80px;
+	margin-top:-2px;
+	margin-bottom:0px;
+	border-radius:0px;
+	margin-left:15px;
+	margin-right:30px;
+	background-color: #FFC52F;
+	border-color: #FFC52F;
+}
+.btn-search:hover,.btn-search:active,.btn-search:focus{
+	background-color: #FFC52F;
+	border-color: #FFC52F;
+}
+.car_search{
+	width: 12%;
+	margin-left: 15px;
+}
+
+
+
+/*账户充值--表格及分页--样式*/
+.page-input {
+	width: 30px;
+}
+.fen_ye span>strong {
+	color: #FF4D00;
+}
+.fen_ye span {
+	display: inline-block;
+	margin-left: 3px;
+	margin-right: 3px;
+	color: #94918C;
+}
+.fen_ye{
+	padding-top: 45px;
+}
+.goods-manage {
+	width: 100%;
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+.goods_col_1 {
+	background-color: #E7E6E3;
+	height: 40px;
+	border: none;
+}
+.goods-manage tr {
+	padding: 5px 0px;
+	border-bottom: 1px dashed #ccc;
+}
+.goods-manage tr td{
+	padding: 8px 0;
+}
+
+
+
+/*提现--提现信息填写--样式*/
+.cash_title_con{
+	font-size: 18px;
+	padding-left: 8px;
+	color: #00547C;
+	padding-top: 3px;
+}
+.cash_title{
+	margin-left: 30px;
+	height: 50px;
+	line-height: 50px;
+	text-align: left;
+}
+
+
+/*提现--接受账户、常用银行--样式*/
+.cash_type img{
+	height: 40px;
+}
+.cash_type_list{
+	padding-left: 15%;
+}
+.cash_type{
+	text-align: center;
+	display: block;
+	float: left;
+	width: 20.3%;
+	margin-right: 60px;
+}
+.cash_wrap{
+	width: 80%;
+	margin: 0 auto;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-top: 100px;
+	margin-bottom: 115px;
+}
+.right_con input{
+	height: 30px;
+	line-height: 30px;
+	width: 110px;
+}
+.right_con{
+	text-align: left;
+}
+.left_title{
+	font-size: 16px;
+	text-align: right;
+}
+.withdraw_cash_wrap table tr{
+	line-height: 40px;
+}
+.withdraw_cash_wrap table{
+	width: 80%;
+	margin: 20px 0px;
+}
+.withdraw_cash_wrap{
+	width: 100%;
+	border-top: 1px solid #ccc;
+}
+.accept_account>td{
+	line-height:65px;
+}
+.card_list{
+	display: block;
+	text-align: center;
+	width: 33%;
+	float: left;
+	margin-bottom: 20px;
+}
+.card_type_list{
+	padding-left: 11%;
+}
+.card_list img{
+	width: 125px;
+	height: 25px;
+}
+
+
+
+/*--客服电话--公共样式*/
+.custom_service{
+	background: #F6F5F4;
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+}
+
+/*--温馨提示--公共样式*/
+.kind_reminder{
+	background: #FFFDEC;
+	border: 1px solid #F8DFA3;
+	text-align: left;
+	margin: 0 auto;
+	width: 80%;
+	padding: 10px 0px 10px 20px;
+	margin-bottom: 40px;
+}
+/*--黄色按钮--公共样式*/
+.bg_orange_btn{
+	width: 200px;
+	background: #FFC52F;
+	border: none;
+	color: #FFf;
+	line-height: 40px;
+	font-size: 20px;
+	display: block;
+	margin-left: 8%;
+	margin-top: 40px;
+	margin-bottom: 60px;
+}
+/*--蓝色按钮--公共样式*/
+.bg_blue_btn{
+	width: 200px;
+	background: #00B0D9;
+	border: none;
+	color: #FFf;
+	line-height: 40px;
+	font-size: 20px;
+	display: block;
+	margin-left: 8%;
+	margin-top: 40px;
+	margin-bottom: 60px;
+}
+.bg_blue_btn:hover,.bg_blue_btn:focus,.bg_blue_btn:active,.bg_blue_btn:visited{
+	background: #00B0D9;
+	border: none;
+	color: #FFf;
+}
+.bg_orange_btn:hover,.bg_orange_btn:focus,.bg_orange_btn:active,.bg_orange_btn:visited{
+	background:  #FFC52F;
+	border: none;
+	color: #FFf;
+}
+
+/*--转账--继承了提现的样式*/
+.please_note{
+	color: #A49B9E;
+}
+.cash_type_list1{
+	padding-left: 0px;
+}
+.right_con_1 input{
+	height: 28px;
+	line-height: 28px;
+	width: 200px;
+}
+
+
+/*--付款--样式*/
+.payment_title{
+	width: 70%;
+	margin: 0 auto;
+	text-align: center;
+	padding: 20px 0;
+}
+.payment_title_con{
+	font-size: 18px;
+	padding-left: 8px;
+	color: #00547C;
+	padding-top: 3px;
+}
+.bg_like_sea{
+	padding: 5px;
+	text-align: center;
+	background: #F1FDEC;
+}
+.num_red{
+	color: red;
+	font-weight: bold;
+}
+.pay_wrap{
+	width: 80%;
+	margin: 0 auto;
+	padding: 40px 0px;
+}
+.pay_wrap_title{
+	font-size: 18px;
+	text-align: left;
+	margin-bottom: 20px;
+}
+.pay_change_img{
+	width: 144px;
+	height: 53px;
+	border: 1px solid #000;
+	border-radius: 10px;
+}
+.pay_wrap_list{
+	overflow: hidden;
+}
+.pay_wrap_list li{
+	display: block;
+	float: left;
+	width: 25%;
+	cursor: pointer;
+	position: relative;
+}
+.pay_now{
+	margin: 0 auto;
+	margin-top: 75px;
+}
+.change_paytype{
+	position: absolute;
+	left: 150px;
+	top: 34px;
+	border: 3px solid red;
+	border-radius: 50%;
+	background: red;
+}

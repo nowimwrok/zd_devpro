@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.AddressDao">
+    
+	<sql id="addressColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.type AS "type",
+		a.status AS "status",
+		a.province AS "province",
+		a.city AS "city",
+		a.district AS "district",
+		a.address AS "address",
+		a.linkman AS "linkman",
+		a.linkcompany AS "linkcompany",
+		a.linkmobile AS "linkmobile",
+		a.linktelphone AS "linktelphone",
+		a.linkemail AS "linkemail",
+		a.postcode as "postcode",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="addressJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="Address">
+		SELECT 
+			<include refid="addressColumns"/>
+		FROM user_address a
+		<include refid="addressJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Address">
+		SELECT 
+			<include refid="addressColumns"/>
+		FROM user_address a
+		<include refid="addressJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (a.province LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.city LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.district LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.address LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.linkman LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.linkmobile LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.linkcompany LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.postcode LIKE
+				<if test="dbName == 'oracle'">'%'||#{postcode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{postcode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{postcode},'%')</if>
+				)
+			</if>
+
+
+			<if test="user != null and user.id != null and user.id !='' ">
+				AND user_id = #{user.id}
+			</if>
+			<if test="type != null and type !='' ">
+				AND type = #{type}
+			</if>
+			<if test="status != null and status !='' ">
+				AND status = #{status}
+			</if>
+			<if test="province != null and province !='' ">
+				AND province = #{province}
+			</if>
+			<if test="city != null and city !='' ">
+				AND city = #{city}
+			</if>
+			<if test="district != null and district !='' ">
+				AND district = #{district}
+			</if>
+			<if test="address != null and address !='' ">
+				AND address = #{address}
+			</if>
+			<if test="linkman != null and linkman !='' ">
+				AND linkman = #{linkman}
+			</if>
+			<if test="linkcompany != null and linkcompany !='' ">
+				AND linkcompany = #{linkcompany}
+			</if>
+			<if test="linkmobile != null and linkmobile !='' ">
+				AND linkmobile = #{linkmobile}
+			</if>
+			<if test="linktelphone != null and linktelphone !='' ">
+				AND linktelphone = #{linktelphone}
+			</if>
+			<if test="linkemail != null and linkemail !='' ">
+				AND linkemail = #{linkemail}
+			</if>
+			<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+				AND update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				AND update_date = #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Address">
+		SELECT 
+			<include refid="addressColumns"/>
+		FROM user_address a
+		<include refid="addressJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user != null and user.id != null and user.id !='' ">
+				AND user_id = #{user.id}
+			</if>
+			<if test="type != null and type !='' ">
+				AND type = #{type}
+			</if>
+			<if test="status != null and status !='' ">
+				AND status = #{status}
+			</if>
+			<if test="province != null and province !='' ">
+				AND province = #{province}
+			</if>
+			<if test="city != null and city !='' ">
+				AND city = #{city}
+			</if>
+			<if test="district != null and district !='' ">
+				AND district = #{district}
+			</if>
+			<if test="address != null and address !='' ">
+				AND address = #{address}
+			</if>
+			<if test="linkman != null and linkman !='' ">
+				AND linkman = #{linkman}
+			</if>
+			<if test="linkcompany != null and linkcompany !='' ">
+				AND linkcompany = #{linkcompany}
+			</if>
+			<if test="linkmobile != null and linkmobile !='' ">
+				AND linkmobile = #{linkmobile}
+			</if>
+			<if test="linktelphone != null and linktelphone !='' ">
+				AND linktelphone = #{linktelphone}
+			</if>
+			<if test="linkemail != null and linkemail !='' ">
+				AND linkemail = #{linkemail}
+			</if>
+
+
+			<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+				AND update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				AND update_date = #{updateDate}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.status DESC ,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_address(
+
+		<if test="user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="type != null and type !='' ">
+			type,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+		<if test="province != null and province !='' ">
+			province,
+		</if>
+		<if test="city != null and city !='' ">
+			city,
+		</if>
+		<if test="district != null and district !='' ">
+			district,
+		</if>
+		<if test="address != null and address !='' ">
+			address,
+		</if>
+		<if test="linkman != null and linkman !='' ">
+			linkman,
+		</if>
+		<if test="linkcompany != null and linkcompany !='' ">
+			linkcompany,
+		</if>
+		<if test="linkmobile != null and linkmobile !='' ">
+			linkmobile,
+		</if>
+		<if test="linktelphone != null and linktelphone !='' ">
+			linktelphone,
+		</if>
+		<if test="linkemail != null and linkemail !='' ">
+			linkemail,
+		</if>
+		<if test="postcode != null and postcode !='' ">
+			postcode,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="type != null and type !='' ">
+			#{type},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		<if test="province != null and province !='' ">
+			#{province},
+		</if>
+		<if test="city != null and city !='' ">
+			#{city},
+		</if>
+		<if test="district != null and district !='' ">
+			#{district},
+		</if>
+		<if test="address != null and address !='' ">
+			#{address},
+		</if>
+		<if test="linkman != null and linkman !='' ">
+			#{linkman},
+		</if>
+		<if test="linkcompany != null and linkcompany !='' ">
+			#{linkcompany},
+		</if>
+		<if test="linkmobile != null and linkmobile !='' ">
+			#{linkmobile},
+		</if>
+		<if test="linktelphone != null and linktelphone !='' ">
+			#{linktelphone},
+		</if>
+		<if test="linkemail != null and linkemail !='' ">
+			#{linkemail},
+		</if>
+		<if test="postcode != null and postcode !='' ">
+			#{postcode},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_address SET 	
+			<!--<if test="user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>-->
+			<if test="type != null and type !='' ">
+				type = #{type},
+			</if>
+			<if test="status != null and status !='' ">
+				status = #{status},
+			</if>
+			
+			<if test="address != null and address !='' ">
+				address = #{address},
+			</if>
+			<if test="linkman != null and linkman !='' ">
+				linkman = #{linkman},
+			</if>
+			<if test="linkcompany != null and linkcompany !='' ">
+				linkcompany = #{linkcompany},
+			</if>
+			<if test="linkmobile != null and linkmobile !='' ">
+				linkmobile = #{linkmobile},
+			</if>
+			<if test="linktelphone != null and linktelphone !='' ">
+				linktelphone = #{linktelphone},
+			</if>
+			<if test="linkemail != null and linkemail !='' ">
+				linkemail = #{linkemail},
+			</if>
+			<if test="postcode != null and postcode !='' ">
+				#{postcode},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			province = #{province},
+			city = #{city},
+			district = #{district},
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_address SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

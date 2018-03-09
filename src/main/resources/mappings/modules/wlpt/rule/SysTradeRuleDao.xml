@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.rule.SysTradeRuleDao">
+
+	<sql id="sysTradeRuleColumns">
+		a.id AS "id",
+		a.type AS "type",
+		a.trade_quota AS
+		"tradeQuota",
+		a.trade_commission AS "tradeCommission",
+		a.cash_quota AS
+		"cashQuota",
+		a.cash_quota_unit AS "cashQuotaUnit",
+		a.lowest_amount AS
+		"lowestAmount",
+		a.trade_quota_day AS "tradeQuotaDay",
+		a.create_by AS
+		"createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS
+		"updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="sysTradeRuleJoins">
+	</sql>
+
+	<select id="get" resultType="SysTradeRule">
+		SELECT
+		<include refid="sysTradeRuleColumns" />
+		FROM sys_trade_rule a
+		<include refid="sysTradeRuleJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getBySysTradeRule" resultType="SysTradeRule">
+		SELECT
+		<include refid="sysTradeRuleColumns" />
+		FROM sys_trade_rule a
+		<include refid="sysTradeRuleJoins" />
+        where a.type= #{type}
+		limit 1
+	</select>
+
+	<select id="findList" resultType="SysTradeRule">
+		SELECT
+		<include refid="sysTradeRuleColumns" />
+		FROM sys_trade_rule a
+		<include refid="sysTradeRuleJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="SysTradeRule">
+		SELECT
+		<include refid="sysTradeRuleColumns" />
+		FROM sys_trade_rule a
+		<include refid="sysTradeRuleJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO sys_trade_rule(
+
+		<if test="type != null and type !='' ">
+			type,
+		</if>
+		<if test="tradeQuota != null and tradeQuota !='' ">
+			trade_quota,
+		</if>
+		<if test="tradeCommission != null and tradeCommission !='' ">
+			trade_commission,
+		</if>
+		<if test="cashQuota != null and cashQuota !='' ">
+			cash_quota,
+		</if>
+		<if test="cashQuotaUnit != null and cashQuotaUnit !='' ">
+			cash_quota_unit,
+		</if>
+		<if test="lowestAmount != null and lowestAmount !='' ">
+			lowest_amount,
+		</if>
+		<if test="tradeQuotaDay != null and tradeQuotaDay !='' ">
+			trade_quota_day,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		id
+		) VALUES (
+		<if test="type != null and type !='' ">
+			#{type},
+		</if>
+		<if test="tradeQuota != null and tradeQuota !='' ">
+			#{tradeQuota},
+		</if>
+		<if test="tradeCommission != null and tradeCommission !='' ">
+			#{tradeCommission},
+		</if>
+		<if test="cashQuota != null and cashQuota !='' ">
+			#{cashQuota},
+		</if>
+		<if test="cashQuotaUnit != null and cashQuotaUnit !='' ">
+			#{cashQuotaUnit},
+		</if>
+		<if test="lowestAmount != null and lowestAmount !='' ">
+			#{lowestAmount},
+		</if>
+		<if test="tradeQuotaDay != null and tradeQuotaDay !='' ">
+			#{tradeQuotaDay},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE sys_trade_rule SET
+		<if test="type != null and type !='' ">
+			type = #{type},
+		</if>
+		<if test="tradeQuota != null and tradeQuota !='' ">
+			trade_quota = #{tradeQuota},
+		</if>
+		<if test="tradeCommission != null and tradeCommission !='' ">
+			trade_commission = #{tradeCommission},
+		</if>
+		<if test="cashQuota != null and cashQuota !='' ">
+			cash_quota = #{cashQuota},
+		</if>
+		<if test="cashQuotaUnit != null and cashQuotaUnit !='' ">
+			cash_quota_unit = #{cashQuotaUnit},
+		</if>
+		<if test="lowestAmount != null and lowestAmount !='' ">
+			lowest_amount = #{lowestAmount},
+		</if>
+		<if test="tradeQuotaDay != null and tradeQuotaDay !='' ">
+			trade_quota_day = #{tradeQuotaDay},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by = #{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date = #{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE sys_trade_rule SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

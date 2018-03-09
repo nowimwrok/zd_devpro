@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.insur.UserInsuranceDao">
+    
+	<sql id="userInsuranceColumns">
+		a.id AS "id",
+		a.applicant AS "applicant",
+		a.user_id AS "user.id",
+		a.goodsname AS "goodsname",
+		a.goodstype AS "goodstype",
+		a.worth AS "worth",
+		a.carnumber AS "carnumber",
+		a.cartype AS "cartype",
+		a.carmodel AS "carmodel",
+		a.totalweight AS "totalweight",
+		a.carweight AS "carweight",
+		a.insurancetype AS "insurancetype",
+		a.insuranceamount AS "insuranceamount",
+		a.insurancefeel AS "insurancefeel",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.status AS "status",
+		a.orderno AS "orderno",
+		a.insuranceNO AS "insuranceNO",
+		a.payway AS "payway",
+		a.voucherimg  AS "voucherimg",
+		a.ispaystatus AS "ispaystatus",
+		a.sendtime    AS "sendtime",
+		a.cardNo  AS "cardNo",
+		a.useCharacter  AS "usecharacter",
+		a.vin  AS "vin",
+		a.engineNo  AS "engineNo",
+		a.passengersNum  AS "passengersnum",
+		a.insuranceWay  AS "insuranceway",
+		a.subtype  AS "subtype",
+		a.measurestatus AS "measurestatus",
+		a.insurlist_id AS "insurlist.id",
+		a.awardno AS "awardno",
+		a.startTime AS "startTime",
+		a.endTime AS "endTime",
+		a.belongs AS "belongs",
+		a.mainHang AS "mainHang",
+		a.idCardImg AS "idCardImg",
+		a.vehicleLicenseImg AS "vehicleLicenseImg",
+		a.qualifiedImg AS "qualifiedImg",
+		a.invoiceImg AS "invoiceImg",
+		a.applicantUnit AS "applicantUnit",
+		a.insured AS "insured",
+		a.insuredCard AS "insuredCard",
+		a.insuredAddress AS "insuredAddress",
+		a.insuredLink AS "insuredLink",
+		a.underwriting AS "underwriting",
+		a.voucher AS "voucher",
+		a.agent AS "agent",
+		a.serialNumber AS "serialNumber",
+		a.chargeTime AS "chargeTime",
+		a.insuredTime AS "insuredTime",
+		a.printTime AS "printTime",
+		a.solution AS "solution",
+		a.claimsRecords AS "claimsRecords",
+		a.syxinsurancefeel AS "syxinsurancefeel",
+		a.jqxinsurancefeel AS "jqxinsurancefeel",
+		a.taxfeel AS "taxfeel",
+		a.jqxstartTime AS "jqxstartTime",
+		a.jqxendTime AS "jqxendTime",
+		u3.name AS "user.name",
+		  ship.PROVINCE        AS 'shipAddress.province',
+		  ship.CITY            AS 'shipAddress.city',
+		  ship.DISTRICT        AS 'shipAddress.district',
+		  ship.ADDRESS         AS 'shipAddress.address',
+		  ship.LINKMAN         AS 'shipAddress.linkman',
+		  ship.LINKCOMPANY     AS 'shipAddress.linkcompany',
+		  ship.LINKMOBILE      AS 'shipAddress.linkmobile',
+		  ship.LINKTELPHONE    AS 'shipAddress.linktelphone',
+		  ship.LINKEMAIL       AS 'shipAddress.linkemail',
+		  consign.PROVINCE     AS 'consignAddress.province',
+		  consign.CITY         AS 'consignAddress.city',
+		  consign.DISTRICT     AS 'consignAddress.district',
+		  consign.ADDRESS      AS 'consignAddress.address',
+		  consign.LINKMAN      AS 'consignAddress.linkman',
+		  consign.LINKCOMPANY  AS 'consignAddress.linkcompany',
+		  consign.LINKMOBILE   AS 'consignAddress.linkmobile',
+		  consign.LINKTELPHONE AS 'consignAddress.linktelphone',
+		  consign.LINKEMAIL    AS 'consignAddress.linkemail',
+		  linkaddress.PROVINCE     AS 'applicantAddress.province',
+		  linkaddress.CITY         AS 'applicantAddress.city',
+		  linkaddress.DISTRICT     AS 'applicantAddress.district',
+		  linkaddress.ADDRESS      AS 'applicantAddress.address',
+		  linkaddress.LINKMAN      AS 'applicantAddress.linkman',
+		  linkaddress.LINKCOMPANY  AS 'applicantAddress.linkcompany',
+		  linkaddress.LINKMOBILE   AS 'applicantAddress.linkmobile',
+		  linkaddress.LINKTELPHONE AS 'applicantAddress.linktelphone',
+		  linkaddress.LINKEMAIL    AS 'applicantAddress.linkemail'
+	</sql>
+	<sql id="userInsurancelistColumns">
+		,insurlist.insur_name AS "insurlist.insurName",
+		insurlist.suitable_crowd AS "insurlist.suitableCrowd",
+		insurlist.validity_term AS "insurlist.validityTerm",
+		insurlist.product_features AS "insurlist.productFeatures",
+		insurlist.max_amount AS "insurlist.maxAmount",
+		insurlist.min_amount AS "insurlist.minAmount",
+		insurlist.pay_type AS "insurlist.payType",
+		insurlist.insur_amount AS "insurlist.insurAmount",
+		insurlist.insur_project AS "insurlist.insurProject",
+		insurlist.insur_range AS "insurlist.insurRange",
+		insurlist.insur_phone AS "insurlist.insurPhone",
+		insurlist.insur_companyname AS "insurlist.insurCompanyname",
+		insurlist.claim_period AS "insurlist.claimPeriod",
+		insurlist.clause_code AS "insurlist.clauseCode",
+		insurlist.insur_logo AS "insurlist.insurLogo",
+		insurlist.claim_service AS "insurlist.claimService",
+		insurlist.claim_notice  AS "insurlist.claimNotice",
+		insurlist.insuranceway  AS "insurlist.insuranceway",
+		insurlist.type  AS "insurlist.type",
+		insurlist.subtype AS "insurlist.subtype",
+		insurlist.ismeasure AS "insurlist.ismeasure",
+		insurlist.isenable AS "insurlist.isenable"
+	</sql>
+	
+	
+	<sql id="userInsuranceJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.user_id
+		LEFT JOIN user_address ship ON a.ship_id = ship.ID
+        LEFT JOIN user_address consign ON a.consign_id = consign.ID
+        LEFT JOIN user_address linkaddress ON a.applicantAddressid = linkaddress.ID
+	</sql>
+	
+	
+    <sql id="userInsurancelistJoins">
+    	LEFT JOIN user_insurancelist insurlist ON insurlist.id = a.insurlist_id
+	</sql>
+	
+	
+	<select id="get" resultType="UserInsurance">
+		SELECT
+			<include refid="userInsuranceColumns"/>
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurance a
+		<include refid="userInsuranceJoins"/>
+		<include refid="userInsurancelistJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getInsurInfo" resultType="UserInsurance">
+		SELECT 
+			<include refid="userInsuranceColumns"/>
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurance a
+		<include refid="userInsuranceJoins"/>
+		<include refid="userInsurancelistJoins"/>
+		<where>
+			a.del_flag =0
+			<if test="orderno != null and orderno != ''">
+				AND a.orderno = #{orderno}
+			</if>
+			<if test="insuranceNO != null and insuranceNO != ''">
+				AND a.insuranceNO = #{insuranceNO}
+			</if>
+		</where>
+		limit 1
+	</select>
+	<select id="findList" resultType="UserInsurance">
+		SELECT 
+			<include refid="userInsuranceColumns"/>
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurance a
+		<include refid="userInsuranceJoins"/>
+		<include refid="userInsurancelistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="searchinfo != null and searchinfo != ''">
+                AND (a.applicant LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                
+                OR
+                a.carnumber LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+                a.goodsname LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                linkaddress.LINKMOBILE LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                )
+            </if>
+			<if test="applicant != null and applicant != ''">
+				AND a.applicant = #{applicant}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="goodsname != null and goodsname != ''">
+				AND a.goodsname = #{goodsname}
+			</if>
+			<if test="goodstype != null and goodstype != ''">
+				AND a.goodstype = #{goodstype}
+			</if>
+			<if test="worth != null and worth != ''">
+				AND a.worth = #{worth}
+			</if>
+			<if test="applicantAddress != null and applicantAddress != ''">
+				AND a.applicantaddress = #{applicantAddress}
+			</if>
+			<if test="carnumber != null and carnumber != ''">
+				AND a.carnumber = #{carnumber}
+			</if>
+			<if test="cartype != null and cartype != ''">
+				AND a.cartype = #{cartype}
+			</if>
+			<if test="carmodel != null and carmodel != ''">
+				AND a.carmodel = #{carmodel}
+			</if>
+			<if test="totalweight != null and totalweight != ''">
+				AND a.totalweight = #{totalweight}
+			</if>
+			<if test="carweight != null and carweight != ''">
+				AND a.carweight = #{carweight}
+			</if>
+			<if test="shipAddress != null and shipAddress.id != null and shipAddress.id != '' ">
+				AND a.ship_id = #{shipAddress.id}
+			</if>
+			<if test="consignAddress != null and consignAddress.id != null and consignAddress.id != ''">
+				AND a.consign_id = #{consignAddress.id}
+			</if>
+			<if test="insurancetype != null and insurancetype != ''">
+				AND a.insurancetype = #{insurancetype}
+			</if>
+			<if test="insuranceamount != null and insuranceamount != ''">
+				AND a.insuranceamount = #{insuranceamount}
+			</if>
+			<if test="insurancefeel != null and insurancefeel != ''">
+				AND a.insurancefeel = #{insurancefeel}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="orderno != null and orderno != ''">
+				AND a.orderno = #{orderno}
+			</if>
+			<if test="insuranceNO != null and insuranceNO != ''">
+				AND a.insuranceNO = #{insuranceNO}
+			</if>
+			<if test="insurlist != null and insurlist.id != null and insurlist.id != ''">
+				AND a.insurlist_id = #{insurlist.id}
+			</if>
+			<if test="sendtime != null and sendtime != ''">
+				AND a.sendtime = #{sendtime}
+			</if>
+			<if test="ispaystatus != null and ispaystatus != ''">
+				AND a.ispaystatus = #{ispaystatus}
+			</if>
+			<if test="cardNo != null and cardNo != ''">
+				AND a.cardNo = #{cardNo}
+			</if>
+			<if test="usecharacter != null and usecharacter != ''">
+				AND a.useCharacter = #{usecharacter}
+			</if>
+			<if test="searchtype =='true'" >
+				<if test="beginCreateDate != null and beginCreateDate != '' ">
+					AND a.startTime &gt;= #{beginCreateDate}
+				</if>
+				<if test="endCreateDate != null and endCreateDate != '' ">
+					AND a.startTime &lt;= #{endCreateDate}
+				</if>
+			</if>
+			<if test="searchtype =='false'" >
+				<if test="beginCreateDate != null and beginCreateDate != '' ">
+					AND a.endTime &gt;= #{beginCreateDate}
+				</if>
+				<if test="endCreateDate != null and endCreateDate != '' ">
+					AND a.endTime &lt;= #{endCreateDate}
+				</if>
+			</if>
+
+			<if test="vin != null and vin != ''">
+				AND a.vin = #{vin}
+			</if>
+			<if test="engineNo != null and engineNo != ''">
+				AND a.engineNo = #{engineNo}
+			</if>
+			<if test="passengersnum != null and passengersnum != ''">
+				AND a.passengersNum = #{passengersnum}
+			</if>
+			<if test="insuranceway != null and insuranceway != ''">
+				AND a.insuranceWay = #{insuranceway}
+			</if>
+			<if test="measurestatus != null and measurestatus != ''">
+				AND a.measurestatus = #{measurestatus}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserInsurance">
+		SELECT 
+			<include refid="userInsuranceColumns"/>
+			<include refid="userInsurancelistColumns"/>
+		FROM user_insurance a
+		<include refid="userInsuranceJoins"/>
+		<include refid="userInsurancelistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_insurance(
+
+        <if test="payway != null and payway !='' ">
+			payway,
+		</if>
+		<if test="applicant != null and applicant !='' ">
+			applicant,
+		</if>
+		<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="goodsname != null and goodsname !='' ">
+			goodsname,
+		</if>
+		<if test="goodstype != null and goodstype !='' ">
+			goodstype,
+		</if>
+		<if test="worth != null and worth !='' ">
+			worth,
+		</if>
+		<if test="applicantAddress!=null and applicantAddress.id != null and applicantAddress.id !='' ">
+			applicantaddressid,
+		</if>
+		<if test="carnumber != null and carnumber !='' ">
+			carnumber,
+		</if>
+		<if test="cartype != null and cartype !='' ">
+			cartype,
+		</if>
+		<if test="carmodel != null and carmodel !='' ">
+			carmodel,
+		</if>
+		<if test="totalweight != null and totalweight !='' ">
+			totalweight,
+		</if>
+		<if test="carweight != null and carweight !='' ">
+			carweight,
+		</if>
+		<if test="shipAddress != null and shipAddress.id != null and shipAddress.id !='' ">
+			ship_id,
+		</if>
+		<if test="consignAddress != null and consignAddress.id != null and consignAddress.id !='' ">
+			consign_id,
+		</if>
+		<if test="insurancetype != null and insurancetype !='' ">
+			insurancetype,
+		</if>
+		<if test="insuranceamount != null and insuranceamount !='' ">
+			insuranceamount,
+		</if>
+		<if test="insurancefeel != null and insurancefeel !='' ">
+			insurancefeel,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+		<if test="orderno != null and orderno !='' ">
+			orderno,
+		</if>
+		<if test="insuranceNO != null and insuranceNO !='' ">
+			insuranceNO,
+		</if>
+		<if test="voucherimg != null and voucherimg !='' ">
+			voucherimg,
+		</if>
+		<if test="insurlist != null and insurlist.id != null and insurlist.id !='' ">
+			insurlist_id,
+		</if>
+		<if test="ispaystatus != null and ispaystatus !='' ">
+			ispaystatus,
+		</if>
+		<if test="sendtime != null and sendtime !='' ">
+			sendtime,
+		</if>
+		<if test="cardNo != null and cardNo !='' ">
+			cardNo,
+		</if>
+		<if test="usecharacter != null and usecharacter !='' ">
+			useCharacter,
+		</if>
+		<if test="vin != null and vin !='' ">
+			vin,
+		</if>
+		<if test="engineNo != null and engineNo !='' ">
+			engineNo,
+		</if>
+		<if test="passengersnum != null and passengersnum !='' ">
+			passengersNum,
+		</if>
+		<if test="insuranceway != null and insuranceway !='' ">
+			insuranceWay,
+		</if>
+		<if test="subtype != null and subtype !='' ">
+			subtype,
+		</if>
+		<if test="measurestatus != null and measurestatus !='' ">
+			measurestatus,
+		</if>
+		<if test="awardno != null and awardno !='' ">
+			awardno,
+		</if>
+		<if test="startTime != null and startTime !='' ">
+			startTime,
+		</if>
+		<if test="endTime != null and endTime !='' ">
+			endTime,
+		</if>
+		<if test="belongs != null and belongs !='' ">
+			belongs,
+		</if>
+		<if test="mainHang != null and mainHang !='' ">
+			mainHang,
+		</if>
+		<if test="idCardImg != null and idCardImg !='' ">
+			idCardImg,
+		</if>
+		<if test="vehicleLicenseImg != null and vehicleLicenseImg !='' ">
+			vehicleLicenseImg,
+		</if>
+		<if test="qualifiedImg != null and qualifiedImg !='' ">
+			qualifiedImg,
+		</if>
+		<if test="invoiceImg != null and invoiceImg !='' ">
+			invoiceImg,
+		</if>
+		<if test="applicantUnit != null and applicantUnit !='' ">
+			applicantUnit,
+		</if>
+		<if test="insured != null and insured !='' ">
+			insured,
+		</if>
+		<if test="insuredCard != null and insuredCard !='' ">
+			insuredCard,
+		</if>
+		<if test="insuredAddress != null and insuredAddress !='' ">
+			insuredAddress,
+		</if>
+		<if test="insuredLink != null and insuredLink !='' ">
+			insuredLink,
+		</if>
+		<if test="underwriting != null and underwriting !='' ">
+			underwriting,
+		</if>
+		<if test="voucher != null and voucher !='' ">
+			voucher,
+		</if>
+		<if test="agent != null and agent !='' ">
+			agent,
+		</if>
+		<if test="serialNumber != null and serialNumber !='' ">
+			serialNumber,
+		</if>
+		<if test="chargeTime != null and chargeTime !='' ">
+			chargeTime,
+		</if>
+		<if test="insuredTime != null and insuredTime !='' ">
+			insuredTime,
+		</if>
+		<if test="printTime != null and printTime !='' ">
+			printTime,
+		</if>
+		<if test="solution != null and solution !='' ">
+			solution,
+		</if>
+		<if test="claimsRecords != null and claimsRecords !='' ">
+			claimsRecords,
+		</if>
+
+		<if test="syxinsurancefeel != null and syxinsurancefeel !='' ">
+			syxinsurancefeel,
+		</if>
+		<if test="jqxinsurancefeel != null and jqxinsurancefeel !='' ">
+			jqxinsurancefeel,
+		</if>
+		<if test="taxfeel != null and taxfeel !='' ">
+			taxfeel,
+		</if>
+		<if test="jqxstartTime != null and jqxstartTime !='' ">
+			jqxstartTime,
+		</if>
+		<if test="jqxendTime != null and jqxendTime !='' ">
+			jqxendTime,
+		</if>
+			id
+		) VALUES (
+		<if test="payway != null and payway !='' ">
+			#{payway},
+		</if>
+		<if test="applicant != null and applicant !='' ">
+			#{applicant},
+		</if>
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="goodsname != null and goodsname !='' ">
+			#{goodsname},
+		</if>
+		<if test="goodstype != null and goodstype !='' ">
+			#{goodstype},
+		</if>
+		<if test="worth != null and worth !='' ">
+			#{worth},
+		</if>
+		<if test="applicantAddress!=null and applicantAddress.id != null and applicantAddress.id !='' ">
+			#{applicantAddress.id},
+		</if>
+		<if test="carnumber != null and carnumber !='' ">
+			#{carnumber},
+		</if>
+		<if test="cartype != null and cartype !='' ">
+			#{cartype},
+		</if>
+		<if test="carmodel != null and carmodel !='' ">
+			#{carmodel},
+		</if>
+		<if test="totalweight != null and totalweight !='' ">
+			#{totalweight},
+		</if>
+		<if test="carweight != null and carweight !='' ">
+			#{carweight},
+		</if>
+		<if test="shipAddress != null and shipAddress.id != null and shipAddress.id !='' ">
+			#{shipAddress.id},
+		</if>
+		<if test="consignAddress != null and consignAddress.id != null and consignAddress.id !='' ">
+			#{consignAddress.id},
+		</if>
+		<if test="insurancetype != null and insurancetype !='' ">
+			#{insurancetype},
+		</if>
+		<if test="insuranceamount != null and insuranceamount !='' ">
+			#{insuranceamount},
+		</if>
+		<if test="insurancefeel != null and insurancefeel !='' ">
+			#{insurancefeel},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		<if test="orderno != null and orderno !='' ">
+			#{orderno},
+		</if>
+		<if test="insuranceNO != null and insuranceNO !='' ">
+			#{insuranceNO},
+		</if>
+		<if test="voucherimg != null and voucherimg !='' ">
+			#{voucherimg},
+		</if>
+		<if test="insurlist != null and insurlist.id != null and insurlist.id !='' ">
+			#{insurlist.id},
+		</if>
+		<if test="ispaystatus != null and ispaystatus !='' ">
+			#{ispaystatus},
+		</if>
+		<if test="sendtime != null and sendtime !='' ">
+			#{sendtime},
+		</if>
+		<if test="cardNo != null and cardNo !='' ">
+			#{cardNo},
+		</if>
+		<if test="usecharacter != null and usecharacter !='' ">
+			#{usecharacter},
+		</if>
+		<if test="vin != null and vin !='' ">
+			#{vin},
+		</if>
+		<if test="engineNo != null and engineNo !='' ">
+			#{engineNo},
+		</if>
+		<if test="passengersnum != null and passengersnum !='' ">
+			#{passengersnum},
+		</if>
+		<if test="insuranceway != null and insuranceway !='' ">
+			#{insuranceway},
+		</if>
+		<if test="subtype != null and subtype !='' ">
+			#{subtype},
+		</if>
+		<if test="measurestatus != null and measurestatus !='' ">
+			#{measurestatus},
+		</if>
+		<if test="awardno != null and awardno !='' ">
+			#{awardno},
+		</if>
+		<if test="startTime != null and startTime !='' ">
+			#{startTime},
+		</if>
+		<if test="endTime != null and endTime !='' ">
+			#{endTime},
+		</if>
+		<if test="belongs != null and belongs !='' ">
+			#{belongs},
+		</if>
+		<if test="mainHang != null and mainHang !='' ">
+			#{mainHang},
+		</if>
+		<if test="idCardImg != null and idCardImg !='' ">
+			#{idCardImg},
+		</if>
+		<if test="vehicleLicenseImg != null and vehicleLicenseImg !='' ">
+			#{vehicleLicenseImg},
+		</if>
+		<if test="qualifiedImg != null and qualifiedImg !='' ">
+			#{qualifiedImg},
+		</if>
+		<if test="invoiceImg != null and invoiceImg !='' ">
+			#{invoiceImg},
+		</if>
+		<if test="applicantUnit != null and applicantUnit !='' ">
+			#{applicantUnit},
+		</if>
+		<if test="insured != null and insured !='' ">
+			#{insured},
+		</if>
+		<if test="insuredCard != null and insuredCard !='' ">
+			#{insuredCard},
+		</if>
+		<if test="insuredAddress != null and insuredAddress !='' ">
+			#{insuredAddress},
+		</if>
+		<if test="insuredLink != null and insuredLink !='' ">
+			#{insuredLink},
+		</if>
+		<if test="underwriting != null and underwriting !='' ">
+			#{underwriting},
+		</if>
+		<if test="voucher != null and voucher !='' ">
+			#{voucher},
+		</if>
+		<if test="agent != null and agent !='' ">
+			#{agent},
+		</if>
+		<if test="serialNumber != null and serialNumber !='' ">
+			#{serialNumber},
+		</if>
+		<if test="chargeTime != null and chargeTime !='' ">
+			#{chargeTime},
+		</if>
+		<if test="insuredTime != null and insuredTime !='' ">
+			#{insuredTime},
+		</if>
+		<if test="printTime != null and printTime !='' ">
+			#{printTime},
+		</if>
+		<if test="solution != null and solution !='' ">
+			#{solution},
+		</if>
+		<if test="claimsRecords != null and claimsRecords !='' ">
+			#{claimsRecords},
+		</if>
+		<if test="syxinsurancefeel != null and syxinsurancefeel !='' ">
+			syxinsurancefeel,
+		</if>
+		<if test="jqxinsurancefeel != null and jqxinsurancefeel !='' ">
+			jqxinsurancefeel,
+		</if>
+		<if test="taxfeel != null and taxfeel !='' ">
+			taxfeel,
+		</if>
+		<if test="jqxstartTime != null and jqxstartTime !='' ">
+			jqxstartTime,
+		</if>
+		<if test="jqxendTime != null and jqxendTime !='' ">
+			jqxendTime,
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_insurance SET 	
+		    <if test="payway != null and payway !='' ">
+			    payway = #{payway},
+		    </if>
+			<if test="applicant != null and applicant !='' ">
+				applicant = #{applicant},
+			</if>
+			<if test="user != null and user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="goodsname != null and goodsname !='' ">
+				goodsname = #{goodsname},
+			</if>
+			<if test="goodstype != null and goodstype !='' ">
+				goodstype = #{goodstype},
+			</if>
+			<if test="worth != null and worth !='' ">
+				worth = #{worth},
+			</if>
+			<if test="applicantAddress!=null and applicantAddress.id != null and applicantAddress.id !='' ">
+				applicantaddressid = #{applicantAddress.id},
+			</if>
+			<if test="carnumber != null and carnumber !='' ">
+				carnumber = #{carnumber},
+			</if>
+			<if test="cartype != null and cartype !='' ">
+				cartype = #{cartype},
+			</if>
+			<if test="carmodel != null and carmodel !='' ">
+				carmodel = #{carmodel},
+			</if>
+			<if test="totalweight != null and totalweight !='' ">
+				totalweight = #{totalweight},
+			</if>
+			<if test="carweight != null and carweight !='' ">
+				carweight = #{carweight},
+			</if>
+			<if test="shipAddress != null and shipAddress.id != null and shipAddress.id !='' ">
+				ship_id = #{shipAddress.id},
+			</if>
+			<if test="consignAddress != null and consignAddress.id != null and consignAddress.id !='' ">
+				consign_id = #{consignAddress.id},
+			</if>
+			<if test="insurancetype != null and insurancetype !='' ">
+				insurancetype = #{insurancetype},
+			</if>
+			<if test="insuranceamount != null and insuranceamount !='' ">
+				insuranceamount = #{insuranceamount},
+			</if>
+			<if test="insurancefeel != null and insurancefeel !='' ">
+				insurancefeel = #{insurancefeel},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="status != null and status !='' ">
+				status = #{status},
+			</if>
+			<if test="orderno != null and orderno !='' ">
+				orderno = #{orderno},
+			</if>
+			<if test="insuranceNO != null and insuranceNO !='' ">
+				insuranceNO = #{insuranceNO},
+			</if>
+			<if test="voucherimg != null and voucherimg !='' ">
+				voucherimg = #{voucherimg},
+			</if>
+			<if test="insurlist != null and insurlist.id != null and insurlist.id !='' ">
+				insurlist_id = #{insurlist.id},
+			</if>
+			<if test="ispaystatus != null and ispaystatus !='' ">
+				ispaystatus = #{ispaystatus},
+			</if>
+			<if test="sendtime != null and sendtime !='' ">
+				sendtime = #{sendtime},
+			</if>
+			<if test="cardNo != null and cardNo !='' ">
+				 cardNo= #{cardNo},
+			</if>
+			<if test="usecharacter != null and usecharacter !='' ">
+				useCharacter = #{usecharacter},
+			</if>
+			<if test="vin != null and vin !='' ">
+				vin = #{vin},
+			</if>
+			<if test="engineNo != null and engineNo !='' ">
+				engineNo = #{engineNo},
+			</if>
+			<if test="passengersnum != null and passengersnum !='' ">
+				passengersNum = #{passengersnum},
+			</if>
+			<if test="insuranceway != null and insuranceway !='' ">
+				insuranceWay = #{insuranceway},
+			</if>
+			<if test="subtype != null and subtype !='' ">
+				subtype = #{subtype},
+			</if>
+			<if test="measurestatus != null and measurestatus !='' ">
+				measurestatus = #{measurestatus},
+			</if>
+			<if test="awardno != null and awardno !='' ">
+				awardno=#{awardno},
+			</if>
+			<if test="startTime != null and startTime !='' ">
+				startTime=#{startTime},
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				endTime=#{endTime},
+			</if>
+			<if test="belongs != null and belongs !='' ">
+				belongs=#{belongs},
+			</if>
+			<if test="mainHang != null and mainHang !='' ">
+				mainHang=#{mainHang},
+			</if>
+			<if test="idCardImg != null and idCardImg !='' ">
+				idCardImg=#{idCardImg},
+			</if>
+			<if test="vehicleLicenseImg != null and vehicleLicenseImg !='' ">
+				vehicleLicenseImg=#{vehicleLicenseImg},
+			</if>
+			<if test="qualifiedImg != null and qualifiedImg !='' ">
+				qualifiedImg=#{qualifiedImg},
+			</if>
+			<if test="invoiceImg != null and invoiceImg !='' ">
+				invoiceImg=#{invoiceImg},
+			</if>
+			<if test="applicantUnit != null and applicantUnit !='' ">
+				applicantUnit=#{applicantUnit},
+			</if>
+			<if test="insured != null and insured !='' ">
+				insured=#{insured},
+			</if>
+			<if test="insuredCard != null and insuredCard !='' ">
+				insuredCard=#{insuredCard},
+			</if>
+			<if test="insuredAddress != null and insuredAddress !='' ">
+				insuredAddress=#{insuredAddress},
+			</if>
+			<if test="insuredLink != null and insuredLink !='' ">
+				insuredLink=#{insuredLink},
+			</if>
+			<if test="underwriting != null and underwriting !='' ">
+				underwriting=#{underwriting},
+			</if>
+			<if test="voucher != null and voucher !='' ">
+				voucher=#{voucher},
+			</if>
+			<if test="agent != null and agent !='' ">
+				agent=#{agent},
+			</if>
+			<if test="serialNumber != null and serialNumber !='' ">
+				serialNumber=#{serialNumber},
+			</if>
+			<if test="chargeTime != null and chargeTime !='' ">
+				chargeTime=#{chargeTime},
+			</if>
+			<if test="insuredTime != null and insuredTime !='' ">
+				insuredTime=#{insuredTime},
+			</if>
+			<if test="printTime != null and printTime !='' ">
+				printTime=#{printTime},
+			</if>
+			<if test="solution != null and solution !='' ">
+				solution=#{solution},
+			</if>
+			<if test="claimsRecords != null and claimsRecords !='' ">
+				claimsRecords=#{claimsRecords},
+			</if>
+			<if test="syxinsurancefeel != null and syxinsurancefeel !='' ">
+				syxinsurancefeel=#{syxinsurancefeel},
+			</if>
+			<if test="jqxinsurancefeel != null and jqxinsurancefeel !='' ">
+				jqxinsurancefeel=#{jqxinsurancefeel},
+			</if>
+			<if test="taxfeel != null and taxfeel !='' ">
+				taxfeel=#{taxfeel},
+			</if>
+			<if test="jqxstartTime != null and jqxstartTime !='' ">
+				jqxstartTime=#{jqxstartTime},
+			</if>
+			<if test="jqxendTime != null and jqxendTime !='' ">
+				jqxendTime=#{jqxendTime},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insertInsuranceInfo">
+		INSERT INTO user_insurance_info(id, insurance_id,name,insuredamount,insurancepremium,isfranchise,subtotal,create_date,del_flag)
+		<foreach collection="infoList" item="infoitem" separator=" union all ">
+			SELECT getShortUuid(), #{id},#{infoitem.name},#{infoitem.insuredamount},#{infoitem.insurancepremium},#{infoitem.isfranchise},#{infoitem.subtotal},NOW(),0
+			<if test="dbName != 'mssql'">
+				FROM dual
+			</if>
+		</foreach>
+	</insert>
+
+	<!-- 修改测算信息 -->
+	<update id="updateMeasuresInfo">
+		UPDATE user_insurance SET 
+			measurestatus = #{measurestatus},
+			insurancefeel = #{insurancefeel},
+			update_date = NOW()
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		UPDATE user_insurance SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

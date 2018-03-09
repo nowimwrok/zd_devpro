@@ -1,0 +1,54 @@
+@charset "utf-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0 auto;
+	min-width: 320px;
+	background-color: #EBEBEB;
+	font-family: Helvetica, STHeiti STXihei, Microsoft JhengHei, Microsoft YaHei, Arial;
+}
+
+#carInfo {
+	text-align: left;
+	width: 80%;
+	margin-top: 3%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+p {
+	font-size: 1em;
+	color: gray;
+	line-height: 30px;
+}
+
+input,select {
+	width: 100%;
+	height: 35px;
+	font-size: 1em;
+	text-indent: 5px;
+	border: 1px solid #E0DDDD;
+	color: gray;
+}
+
+input:focus,select:focus {
+	outline-style: none;
+	border: 1px solid #F26522;
+	color: black;
+}
+
+#btnSearch {
+	-webkit-appearance: none;
+	margin-top: 30px;
+	text-align: center;
+	font-size: 1.2em;
+	height: 40px;
+	line-height: 40px;
+	color: #fff;
+	background-color: #F26522;
+	border-radius: 5px;
+}

@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.bid.BidinfoDao">
+
+    <sql id="bidinfoColumns">
+		a.id AS "id",
+		a.bidcode AS "bidcode",
+		a.goodsid AS "goods.id",
+		a.biduserid AS "biduser.id",
+		a.bidtitle AS "bidtitle",
+		a.paytype AS "paytype",
+		a.expectedprice AS "expectedprice",
+		a.isupbl AS "isupbl",
+		a.isbill AS "isbill",
+		a.bidstatus AS "bidstatus",
+		a.endtime AS "endtime",
+		date_format(a.endtime, '%Y-%m-%d %H:%i:%s') AS "endtimeFM",
+		date_format(a.publishtime, '%Y-%m-%d %H:%i:%s') AS "publishtimeFM",
+		a.publishtime AS "publishtime",
+		a.settlementtype AS "settlementtype",
+		a.settlementtime AS "settlementtime",
+		a.settlementperiod AS "settlementperiod",
+		a.biddingcount AS "biddingcount",
+		a.clickcount AS "clickcount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		 gds.goodsname          AS "goods.goodsname",
+          gds.goodstype          AS "goods.goodstype",
+          gds.gsoddtype          AS "goods.gsoddtype",
+          gds.transportway       AS "goods.transportway",
+          gds.cartype            AS "goods.cartype",
+          gds.carlength          AS "goods.carlength",
+          gds.lengthunit         AS "goods.lengthunit",
+          gds.freightvolume      AS "goods.freightvolume",
+          gds.residualvolume     AS "goods.residualvolume",
+          gds.freightunit        AS "goods.freightunit",
+          gds.piecenumber        AS "goods.piecenumber",
+          gds.stevedore          AS "goods.stevedore",
+          gds.packageway         AS "goods.packageway",
+          gds.worth              AS "goods.worth",
+          gds.expectedprice      AS "goods.expectedprice",
+          gds.sendtime           AS "goods.sendtime",
+          date_format(gds.sendtime, '%Y-%m-%d') AS "goods.ymdDate",
+          gds.arrivetime         AS "goods.arrivetime",
+          gds.tradestatus        AS "goods.tradestatus",
+          gds.effectdays         AS "goods.effectdays",
+          gds.datasource         AS "goods.datasource",
+          gds.scannum            AS "goods.scannum",
+          gds.praisenumber       AS "goods.praisenumber",
+          gds.ship_id            AS "goods.shipAddress.id",
+          gds.consign_id         AS "goods.consignAddress.id",
+          gds.create_by          AS "goods.createBy.id",
+          gds.create_date        AS "goods.createDate",
+          gds.update_by          AS "goods.updateBy.id",
+          gds.update_date        AS "goods.updateDate",
+          gds.remarks            AS "goods.remarks",
+          gds.del_flag           AS "goods.delFlag",
+          gds.quotecount         AS "goods.quotecount",
+		  ship.PROVINCE        AS 'goods.shipAddress.province',
+          ship.CITY            AS 'goods.shipAddress.city',
+          ship.DISTRICT        AS 'goods.shipAddress.district',
+          ship.ADDRESS         AS 'goods.shipAddress.address',
+          ship.LINKMAN         AS 'goods.shipAddress.linkman',
+          ship.LINKCOMPANY     AS 'goods.shipAddress.linkcompany',
+          ship.LINKMOBILE      AS 'goods.shipAddress.linkmobile',
+          ship.LINKTELPHONE    AS 'goods.shipAddress.linktelphone',
+          ship.LINKEMAIL       AS 'goods.shipAddress.linkemail',
+          consign.PROVINCE     AS 'goods.consignAddress.province',
+          consign.CITY         AS 'goods.consignAddress.city',
+          consign.DISTRICT     AS 'goods.consignAddress.district',
+          consign.ADDRESS      AS 'goods.consignAddress.address',
+          consign.LINKMAN      AS 'goods.consignAddress.linkman',
+          consign.LINKCOMPANY  AS 'goods.consignAddress.linkcompany',
+          consign.LINKMOBILE   AS 'goods.consignAddress.linkmobile',
+          consign.LINKTELPHONE AS 'goods.consignAddress.linktelphone',
+          consign.LINKEMAIL    AS 'goods.consignAddress.linkemail',
+          biduser.login_name AS "biduser.loginName",
+          biduser.phone AS "biduser.phone",
+          uinfo.status AS "biduser.userinfo.status",
+          uinfo.POINTLEVLE 	   AS "biduser.userinfo.pointlevle"
+	</sql>
+
+
+    <sql id="bidinfoJoins">
+		INNER JOIN sys_user biduser ON a.biduserid=biduser.id
+		INNER JOIN gds_goods gds ON a.goodsid=gds.id
+		LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = biduser.id
+		LEFT JOIN user_address ship ON gds.SHIP_ID = ship.ID
+        LEFT JOIN user_address consign ON gds.CONSIGN_ID = consign.ID
+	</sql>
+
+    <select id="get" resultType="bidinfo">
+        SELECT
+        <include refid="bidinfoColumns"/>
+        FROM bid_bidinfo a
+        <include refid="bidinfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="bidinfo">
+        SELECT
+        <include refid="bidinfoColumns"/>
+        FROM bid_bidinfo a
+        <include refid="bidinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="bidcode != null and bidcode != ''">
+                AND a.bidcode LIKE
+                <if test="dbName == 'oracle'">'%'||#{bidcode}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{bidcode}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{bidcode},'%')</if>
+            </if>
+            <if test="bidtitle != null and bidtitle != ''">
+                AND a.bidtitle LIKE
+                <if test="dbName == 'oracle'">'%'||#{bidtitle}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{bidtitle}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{bidtitle},'%')</if>
+            </if>
+            <if test="paytype != null and paytype != ''">
+                AND a.paytype = #{paytype}
+            </if>
+            <if test="isbill != null and isbill != ''">
+                AND a.isbill = #{isbill}
+            </if>
+            <if test="bidstatus != null and bidstatus != ''">
+                AND a.bidstatus = #{bidstatus}
+            </if>
+            <if test="biduser != null and biduser.id!=null and biduser.id != ''">
+                AND a.biduserid = #{biduser.id}
+            </if>
+
+            <if test="beginEndtime != null and endEndtime != null and beginEndtime != '' and endEndtime != ''">
+                AND a.endtime BETWEEN #{beginEndtime} AND #{endEndtime}
+            </if>
+            <if test="beginPublishtime != null and endPublishtime != null and beginPublishtime != '' and endPublishtime != ''">
+                AND a.publishtime BETWEEN #{beginPublishtime} AND #{endPublishtime}
+            </if>
+            <if test="goods != null and goods.shipAddress != null and goods.shipAddress.city != null and goods.shipAddress.city != '' ">
+                AND ship.city LIKE
+                <if test="dbName == 'oracle'">'%'||#{goods.shipAddress.city}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{goods.shipAddress.city}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{goods.shipAddress.city},'%')</if>
+            </if>
+            <if test="goods != null and goods.consignAddress != null and goods.consignAddress.city != null  and goods.consignAddress.city != '' ">
+                AND consign.city LIKE
+                <if test="dbName == 'oracle'">'%'||#{goods.consignAddress.city}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{goods.consignAddress.city}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{goods.consignAddress.city},'%')</if>
+            </if>
+            <if test="goods != null and goods.shipAddress != null and goods.shipAddress.province != null and goods.shipAddress.province != '' ">
+                AND ship.province LIKE
+                <if test="dbName == 'oracle'">'%'||#{goods.shipAddress.province}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{goods.shipAddress.province}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{goods.shipAddress.province},'%')</if>
+            </if>
+            <if test="goods != null and goods.consignAddress != null and goods.consignAddress.province != null  and goods.consignAddress.province != '' ">
+                AND consign.province LIKE
+                <if test="dbName == 'oracle'">'%'||#{goods.consignAddress.province}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{goods.consignAddress.province}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{goods.consignAddress.province},'%')</if>
+            </if>
+            <if test="goods!=null and  goods.goodsname != null  and goods.goodsname != '' ">
+                AND gds.goodsname LIKE
+                <if test="dbName == 'oracle'">'%'||#{goods.goodsname}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{goods.goodsname}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{goods.goodsname},'%')</if>
+            </if>
+            <if test="goods!=null and goods.cartype != null and goods.cartype != ''">
+				AND gds.cartype = #{goods.cartype}
+			</if>
+            <if test="goods!=null and goods.carlength != null and goods.carlength != ''">
+                AND gds.carlength = #{goods.carlength}
+            </if>
+            <if test="goods!=null and goods.beginCarlength != null and goods.beginCarlength != ''">
+                AND gds.carlength &gt;= #{goods.beginCarlength}
+            </if>
+            <if test="goods!=null and goods.endCarlength != null and goods.endCarlength != ''">
+                AND gds.carlength &lt;= #{goods.endCarlength}
+            </if>
+            <if test="goods!=null and goods.freightvolume != null and goods.freightvolume != ''">
+                AND gds.freightvolume = #{goods.freightvolume}
+            </if>
+            <if test="goods!=null and goods.beginFreightvolume != null and goods.beginFreightvolume != ''">
+                AND gds.freightvolume &gt;= #{goods.beginFreightvolume}
+            </if>
+            <if test="goods!=null and goods.endFreightvolume != null and goods.endFreightvolume != ''">
+                AND gds.freightvolume &lt;= #{goods.endFreightvolume}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            ORDER BY a.create_date DESC,a.BIDSTATUS ASC
+                <!-- ORDER BY a.publishtime DESC -->
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="bidinfo">
+        SELECT
+        <include refid="bidinfoColumns"/>
+        FROM bid_bidinfo a
+        <include refid="bidinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.publishtime DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <!-- 获取最新的三条数据显示在个人中心首页 -->
+    <select id="findNewBidList" resultType="bidinfo">
+        SELECT
+        <include refid="bidinfoColumns"/>
+        FROM bid_bidinfo a
+        <include refid="bidinfoJoins"/>
+        <where>
+            a.del_flag = '0' AND a.biduserid = #{userid}
+        </where>
+        ORDER BY a.publishtime DESC LIMIT 3
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="bidinfo">
+        INSERT INTO bid_bidinfo(
+
+        <if test="bidcode != null and bidcode !='' ">
+            bidcode,
+        </if>
+        <if test="goods.id != null and goods.id !='' ">
+            goodsid,
+        </if>
+        <if test="biduser.id != null and biduser.id !='' ">
+            biduserid,
+        </if>
+
+        <if test="bidtitle != null and bidtitle !='' ">
+            bidtitle,
+        </if>
+        <if test="paytype != null ">
+            paytype,
+        </if>
+        <if test="expectedprice != null and expectedprice !='' ">
+            expectedprice,
+        </if>
+        <if test="isbill != null ">
+            isbill,
+        </if>
+        <if test="isupbl != null ">
+            isupbl,
+        </if>
+        <if test="bidstatus != null ">
+            bidstatus,
+        </if>
+        <if test="endtime != null and endtime !='' ">
+            endtime,
+        </if>
+        <if test="publishtime != null and publishtime !='' ">
+            publishtime,
+        </if>
+        <if test="settlementtime != null and settlementtime !='' ">
+            settlementtime,
+        </if>
+        <if test="settlementperiod != null  ">
+            settlementperiod,
+        </if>
+        <if test="biddingcount != null and biddingcount !='' ">
+            biddingcount,
+        </if>
+        <if test="clickcount != null and clickcount !='' ">
+            clickcount,
+        </if>
+        <if test="settlementtype != null and settlementtype !='' ">
+            settlementtype,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+
+        id
+        ) VALUES (
+        <if test="bidcode != null and bidcode !='' ">
+            #{bidcode},
+        </if>
+        <if test="goods.id != null and goods.id !='' ">
+            #{goods.id},
+        </if>
+        <if test="biduser.id != null and biduser.id !='' ">
+            #{biduser.id},
+        </if>
+
+        <if test="bidtitle != null and bidtitle !='' ">
+            #{bidtitle},
+        </if>
+        <if test="paytype != null  ">
+            #{paytype},
+        </if>
+        <if test="expectedprice != null and expectedprice !='' ">
+            #{expectedprice},
+        </if>
+        <if test="isbill != null ">
+            #{isbill},
+        </if>
+        <if test="isupbl != null ">
+            #{isupbl},
+        </if>
+        <if test="bidstatus != null ">
+            #{bidstatus},
+        </if>
+        <if test="endtime != null and endtime !='' ">
+            #{endtime},
+        </if>
+        <if test="publishtime != null and publishtime !='' ">
+            #{publishtime},
+        </if>
+        <if test="settlementtime != null and settlementtime !='' ">
+            #{settlementtime},
+        </if>
+        <if test="settlementperiod != null  ">
+            #{settlementperiod},
+        </if>
+        <if test="biddingcount != null and biddingcount !='' ">
+            #{biddingcount},
+        </if>
+        <if test="clickcount != null and clickcount !='' ">
+            #{clickcount},
+        </if>
+        <if test="settlementtype != null and settlementtype !='' ">
+            #{settlementtype},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE bid_bidinfo SET
+        <if test="bidcode != null and bidcode !='' ">
+            bidcode = #{bidcode},
+        </if>
+        <if test="goods != null and goods.id != null and goods.id !='' ">
+            goodsid = #{goods.id},
+        </if>
+        <if test="biduser !=null and biduser.id != null and biduser.id !='' ">
+            biduserid = #{biduser.id},
+        </if>
+
+        <if test="bidtitle != null and bidtitle !='' ">
+            bidtitle = #{bidtitle},
+        </if>
+        <if test="paytype != null  ">
+            paytype = #{paytype},
+        </if>
+        <if test="expectedprice != null and expectedprice !='' ">
+            expectedprice = #{expectedprice},
+        </if>
+        <if test="isbill != null  ">
+            isbill = #{isbill},
+        </if>
+        <if test="isupbl != null  ">
+            isupbl = #{isupbl},
+        </if>
+        <if test="bidstatus != null  ">
+            bidstatus = #{bidstatus},
+        </if>
+        <if test="endtime != null and endtime !='' ">
+            endtime = #{endtime},
+        </if>
+        <if test="publishtime != null and publishtime !='' ">
+            publishtime = #{publishtime},
+        </if>
+        <if test="settlementtime != null and settlementtime !='' ">
+            settlementtime = #{settlementtime},
+        </if>
+        <if test="settlementperiod != null  ">
+            settlementperiod = #{settlementperiod},
+        </if>
+        <if test="settlementtype != null and settlementtype !='' ">
+            settlementtype = #{settlementtype},
+        </if>
+        <if test="biddingcount != null and biddingcount !='' ">
+            biddingcount = #{biddingcount},
+        </if>
+        <if test="clickcount != null and clickcount !='' ">
+            clickcount = #{clickcount},
+        </if>
+        <if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE bid_bidinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+    <!--获取每天的交易量-->
+    <select id="daynum" resultType="int">
+        SELECT count(0) num
+        FROM trade_orderinfo
+        WHERE date_format(CREATE_DATE,"%Y-%m-%d") = DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单-->
+    </select>
+</mapper>

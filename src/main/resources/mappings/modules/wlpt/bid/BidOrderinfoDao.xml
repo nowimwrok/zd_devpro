@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.bid.BidOrderinfoDao">
+
+    <sql id="bidOrderinfoColumns">
+		a.ID AS "id",
+  a.contractno AS "contractno",
+  a.bidinfoid AS "bidinfo.id",
+  bidinfo.BIDCODE AS "bidinfo.bidcode",
+  bidinfo.BIDSTATUS AS "bidinfo.bidstatus",
+  bidinfo.isupbl AS "bidinfo.isupbl",
+  bidinfo.bidtitle AS "bidinfo.bidtitle",
+  bidinfo.paytype AS "bidinfo.paytype",
+  bidinfo.GOODSID AS "bidinfo.goods.id",
+  bidinfo.BIDUSERID AS "bidinfo.biduser.id",
+  a.biddinginfoid AS "biddinginfo.id",
+  bidding.BIDDINGCODE    AS "biddinginfo.biddingcode",
+  bidding.biddingprice   AS "biddinginfo.biddingprice",
+  bidding.biddingstatus  AS "biddinginfo.biddingstatus",
+  bidding.guarantee      AS "biddinginfo.guarantee",
+  bidding.biddingmargin      AS "biddinginfo.biddingmargin",
+  bidding.isderate      AS "biddinginfo.isderate",
+  a.biduserid AS "biduser.id",
+  biduser.login_name AS "biduser.loginName",
+  biduser.phone AS "biduser.phone",
+  uinfo.POINTLEVLE 	   AS "biduser.userinfo.pointlevle",
+  biddinguser.login_name AS "biddinguser.loginName",
+  biddinguser.phone AS "biddinguser.phone",
+  a.biddinguserid AS "biddinguser.id",
+  a.contracttotal AS "contracttotal",
+  a.settlestatus AS "settlestatus",
+  a.ispayment AS "ispayment",
+  a.contractstatus AS "contractstatus",
+  a.create_by AS "createBy.id",
+    a.create_date AS "createDate",
+    a.update_by AS "updateBy.id",
+    a.update_date AS "updateDate",
+    a.remarks AS "remarks",
+    a.isAccount AS "isAccount",
+    a.del_flag AS "delFlag",
+    a.ispaycoin AS "ispaycoin",
+    a.isOnlinePay AS "isOnlinePay",
+    a.lineAmount AS "lineAmount",
+    a.webamount AS "webamount",
+    a.coinamount AS "coinamount"
+	</sql>
+
+    <sql id="bidOrderinfoJoins">
+		INNER JOIN bid_bidinfo bidinfo ON a.bidinfoid=bidinfo.id
+		INNER JOIN bid_biddinginfo bidding ON a.biddinginfoid=bidding.id
+		INNER JOIN sys_user biduser ON a.biduserid=biduser.id
+		LEFT JOIN sys_userinfo uinfo ON uinfo.user_id = biduser.id
+		INNER JOIN sys_user biddinguser ON a.biddinguserid=biddinguser.id
+	</sql>
+
+    <select id="get" resultType="BidOrderinfo">
+        SELECT
+        <include refid="bidOrderinfoColumns"/>
+        FROM bid_orderinfo a
+        <include refid="bidOrderinfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="BidOrderinfo">
+        SELECT
+        <include refid="bidOrderinfoColumns"/>
+        FROM bid_orderinfo a
+        <include refid="bidOrderinfoJoins"/>
+
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="contractno !=null and contractno!=''">
+                AND a.contractno LIKE
+                <if test="dbName == 'oracle'">'%'|| #{contractno}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+ #{contractno}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%', #{contractno},'%')</if>
+            </if>
+            <if test="searchinfo !=null and searchinfo!=''">
+                AND (a.contractno LIKE
+                <if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+                or bidinfo.bidcode LIKE
+                <if test="dbName == 'oracle'">'%'|| #{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+ #{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%', #{searchinfo},'%')</if>
+                )
+            </if>
+            <if test="bidinfo !=null and  bidinfo.id !=null and bidinfo.id!=''">
+                AND a.bidinfoid=#{bidinfo.id}
+            </if>
+            <if test="bidinfo !=null and bidinfo.bidcode !=null and bidinfo.bidcode!=''">
+                AND bidinfo.bidcode LIKE
+                <if test="dbName == 'oracle'">'%'|| #{bidinfo.bidcode}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+ #{bidinfo.bidcode}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%', #{bidinfo.bidcode},'%')</if>
+            </if>
+            <if test="bidinfo !=null and bidinfo.bidstatus !=null and bidinfo.bidstatus!=''">
+                AND bidinfo.BIDSTATUS=#{bidinfo.bidstatus}
+            </if>
+            <if test="bidinfo != null and bidinfo.isupbl !=null and bidinfo.isupbl!=''">
+                AND bidinfo.isupbl=#{bidinfo.isupbl}
+            </if>
+            <if test="biddinginfo != null and biddinginfo.id !=null and biddinginfo.id!=''">
+                AND biddinginfoid=#{biddinginfo.id}
+            </if>
+            <if test="biduser != null and biduser.id !=null and biduser.id!=''">
+                AND a.biduserid=#{biduser.id}
+            </if>
+            <if test="biddinguser != null and biddinguser.id !=null and biddinguser.id!=''">
+                AND a.biddinguser=#{biddinguser.id}
+            </if>
+            <if test="curUser !=null and curUser.id !=null and curUser.id!=''">
+                AND (a.biduserid =#{curUser.id} OR a.biddinguserid =#{curUser.id})
+            </if>
+            <if test="settlestatus !=null and settlestatus!=''">
+                AND a.settlestatus=#{settlestatus}
+            </if>
+            <if test="contracttotal !=null and contracttotal!=''">
+                AND a.contracttotal=#{contracttotal}
+            </if>
+            <if test="contractstatus !=null and contractstatus!=''">
+                AND a.contractstatus=#{contractstatus}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                order BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="BidOrderinfo">
+        SELECT
+        <include refid="bidOrderinfoColumns"/>
+        FROM bid_orderinfo a
+        <include refid="bidOrderinfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO bid_orderinfo(
+
+        <if test="contractno != null and contractno !='' ">
+            contractno,
+        </if>
+        <if test="bidinfo.id != null and bidinfo.id !='' ">
+            bidinfoid,
+        </if>
+        <if test="biddinginfo.id != null and biddinginfo.id !='' ">
+            biddinginfoid,
+        </if>
+        <if test="biduser.id != null and biduser.id !='' ">
+            biduserid,
+        </if>
+        <if test="biddinguser.id != null and biddinguser.id !='' ">
+            biddinguserid,
+        </if>
+        <if test="contracttotal != null and contracttotal !='' ">
+            contracttotal,
+        </if>
+        <if test="noticeinfo != null and noticeinfo !='' ">
+            noticeinfo,
+        </if>
+
+        <if test="settlestatus != null and settlestatus !='' ">
+            settlestatus,
+        </if>
+
+        <if test="ispayment != null and ispayment !='' ">
+            ispayment,
+        </if>
+        <if test="contractstatus != null and contractstatus !='' ">
+            contractstatus,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        <if test="isOnlinePay != null and isOnlinePay !='' ">
+            isOnlinePay,
+        </if>
+        <if test="lineAmount != null and lineAmount !='' ">
+            lineAmount,
+        </if>
+        <if test="ispaycoin != null and ispaycoin !='' ">
+            ispaycoin,
+        </if>
+        <if test="webamount != null and webamount !='' ">
+            webamount,
+        </if>
+        <if test="coinamount != null and coinamount !='' ">
+            coinamount,
+        </if>
+        <if test="isAccount != null and isAccount !='' ">
+            isAccount,
+        </if>
+        id
+        ) VALUES (
+
+        <if test="contractno != null and contractno !='' ">
+            #{contractno},
+        </if>
+        <if test="bidinfo.id != null and bidinfo.id !='' ">
+            #{bidinfo.id},
+        </if>
+        <if test="biddinginfo.id != null and biddinginfo.id !='' ">
+            #{biddinginfo.id},
+        </if>
+        <if test="biduser.id != null and biduser.id !='' ">
+            #{biduser.id},
+        </if>
+        <if test="biddinguser.id != null and biddinguser.id !='' ">
+            #{biddinguser.id},
+        </if>
+        <if test="contracttotal != null and contracttotal !='' ">
+            #{contracttotal},
+        </if>
+        <if test="noticeinfo != null and noticeinfo !='' ">
+            #{noticeinfo},
+        </if>
+
+        <if test="settlestatus != null and settlestatus !='' ">
+            #{settlestatus},
+        </if>
+
+        <if test="ispayment != null and ispayment !='' ">
+            #{ispayment},
+        </if>
+        <if test="contractstatus != null and contractstatus !='' ">
+            #{contractstatus},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        <if test="isOnlinePay != null and isOnlinePay !='' ">
+            #{isOnlinePay},
+        </if>
+        <if test="lineAmount != null and lineAmount !='' ">
+            #{lineAmount},
+        </if>
+        <if test="ispaycoin != null and ispaycoin !='' ">
+            #{ispaycoin},
+        </if>
+        <if test="webamount != null and webamount !='' ">
+            #{webamount},
+        </if>
+        <if test="coinamount != null and coinamount !='' ">
+            #{coinamount},
+        </if>
+        <if test="isAccount != null and isAccount !='' ">
+            #{isAccount},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE bid_orderinfo SET
+        <if test="contractno != null and contractno !='' ">
+            contractno = #{contractno},
+        </if>
+        <if test="bidinfo !=null and bidinfo.id != null and bidinfo.id !='' ">
+            bidinfoid = #{bidinfo.id},
+        </if>
+        <if test="biddinginfo != null and biddinginfo.id != null and biddinginfo.id !='' ">
+            biddinginfoid = #{biddinginfo.id},
+        </if>
+        <if test="biduser != null and biduser.id != null and biduser.id !='' ">
+            biduserid = #{biduser.id},
+        </if>
+        <if test="biddinguser!=null and biddinguser.id != null and biddinguser.id !='' ">
+            biddinguserid = #{biddinguser.id},
+        </if>
+        <if test="contracttotal != null and contracttotal !='' ">
+            contracttotal = #{contracttotal},
+        </if>
+        <if test="settlestatus != null and settlestatus !='' ">
+            settlestatus = #{settlestatus},
+        </if>
+        <if test="ispayment != null and ispayment !='' ">
+            ispayment = #{ispayment},
+        </if>
+        <if test="contractstatus != null and contractstatus !='' ">
+            contractstatus = #{contractstatus},
+        </if>
+        <if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+            update_by= #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date= #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks= #{remarks},
+        </if>
+        <if test="isOnlinePay != null and isOnlinePay !='' ">
+            isOnlinePay= #{isOnlinePay},
+        </if>
+        <if test="lineAmount != null and lineAmount !='' ">
+            lineAmount=#{lineAmount},
+        </if>
+        <if test="ispaycoin != null and ispaycoin !='' ">
+            ispaycoin=#{ispaycoin},
+        </if>
+        <if test="webamount != null and webamount !='' ">
+            webamount=#{webamount},
+        </if>
+        <if test="coinamount != null and coinamount !='' ">
+            coinamount=#{coinamount},
+        </if>
+        <if test="isAccount != null and isAccount !='' ">
+            isAccount=#{isAccount},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE bid_orderinfo SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <!-- 统计招标结算 -->
+    <select id="sumBidOrderinfo" resultType="BidOrderinfo" flushCache="true" useCache="false">
+        SELECT
+        SUM(a.contracttotal) AS "sumcontracttotal"
+        FROM bid_orderinfo a
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="biduser != null and biduser.id != null and biduser.id !='' ">
+                AND a.biduserid = #{biduser.id}
+            </if>
+            <if test="biddinguser!=null and biddinguser.id != null and biddinguser.id !='' ">
+                AND a.biddinguserid = #{biddinguser.id}
+            </if>
+            <if test="contractstatus != null and contractstatus !='' ">
+                AND a.contractstatus = #{contractstatus}
+            </if>
+            <if test="settlestatus != null and settlestatus !='' ">
+                AND a.settlestatus = #{settlestatus}
+            </if>
+            <if test="setttleSearch != null and setttleSearch !=''">
+                <if test="setttleSearch==1">
+                    AND a.settlestatus IN(4,5)
+                </if>
+                <if test="setttleSearch==2">
+                    AND a.settlestatus IN(0,1,2,3)
+                </if>
+            </if>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.create_date &lt;= #{endCreateDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="datalistPage" resultType="BidOrderinfo">
+        SELECT
+        bo.contractno AS "contractno",
+        bo.id AS "id",
+        bb.GOODSID AS "bidinfo.goods.id",
+        bb.BIDCODE AS "bidinfo.bidcode",
+        bo.CONTRACTSTATUS AS "contractstatus",
+        bo.SETTLESTATUS  AS "settlestatus",
+        bo.contracttotal AS "contracttotal",
+        bo.ispaycoin AS "ispaycoin",
+        bo.isOnlinePay AS "isOnlinePay",
+        bo.lineAmount AS "lineAmount",
+        bo.webamount AS "webamount",
+        bo.coinamount AS "coinamount",
+        bo.create_date AS "createDate",
+        bo.update_date AS "updateDate",
+        bo.biddinginfoid AS "biddinginfo.id",
+        biding.BIDDINGPRICE AS "biddinginfo.biddingprice",
+        biding.biddingstatus AS "biddinginfo.biddingstatus",
+        biding.guarantee AS "biddinginfo.guarantee",
+        biding.biddingmargin AS "biddinginfo.biddingmargin",
+        biding.isderate AS "biddinginfo.isderate",
+        su.login_Name AS "biduser.loginName",
+        su.PHONE AS "biduser.phone",
+        su2.login_Name AS "biddinguser.loginName",
+        su2.PHONE AS "biddinguser.phone",
+        IFNULL(a.TOTAL,0) AS "total",
+        IFNULL(a.QUANTITY,0) AS "quantity"
+        FROM
+        bid_orderinfo bo
+        INNER JOIN sys_user su ON su.ID = bo.BIDUSERID
+        INNER JOIN sys_user su2 ON su2.ID = bo.BIDDINGUSERID
+        INNER JOIN bid_bidinfo bb ON bo.BIDINFOID = bb.ID
+        LEFT JOIN bid_biddinginfo biding ON biding.ID=bo.BIDDINGINFOID
+        LEFT JOIN (
+        SELECT
+        blinfo.BIDGOODSID,
+        IFNULL(COUNT(blinfo.ID), 0) TOTAL,
+        IFNULL(SUM(blinfo.QUANTITY), 0) QUANTITY
+        FROM
+        bid_blinfo blinfo
+        WHERE
+        blinfo.TRADESTATUS >= 0
+        GROUP BY
+        blinfo.BIDGOODSID
+        ) a ON bb.GOODSID = a.BIDGOODSID
+
+        <where>
+            <if test="searchInfo != null and searchInfo != ''">
+                and
+                (su.login_Name LIKE CONCAT(CONCAT('%', #{searchInfo}),'%')
+                or
+                su.PHONE LIKE CONCAT(CONCAT('%', #{searchInfo}),'%')
+                or
+                su2.login_Name LIKE CONCAT(CONCAT('%', #{searchInfo}),'%')
+                or
+                su2.PHONE LIKE CONCAT(CONCAT('%', #{searchInfo}),'%'))
+            </if>
+            <if test="bidinfo != null and bidinfo.bidcode!=null and bidinfo.bidcode != ''">
+                AND bb.bidcode LIKE
+                <if test="dbName == 'oracle'">'%'||#{bidinfo.bidcode}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{bidinfo.bidcode}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{bidinfo.bidcode},'%')</if>
+            </if>
+            <if test="settlestatus != null and settlestatus !='' ">
+                and bo.SETTLESTATUS = #{settlestatus},
+            </if>
+            <if test="contractstatus != null and contractstatus !='' ">
+                AND bo.CONTRACTSTATUS = #{contractstatus}
+            </if>
+            <if test="biddinginfo != null and biddinginfo.guarantee != null and biddinginfo.guarantee !='' ">
+                AND biding.guarantee = #{biddinginfo.guarantee}
+            </if>
+
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND bo.create_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND bo.create_date &lt;= #{endCreateDate}
+            </if>
+        </where>
+
+    </select>
+    
+    <!--获取今天的竞标金额 -->
+    <select id="contracttotalNum" resultType="double">
+        SELECT  sum(contracttotal-lineAmount)
+        FROM bid_orderinfo
+        WHERE TO_DAYS(CREATE_DATE) = TO_DAYS(SYSDATE()) and biduserid = #{userid}
+    </select>
+    
+    <!--获取今天的竞标待结算金额   -->
+    <select id="weiNum" resultType="double">
+        SELECT  sum(contracttotal-lineAmount)
+        FROM bid_orderinfo
+        WHERE TO_DAYS(CREATE_DATE) = TO_DAYS(SYSDATE()) and biduserid = #{userid}
+        and settlestatus = 3
+    </select>
+    
+    <!--获取今天的竞标已结算金额  -->
+    <select id="yiNum" resultType="double">
+        SELECT  sum(contracttotal-lineAmount)
+        FROM bid_orderinfo
+        WHERE TO_DAYS(CREATE_DATE) = TO_DAYS(SYSDATE()) and biduserid = #{userid}
+        and (settlestatus = 4 or settlestatus = 5)
+    </select>
+
+    
+    <!--获取今天的待运输总吨数-->
+    <select id="daiNum" resultType="double">
+        SELECT  sum(gds.residualvolume)
+        FROM bid_orderinfo a
+        <include refid="bidOrderinfoJoins"/>
+        left join gds_goods gds on bidinfo.goodsid = gds.id
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.biddinguserid = #{userid}
+    </select>
+    
+    <!--获取今天的已运输总吨数-->
+    <select id="yunNum" resultType="double">
+        SELECT  sum(gds.freightvolume-gds.residualvolume)
+        FROM bid_orderinfo a
+        <include refid="bidOrderinfoJoins"/>
+        left join gds_goods gds on bidinfo.goodsid = gds.id
+        WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE()) and a.biddinguserid = #{userid}
+    </select>
+
+    <!--获取每天的交易量-->
+    <select id="daynum" resultType="int">
+        SELECT count(0) num
+        FROM bid_orderinfo
+        WHERE date_format(CREATE_DATE,"%Y-%m-%d") = DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单-->
+    </select>
+
+
+    <select id="findFinancialBidOrderList" resultType="BidOrderinfo">
+        select
+        a.ID AS "id",
+        su1.id AS "biduser.id",
+        su1.login_Name AS "biduser.loginName",
+        su1.PHONE AS "biduser.phone",
+        su2.id AS "biddinguser.id",
+        su2.login_Name AS "biddinguser.loginName",
+        su2.PHONE AS "biddinguser.phone",
+        a.CONTRACTSTATUS AS "contractstatus",
+        a.CONTRACTNO AS "contractno"
+        ,IFNULL(a.CONTRACTTOTAL,0) AS "contracttotal",
+        IFNULL(a.WEBAMOUNT,0) AS "webamount",
+        bidinfo.ID AS "bidinfo.id",
+        IFNULL(goods.FREIGHTVOLUME,0) AS "bidinfo.goods.freightvolume",
+        goods.ID AS "bidinfo.goods.id",
+        a.update_date AS "updateDate"
+        from bid_orderinfo a
+        LEFT JOIN sys_user su1 ON a.BIDUSERID = su1.id
+        LEFT JOIN sys_user su2 ON a.BIDDINGUSERID = su2.id
+        INNER JOIN bid_bidinfo bidinfo ON bidinfo.ID = a.BIDINFOID
+        INNER JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+        <where>
+            <if test="settlestatus != null and settlestatus !='' " >
+                <if test="settlestatus ==1 ">
+                    AND a.SETTLESTATUS = 0
+                </if>
+                <if test="settlestatus ==2 ">
+                    AND a.SETTLESTATUS in (1,2)
+                </if>
+                <if test="settlestatus ==3 ">
+                    AND a.SETTLESTATUS =3
+                </if>
+                <if test="settlestatus ==4 ">
+                    AND a.SETTLESTATUS in (4,5)
+                </if>
+            </if>
+            <if test="biduser != null and biduser.id != null and biduser.id !='' ">
+                AND a.BIDUSERID = #{biduser.id}
+            </if>
+            <if test="biddinguser != null and biddinguser.id != null and biddinguser.id !='' ">
+                AND a.BIDDINGUSERID = #{biddinguser.id}
+            </if>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.update_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.update_date &lt;= #{endCreateDate}
+            </if>
+        </where>
+        ORDER BY a.update_date DESC
+    </select>
+
+    <select id="findFinancialBidOrderExcel" resultType="com.thinkgem.jeesite.modules.wlpt.entity.vo.BidOrderinfoExcelVO">
+        select
+        a.ID AS "id",
+        <if test="biddinguser != null and biddinguser.id != null and biddinguser.id !='' ">
+        su1.login_Name AS "loginName",
+        su1.PHONE AS "phone",
+        </if>
+        <if test="biduser != null and biduser.id != null and biduser.id !='' ">
+        su2.login_Name AS "loginName",
+        su2.PHONE AS "phone",
+        </if>
+        a.CONTRACTSTATUS AS "contractstatus",
+        a.CONTRACTNO AS "contractno"
+        ,IFNULL(a.CONTRACTTOTAL,0) AS "contracttotal",
+        IFNULL(goods.FREIGHTVOLUME,0) AS "freightvolume",
+        date_format(a.update_date, '%Y-%m-%d') AS "createtime"
+        from bid_orderinfo a
+        LEFT JOIN sys_user su1 ON a.BIDUSERID = su1.id
+        LEFT JOIN sys_user su2 ON a.BIDDINGUSERID = su2.id
+        INNER JOIN bid_bidinfo bidinfo ON bidinfo.ID = a.BIDINFOID
+        INNER JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+        <where>
+            <if test="settlestatus != null and settlestatus !='' " >
+                <if test="settlestatus ==1 ">
+                    AND a.SETTLESTATUS = 0
+                </if>
+                <if test="settlestatus ==2 ">
+                    AND a.SETTLESTATUS in (1,2)
+                </if>
+                <if test="settlestatus ==3 ">
+                    AND a.SETTLESTATUS =3
+                </if>
+                <if test="settlestatus ==4 ">
+                    AND a.SETTLESTATUS in (4,5)
+                </if>
+            </if>
+            <if test="biduser != null and biduser.id != null and biduser.id !='' ">
+                AND a.BIDUSERID = #{biduser.id}
+            </if>
+            <if test="biddinguser != null and biddinguser.id != null and biddinguser.id !='' ">
+                AND a.BIDDINGUSERID = #{biddinguser.id}
+            </if>
+            <if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.update_date &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.update_date &lt;= #{endCreateDate}
+            </if>
+        </where>
+        ORDER BY a.update_date DESC
+    </select>
+
+    <select id="findFinancialBidOrderCount" resultType="com.thinkgem.jeesite.modules.wlpt.entity.statistics.StatisticsTradetype">
+        select
+        count(a.ID) AS "evercout",
+        sum(IFNULL(a.contracttotal,0)) AS "alltradmy",
+        sum(IFNULL(goods.FREIGHTVOLUME,0)) AS "allweight"
+        from bid_orderinfo a
+        LEFT JOIN sys_user su1 ON a.BIDUSERID = su1.id
+        LEFT JOIN sys_user su2 ON a.BIDDINGUSERID = su2.id
+        INNER JOIN bid_bidinfo bidinfo ON bidinfo.ID = a.BIDINFOID
+        INNER JOIN gds_goods goods ON bidinfo.GOODSID = goods.ID
+        <where>
+            <if test="orderstatus != null and orderstatus !='' " >
+                <if test="orderstatus ==1 ">
+                    AND a.SETTLESTATUS = 0
+                </if>
+                <if test="orderstatus ==2 ">
+                    AND a.SETTLESTATUS in (1,2)
+                </if>
+                <if test="orderstatus ==3 ">
+                    AND a.SETTLESTATUS =3
+                </if>
+                <if test="orderstatus ==4 ">
+                    AND a.SETTLESTATUS in (4,5)
+                </if>
+            </if>
+            <if test="type != null and type != '' ">
+
+                <if test="type==1 ">
+                    AND a.BIDDINGUSERID = #{userid}
+                </if>
+                <if test="type==2 ">
+                    AND a.BIDUSERID = #{userid}
+                </if>
+            </if>
+
+            <if test="beginDate != null and beginDate != '' ">
+                AND a.update_date &gt;= #{beginDate}
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                AND a.update_date &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserSettleDao">
+    
+	<sql id="userSettleColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.bidorder_id AS "bidorderId",
+		a.settlemoney AS "settlemoney",
+		a.settlestatus AS "settlestatus",
+		a.settletype AS "settletype",
+		a.settletime AS "settletime",
+		a.avalbecash AS "avalbecash",
+		a.cashmoney AS "cashmoney",
+		a.cashtime AS "cashtime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="userSettleJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="UserSettle">
+		SELECT
+			<include refid="userSettleColumns"/>
+		FROM user_settle a
+		<include refid="userSettleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findByCondition" resultType="UserSettle">
+		SELECT
+			<include refid="userSettleColumns"/>
+		FROM user_settle a
+		<include refid="userSettleJoins"/>
+		<where>
+			<if test="user.id != null and user.id !='' ">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="bidorderId != null and bidorderId !='' ">
+				AND a.bidorder_id = #{bidorderId}
+			</if>
+			<if test="settlemoney != null and settlemoney !='' ">
+				AND a.settlemoney = #{settlemoney}
+			</if>
+			<if test="settlestatus != null and settlestatus !='' ">
+				AND a.settlestatus = #{settlestatus}
+			</if>
+			<if test="settletype != null and settletype !='' ">
+				AND a.settletype = #{settletype}
+			</if>
+			<if test="settletime != null and settletime !='' ">
+				AND a.settletime = #{settletime}
+			</if>
+			<if test="avalbecash != null and avalbecash !='' ">
+				AND a.avalbecash = #{avalbecash}
+			</if>
+			<if test="cashmoney != null and cashmoney !='' ">
+				AND a.cashmoney = #{cashmoney}
+			</if>
+			<if test="cashtime != null and cashtime !='' ">
+				AND a.cashtime = #{cashtime}
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				AND a.remarks = #{remarks}
+			</if>
+        </where>
+	</select>
+	
+	<select id="findList" resultType="UserSettle">
+		SELECT 
+			<include refid="userSettleColumns"/>
+		FROM user_settle a
+		<include refid="userSettleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+
+			<if test="user.id != null and user.id !='' ">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="bidorderId != null and bidorderId !='' ">
+				AND a.bidorder_id = #{bidorderId}
+			</if>
+			<if test="settlemoney != null and settlemoney !='' ">
+				AND a.settlemoney = #{settlemoney}
+			</if>
+			<if test="settlestatus != null and settlestatus !='' ">
+				AND a.settlestatus = #{settlestatus}
+			</if>
+			<if test="settletype != null and settletype !='' ">
+				AND a.settletype = #{settletype}
+			</if>
+			<if test="settletime != null and settletime !='' ">
+				AND a.settletime = #{settletime}
+			</if>
+			<if test="avalbecash != null and avalbecash !='' ">
+				AND a.avalbecash = #{avalbecash}
+			</if>
+			<if test="cashmoney != null and cashmoney !='' ">
+				AND a.cashmoney = #{cashmoney}
+			</if>
+			<if test="cashtime != null and cashtime !='' ">
+				AND a.cashtime = #{cashtime}
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				AND a.remarks = #{remarks}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserSettle">
+		SELECT 
+			<include refid="userSettleColumns"/>
+		FROM user_settle a
+		<include refid="userSettleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_settle(
+
+		<if test="user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="bidorderId != null and bidorderId !='' ">
+			bidorder_id,
+		</if>
+		<if test="settlemoney != null and settlemoney !='' ">
+			settlemoney,
+		</if>
+		<if test="settlestatus != null and settlestatus !='' ">
+			settlestatus,
+		</if>
+		<if test="settletype != null and settletype !='' ">
+			settletype,
+		</if>
+		<if test="settletime != null and settletime !='' ">
+			settletime,
+		</if>
+		<if test="avalbecash != null and avalbecash !='' ">
+			avalbecash,
+		</if>
+		<if test="cashmoney != null and cashmoney !='' ">
+			cashmoney,
+		</if>
+		<if test="cashtime != null and cashtime !='' ">
+			cashtime,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="bidorderId != null and bidorderId !='' ">
+			#{bidorderId},
+		</if>
+		<if test="settlemoney != null and settlemoney !='' ">
+			#{settlemoney},
+		</if>
+		<if test="settlestatus != null and settlestatus !='' ">
+			#{settlestatus},
+		</if>
+		<if test="settletype != null and settletype !='' ">
+			#{settletype},
+		</if>
+		<if test="settletime != null and settletime !='' ">
+			#{settletime},
+		</if>
+		<if test="avalbecash != null and avalbecash !='' ">
+			#{avalbecash},
+		</if>
+		<if test="cashmoney != null and cashmoney !='' ">
+			#{cashmoney},
+		</if>
+		<if test="cashtime != null and cashtime !='' ">
+			#{cashtime},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_settle SET 	
+			<if test="user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="bidorderId != null and bidorderId !='' ">
+				bidorder_id = #{bidorderId},
+			</if>
+			<if test="settlemoney != null and settlemoney !='' ">
+				settlemoney = #{settlemoney},
+			</if>
+			<if test="settlestatus != null and settlestatus !='' ">
+				settlestatus = #{settlestatus},
+			</if>
+			<if test="settletype != null and settletype !='' ">
+				settletype = #{settletype},
+			</if>
+			<if test="settletime != null and settletime !='' ">
+				settletime = #{settletime},
+			</if>
+			<if test="avalbecash != null and avalbecash !='' ">
+				avalbecash = #{avalbecash},
+			</if>
+			<if test="cashmoney != null and cashmoney !='' ">
+				cashmoney = #{cashmoney},
+			</if>
+			<if test="cashtime != null and cashtime !='' ">
+				cashtime = #{cashtime},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_settle SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

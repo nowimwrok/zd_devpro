@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.comment.RatingscaleDao">
+    
+	<sql id="statisticsRatingscaleColumns">
+		a.id AS "id",
+		a.sellerid AS "user.id",
+		a.serviceattitudepoint AS "serviceattitudepoint",
+		a.transportationcostpoint AS "transportationcostpoint",
+		a.transportlimitationpoint AS "transportlimitationpoint",
+		a.goodssafetypoint AS "goodssafetypoint",
+		a.comprehensivepoint AS "comprehensivepoint",
+		a.serviceattitudetotallnumber AS "serviceattitudetotallnumber",
+		a.goodssafetylevel2num AS "goodssafetylevel2num",
+		a.transportlimitationtotalnumber AS "transportlimitationtotalnumber",
+		a.goodssafetytotalnumber AS "goodssafetytotalnumber",
+		a.serviceattitudelevel5num AS "serviceattitudelevel5num",
+		a.transportationcostlevel5num AS "transportationcostlevel5num",
+		a.transportlimitationlevel5num AS "transportlimitationlevel5num",
+		a.goodssafetylevel1num AS "goodssafetylevel1num",
+		a.transportationcosttotalnumber AS "transportationcosttotalnumber",
+		a.transportationcostlevel1num AS "transportationcostlevel1num",
+		a.transportationcostlevel2num AS "transportationcostlevel2num",
+		a.transportationcostlevel3num AS "transportationcostlevel3num",
+		a.transportationcostlevel4num AS "transportationcostlevel4num",
+		a.serviceattitudelevel1num AS "serviceattitudelevel1num",
+		a.transportlimitationlevel1num AS "transportlimitationlevel1num",
+		a.transportlimitationlevel2num AS "transportlimitationlevel2num",
+		a.transportlimitationlevel3num AS "transportlimitationlevel3num",
+		a.transportlimitationlevel4num AS "transportlimitationlevel4num",
+		a.serviceattitudelevel4num AS "serviceattitudelevel4num",
+		a.serviceattitudelevel3num AS "serviceattitudelevel3num",
+		a.serviceattitudelevel2num AS "serviceattitudelevel2num",
+		a.goodssafetylevel3num AS "goodssafetylevel3num",
+		a.goodssafetylevel4num AS "goodssafetylevel4num",
+		a.goodssafetylevel5num AS "goodssafetylevel5num"
+	</sql>
+	
+	<sql id="statisticsRatingscaleJoins">
+	</sql>
+    
+	<select id="get" resultType="Ratingscale">
+		SELECT
+			<include refid="statisticsRatingscaleColumns"/>
+		FROM statistics_ratingscale a
+		<include refid="statisticsRatingscaleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Ratingscale">
+		SELECT 
+			<include refid="statisticsRatingscaleColumns"/>
+		FROM statistics_ratingscale a
+		<include refid="statisticsRatingscaleJoins"/>
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.sellerid = #{user.id}
+			</if>
+			<if test="serviceattitudepoint != null and serviceattitudepoint != ''">
+				AND a.serviceattitudepoint = #{serviceattitudepoint}
+			</if>
+			<if test="transportationcostpoint != null and transportationcostpoint != ''">
+				AND a.transportationcostpoint = #{transportationcostpoint}
+			</if>
+			<if test="transportlimitationpoint != null and transportlimitationpoint != ''">
+				AND a.transportlimitationpoint = #{transportlimitationpoint}
+			</if>
+			<if test="goodssafetypoint != null and goodssafetypoint != ''">
+				AND a.goodssafetypoint = #{goodssafetypoint}
+			</if>
+			<if test="comprehensivepoint != null and comprehensivepoint != ''">
+				AND a.comprehensivepoint = #{comprehensivepoint}
+			</if>
+			<if test="serviceattitudetotallnumber != null and serviceattitudetotallnumber != ''">
+				AND a.serviceattitudetotallnumber = #{serviceattitudetotallnumber}
+			</if>
+			<if test="goodssafetylevel2num != null and goodssafetylevel2num != ''">
+				AND a.goodssafetylevel2num = #{goodssafetylevel2num}
+			</if>
+			<if test="transportlimitationtotalnumber != null and transportlimitationtotalnumber != ''">
+				AND a.transportlimitationtotalnumber = #{transportlimitationtotalnumber}
+			</if>
+			<if test="goodssafetytotalnumber != null and goodssafetytotalnumber != ''">
+				AND a.goodssafetytotalnumber = #{goodssafetytotalnumber}
+			</if>
+			<if test="serviceattitudelevel5num != null and serviceattitudelevel5num != ''">
+				AND a.serviceattitudelevel5num = #{serviceattitudelevel5num}
+			</if>
+			<if test="transportationcostlevel5num != null and transportationcostlevel5num != ''">
+				AND a.transportationcostlevel5num = #{transportationcostlevel5num}
+			</if>
+			<if test="transportlimitationlevel5num != null and transportlimitationlevel5num != ''">
+				AND a.transportlimitationlevel5num = #{transportlimitationlevel5num}
+			</if>
+			<if test="goodssafetylevel1num != null and goodssafetylevel1num != ''">
+				AND a.goodssafetylevel1num = #{goodssafetylevel1num}
+			</if>
+			<if test="transportationcosttotalnumber != null and transportationcosttotalnumber != ''">
+				AND a.transportationcosttotalnumber = #{transportationcosttotalnumber}
+			</if>
+			<if test="transportationcostlevel1num != null and transportationcostlevel1num != ''">
+				AND a.transportationcostlevel1num = #{transportationcostlevel1num}
+			</if>
+			<if test="transportationcostlevel2num != null and transportationcostlevel2num != ''">
+				AND a.transportationcostlevel2num = #{transportationcostlevel2num}
+			</if>
+			<if test="transportationcostlevel3num != null and transportationcostlevel3num != ''">
+				AND a.transportationcostlevel3num = #{transportationcostlevel3num}
+			</if>
+			<if test="transportationcostlevel4num != null and transportationcostlevel4num != ''">
+				AND a.transportationcostlevel4num = #{transportationcostlevel4num}
+			</if>
+			<if test="serviceattitudelevel1num != null and serviceattitudelevel1num != ''">
+				AND a.serviceattitudelevel1num = #{serviceattitudelevel1num}
+			</if>
+			<if test="transportlimitationlevel1num != null and transportlimitationlevel1num != ''">
+				AND a.transportlimitationlevel1num = #{transportlimitationlevel1num}
+			</if>
+			<if test="transportlimitationlevel2num != null and transportlimitationlevel2num != ''">
+				AND a.transportlimitationlevel2num = #{transportlimitationlevel2num}
+			</if>
+			<if test="transportlimitationlevel3num != null and transportlimitationlevel3num != ''">
+				AND a.transportlimitationlevel3num = #{transportlimitationlevel3num}
+			</if>
+			<if test="transportlimitationlevel4num != null and transportlimitationlevel4num != ''">
+				AND a.transportlimitationlevel4num = #{transportlimitationlevel4num}
+			</if>
+			<if test="serviceattitudelevel4num != null and serviceattitudelevel4num != ''">
+				AND a.serviceattitudelevel4num = #{serviceattitudelevel4num}
+			</if>
+			<if test="serviceattitudelevel3num != null and serviceattitudelevel3num != ''">
+				AND a.serviceattitudelevel3num = #{serviceattitudelevel3num}
+			</if>
+			<if test="serviceattitudelevel2num != null and serviceattitudelevel2num != ''">
+				AND a.serviceattitudelevel2num = #{serviceattitudelevel2num}
+			</if>
+			<if test="goodssafetylevel3num != null and goodssafetylevel3num != ''">
+				AND a.goodssafetylevel3num = #{goodssafetylevel3num}
+			</if>
+			<if test="goodssafetylevel4num != null and goodssafetylevel4num != ''">
+				AND a.goodssafetylevel4num = #{goodssafetylevel4num}
+			</if>
+			<if test="goodssafetylevel5num != null and goodssafetylevel5num != ''">
+				AND a.goodssafetylevel5num = #{goodssafetylevel5num}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Ratingscale">
+		SELECT 
+			<include refid="statisticsRatingscaleColumns"/>
+		FROM statistics_ratingscale a
+		<include refid="statisticsRatingscaleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_ratingscale(
+
+		<if test="user != null and user.id != null and user.id != ''">
+			sellerid,
+		</if>
+		<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+			serviceattitudepoint,
+		</if>
+		<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+			transportationcostpoint,
+		</if>
+		<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+			transportlimitationpoint,
+		</if>
+		<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+			goodssafetypoint,
+		</if>
+		<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+			comprehensivepoint,
+		</if>
+		<if test="serviceattitudetotallnumber != null and serviceattitudetotallnumber !='' ">
+			serviceattitudetotallnumber,
+		</if>
+		<if test="goodssafetylevel2num != null and goodssafetylevel2num !='' ">
+			goodssafetylevel2num,
+		</if>
+		<if test="transportlimitationtotalnumber != null and transportlimitationtotalnumber !='' ">
+			transportlimitationtotalnumber,
+		</if>
+		<if test="goodssafetytotalnumber != null and goodssafetytotalnumber !='' ">
+			goodssafetytotalnumber,
+		</if>
+		<if test="serviceattitudelevel5num != null and serviceattitudelevel5num !='' ">
+			serviceattitudelevel5num,
+		</if>
+		<if test="transportationcostlevel5num != null and transportationcostlevel5num !='' ">
+			transportationcostlevel5num,
+		</if>
+		<if test="transportlimitationlevel5num != null and transportlimitationlevel5num !='' ">
+			transportlimitationlevel5num,
+		</if>
+		<if test="goodssafetylevel1num != null and goodssafetylevel1num !='' ">
+			goodssafetylevel1num,
+		</if>
+		<if test="transportationcosttotalnumber != null and transportationcosttotalnumber !='' ">
+			transportationcosttotalnumber,
+		</if>
+		<if test="transportationcostlevel1num != null and transportationcostlevel1num !='' ">
+			transportationcostlevel1num,
+		</if>
+		<if test="transportationcostlevel2num != null and transportationcostlevel2num !='' ">
+			transportationcostlevel2num,
+		</if>
+		<if test="transportationcostlevel3num != null and transportationcostlevel3num !='' ">
+			transportationcostlevel3num,
+		</if>
+		<if test="transportationcostlevel4num != null and transportationcostlevel4num !='' ">
+			transportationcostlevel4num,
+		</if>
+		<if test="serviceattitudelevel1num != null and serviceattitudelevel1num !='' ">
+			serviceattitudelevel1num,
+		</if>
+		<if test="transportlimitationlevel1num != null and transportlimitationlevel1num !='' ">
+			transportlimitationlevel1num,
+		</if>
+		<if test="transportlimitationlevel2num != null and transportlimitationlevel2num !='' ">
+			transportlimitationlevel2num,
+		</if>
+		<if test="transportlimitationlevel3num != null and transportlimitationlevel3num !='' ">
+			transportlimitationlevel3num,
+		</if>
+		<if test="transportlimitationlevel4num != null and transportlimitationlevel4num !='' ">
+			transportlimitationlevel4num,
+		</if>
+		<if test="serviceattitudelevel4num != null and serviceattitudelevel4num !='' ">
+			serviceattitudelevel4num,
+		</if>
+		<if test="serviceattitudelevel3num != null and serviceattitudelevel3num !='' ">
+			serviceattitudelevel3num,
+		</if>
+		<if test="serviceattitudelevel2num != null and serviceattitudelevel2num !='' ">
+			serviceattitudelevel2num,
+		</if>
+		<if test="goodssafetylevel3num != null and goodssafetylevel3num !='' ">
+			goodssafetylevel3num,
+		</if>
+		<if test="goodssafetylevel4num != null and goodssafetylevel4num !='' ">
+			goodssafetylevel4num,
+		</if>
+		<if test="goodssafetylevel5num != null and goodssafetylevel5num !='' ">
+			goodssafetylevel5num,
+		</if>
+			id
+		) VALUES (
+
+		<if test="user != null and user.id != null and user.id != ''">
+			#{user.id},
+		</if>
+		<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+			#{serviceattitudepoint},
+		</if>
+		<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+			#{transportationcostpoint},
+		</if>
+		<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+			#{transportlimitationpoint},
+		</if>
+		<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+			#{goodssafetypoint},
+		</if>
+		<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+			#{comprehensivepoint},
+		</if>
+		<if test="serviceattitudetotallnumber != null and serviceattitudetotallnumber !='' ">
+			#{serviceattitudetotallnumber},
+		</if>
+		<if test="goodssafetylevel2num != null and goodssafetylevel2num !='' ">
+			#{goodssafetylevel2num},
+		</if>
+		<if test="transportlimitationtotalnumber != null and transportlimitationtotalnumber !='' ">
+			#{transportlimitationtotalnumber},
+		</if>
+		<if test="goodssafetytotalnumber != null and goodssafetytotalnumber !='' ">
+			#{goodssafetytotalnumber},
+		</if>
+		<if test="serviceattitudelevel5num != null and serviceattitudelevel5num !='' ">
+			#{serviceattitudelevel5num},
+		</if>
+		<if test="transportationcostlevel5num != null and transportationcostlevel5num !='' ">
+			#{transportationcostlevel5num},
+		</if>
+		<if test="transportlimitationlevel5num != null and transportlimitationlevel5num !='' ">
+			#{transportlimitationlevel5num},
+		</if>
+		<if test="goodssafetylevel1num != null and goodssafetylevel1num !='' ">
+			#{goodssafetylevel1num},
+		</if>
+		<if test="transportationcosttotalnumber != null and transportationcosttotalnumber !='' ">
+			#{transportationcosttotalnumber},
+		</if>
+		<if test="transportationcostlevel1num != null and transportationcostlevel1num !='' ">
+			#{transportationcostlevel1num},
+		</if>
+		<if test="transportationcostlevel2num != null and transportationcostlevel2num !='' ">
+			#{transportationcostlevel2num},
+		</if>
+		<if test="transportationcostlevel3num != null and transportationcostlevel3num !='' ">
+			#{transportationcostlevel3num},
+		</if>
+		<if test="transportationcostlevel4num != null and transportationcostlevel4num !='' ">
+			#{transportationcostlevel4num},
+		</if>
+		<if test="serviceattitudelevel1num != null and serviceattitudelevel1num !='' ">
+			#{serviceattitudelevel1num},
+		</if>
+		<if test="transportlimitationlevel1num != null and transportlimitationlevel1num !='' ">
+			#{transportlimitationlevel1num},
+		</if>
+		<if test="transportlimitationlevel2num != null and transportlimitationlevel2num !='' ">
+			#{transportlimitationlevel2num},
+		</if>
+		<if test="transportlimitationlevel3num != null and transportlimitationlevel3num !='' ">
+			#{transportlimitationlevel3num},
+		</if>
+		<if test="transportlimitationlevel4num != null and transportlimitationlevel4num !='' ">
+			#{transportlimitationlevel4num},
+		</if>
+		<if test="serviceattitudelevel4num != null and serviceattitudelevel4num !='' ">
+			#{serviceattitudelevel4num},
+		</if>
+		<if test="serviceattitudelevel3num != null and serviceattitudelevel3num !='' ">
+			#{serviceattitudelevel3num},
+		</if>
+		<if test="serviceattitudelevel2num != null and serviceattitudelevel2num !='' ">
+			#{serviceattitudelevel2num},
+		</if>
+		<if test="goodssafetylevel3num != null and goodssafetylevel3num !='' ">
+			#{goodssafetylevel3num},
+		</if>
+		<if test="goodssafetylevel4num != null and goodssafetylevel4num !='' ">
+			#{goodssafetylevel4num},
+		</if>
+		<if test="goodssafetylevel5num != null and goodssafetylevel5num !='' ">
+			#{goodssafetylevel5num},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_ratingscale SET 	
+
+			<if test="user != null and user.id != null and user.id != ''">
+				sellerid = #{user.id},
+			</if>
+			<if test="serviceattitudepoint != null and serviceattitudepoint !='' ">
+				serviceattitudepoint = #{serviceattitudepoint},
+			</if>
+			<if test="transportationcostpoint != null and transportationcostpoint !='' ">
+				transportationcostpoint = #{transportationcostpoint},
+			</if>
+			<if test="transportlimitationpoint != null and transportlimitationpoint !='' ">
+				transportlimitationpoint = #{transportlimitationpoint},
+			</if>
+			<if test="goodssafetypoint != null and goodssafetypoint !='' ">
+				goodssafetypoint = #{goodssafetypoint},
+			</if>
+			<if test="comprehensivepoint != null and comprehensivepoint !='' ">
+				comprehensivepoint = #{comprehensivepoint},
+			</if>
+			<if test="serviceattitudetotallnumber != null and serviceattitudetotallnumber !='' ">
+				serviceattitudetotallnumber = #{serviceattitudetotallnumber},
+			</if>
+			<if test="goodssafetylevel2num != null and goodssafetylevel2num !='' ">
+				goodssafetylevel2num = #{goodssafetylevel2num},
+			</if>
+			<if test="transportlimitationtotalnumber != null and transportlimitationtotalnumber !='' ">
+				transportlimitationtotalnumber = #{transportlimitationtotalnumber},
+			</if>
+			<if test="goodssafetytotalnumber != null and goodssafetytotalnumber !='' ">
+				goodssafetytotalnumber = #{goodssafetytotalnumber},
+			</if>
+			<if test="serviceattitudelevel5num != null and serviceattitudelevel5num !='' ">
+				serviceattitudelevel5num = #{serviceattitudelevel5num},
+			</if>
+			<if test="transportationcostlevel5num != null and transportationcostlevel5num !='' ">
+				transportationcostlevel5num = #{transportationcostlevel5num},
+			</if>
+			<if test="transportlimitationlevel5num != null and transportlimitationlevel5num !='' ">
+				transportlimitationlevel5num = #{transportlimitationlevel5num},
+			</if>
+			<if test="goodssafetylevel1num != null and goodssafetylevel1num !='' ">
+				goodssafetylevel1num = #{goodssafetylevel1num},
+			</if>
+			<if test="transportationcosttotalnumber != null and transportationcosttotalnumber !='' ">
+				transportationcosttotalnumber = #{transportationcosttotalnumber},
+			</if>
+			<if test="transportationcostlevel1num != null and transportationcostlevel1num !='' ">
+				transportationcostlevel1num = #{transportationcostlevel1num},
+			</if>
+			<if test="transportationcostlevel2num != null and transportationcostlevel2num !='' ">
+				transportationcostlevel2num = #{transportationcostlevel2num},
+			</if>
+			<if test="transportationcostlevel3num != null and transportationcostlevel3num !='' ">
+				transportationcostlevel3num = #{transportationcostlevel3num},
+			</if>
+			<if test="transportationcostlevel4num != null and transportationcostlevel4num !='' ">
+				transportationcostlevel4num = #{transportationcostlevel4num},
+			</if>
+			<if test="serviceattitudelevel1num != null and serviceattitudelevel1num !='' ">
+				serviceattitudelevel1num = #{serviceattitudelevel1num},
+			</if>
+			<if test="transportlimitationlevel1num != null and transportlimitationlevel1num !='' ">
+				transportlimitationlevel1num = #{transportlimitationlevel1num},
+			</if>
+			<if test="transportlimitationlevel2num != null and transportlimitationlevel2num !='' ">
+				transportlimitationlevel2num = #{transportlimitationlevel2num},
+			</if>
+			<if test="transportlimitationlevel3num != null and transportlimitationlevel3num !='' ">
+				transportlimitationlevel3num = #{transportlimitationlevel3num},
+			</if>
+			<if test="transportlimitationlevel4num != null and transportlimitationlevel4num !='' ">
+				transportlimitationlevel4num = #{transportlimitationlevel4num},
+			</if>
+			<if test="serviceattitudelevel4num != null and serviceattitudelevel4num !='' ">
+				serviceattitudelevel4num = #{serviceattitudelevel4num},
+			</if>
+			<if test="serviceattitudelevel3num != null and serviceattitudelevel3num !='' ">
+				serviceattitudelevel3num = #{serviceattitudelevel3num},
+			</if>
+			<if test="serviceattitudelevel2num != null and serviceattitudelevel2num !='' ">
+				serviceattitudelevel2num = #{serviceattitudelevel2num},
+			</if>
+			<if test="goodssafetylevel3num != null and goodssafetylevel3num !='' ">
+				goodssafetylevel3num = #{goodssafetylevel3num},
+			</if>
+			<if test="goodssafetylevel4num != null and goodssafetylevel4num !='' ">
+				goodssafetylevel4num = #{goodssafetylevel4num},
+			</if>
+			<if test="goodssafetylevel5num != null and goodssafetylevel5num !='' ">
+				goodssafetylevel5num = #{goodssafetylevel5num},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_ratingscale
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

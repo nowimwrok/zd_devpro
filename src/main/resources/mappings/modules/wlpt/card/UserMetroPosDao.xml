@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.card.UserMetroPosDao">
+    
+	<sql id="userMetroPosColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.member_name AS "memberName",
+		a.store_name AS "storeName",
+		a.useraccount AS "useraccount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u2.name AS "user.name",
+		u2.phone AS "user.phone",
+		u2.login_name AS "user.loginName"
+	</sql>
+	
+	<sql id="userMetroPosJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="UserMetroPos">
+		SELECT
+			<include refid="userMetroPosColumns"/>
+		FROM user_metro_pos a
+		<include refid="userMetroPosJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getMetroPosInfo" resultType="UserMetroPos">
+		SELECT
+			<include refid="userMetroPosColumns"/>
+		FROM user_metro_pos a
+		<include refid="userMetroPosJoins"/>
+		WHERE a.useraccount = #{useraccount}
+		limit 1
+	</select>
+
+	<select id="findList" resultType="UserMetroPos">
+		SELECT 
+			<include refid="userMetroPosColumns"/>
+		FROM user_metro_pos a
+		<include refid="userMetroPosJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="memberName != null and memberName != ''">
+				AND a.member_name = #{memberName}
+			</if>
+			<if test="storeName != null and storeName != ''">
+				AND a.store_name = #{storeName}
+			</if>
+			<if test="useraccount != null and useraccount != ''">
+				AND a.useraccount = #{useraccount}
+			</if>
+			<if test="user != null and user.id != null and user.id !='' ">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="searchinfo != null and searchinfo != ''">
+				AND (a.member_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.store_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				a.useraccount LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				OR
+				u2.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+				)
+				
+			</if>
+			<if test="beginOperateDate !=null and beginOperateDate !=''">
+				and a.create_date &gt;= #{beginOperateDate}
+			</if>
+			<if test="endOperateDate !=null and endOperateDate !=''">
+				and a.create_date &lt;= #{endOperateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserMetroPos">
+		SELECT 
+			<include refid="userMetroPosColumns"/>
+		FROM user_metro_pos a
+		<include refid="userMetroPosJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_metro_pos(
+
+		<if test="user != null and user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="memberName != null and memberName !='' ">
+			member_name,
+		</if>
+		<if test="storeName != null and storeName !='' ">
+			store_name,
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			useraccount,
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="user != null and user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="memberName != null and memberName !='' ">
+			#{memberName},
+		</if>
+		<if test="storeName != null and storeName !='' ">
+			#{storeName},
+		</if>
+		<if test="useraccount != null and useraccount !='' ">
+			#{useraccount},
+		</if>
+		<if test="createBy != null and createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_metro_pos SET 	
+			<if test="user != null and user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="memberName != null and memberName !='' ">
+				member_name = #{memberName},
+			</if>
+			<if test="storeName != null and storeName !='' ">
+				store_name = #{storeName},
+			</if>
+			<if test="useraccount != null and useraccount !='' ">
+				useraccount = #{useraccount},
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_metro_pos SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

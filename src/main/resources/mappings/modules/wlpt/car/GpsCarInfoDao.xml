@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.GpsCarInfoDao">
+
+    <sql id="gpsCarInfoColumns">
+		a.id AS "id",
+		a.tid AS "tid",
+		a.tname AS "tname",
+		a.cid AS "cid",
+		a.cname AS "cname",
+		a.ckey AS "ckey",
+		loc.id                                                  AS "carLocs.id",
+          loc.name                                                AS "carLocs.name",
+          loc.mobile                                              AS "carLocs.mobile",
+          FROM_UNIXTIME(loc.recvtime / 1000, '%Y-%m-%d %H:%i:%s') AS "carLocs.formatrecvtime",
+          FROM_UNIXTIME(loc.gpstime / 1000, '%Y-%m-%d %H:%i:%s')  AS "carLocs.formatgpstime",
+          loc.recvtime                                            AS "carLocs.recvtime",
+          loc.gpstime                                             AS "carLocs.gpstime",
+          loc.lat                                                 AS "carLocs.lat",
+          loc.lng                                                 AS "carLocs.lng",
+          loc.lat_xz                                              AS "carLocs.latXz",
+          loc.lng_xz                                              AS "carLocs.lngXz",
+          loc.state                                               AS "carLocs.state",
+          loc.speed                                               AS "carLocs.speed",
+          loc.direct                                              AS "carLocs.direct",
+          loc.temp                                                AS "carLocs.temp",
+          loc.oil                                                 AS "carLocs.oil",
+          loc.distance                                            AS "carLocs.distance",
+          loc.totaldis                                            AS "carLocs.totaldis",
+          loc.av                                                  AS "carLocs.av",
+          loc.info                                                AS "carLocs.info"
+	</sql>
+
+    <sql id="gpsCarInfoJoins">
+        LEFT JOIN gps_car_locs loc ON a.cname = loc.name
+    </sql>
+
+    <select id="get" resultType="GpsCarInfo">
+        SELECT
+        <include refid="gpsCarInfoColumns"/>
+        FROM gps_car_infos a
+        <include refid="gpsCarInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GpsCarInfo">
+        SELECT
+        <include refid="gpsCarInfoColumns"/>
+        FROM gps_car_infos a
+        <include refid="gpsCarInfoJoins"/>
+        <where>
+
+            <if test="tid != null and tid != ''">
+                AND a.tid = #{tid}
+            </if>
+            <if test="tname != null and tname != ''">
+                AND a.tname = #{tname}
+            </if>
+            <if test="cid != null and cid != ''">
+                AND a.cid = #{cid}
+            </if>
+            <if test="cname != null and cname != ''">
+                AND a.cname = #{cname}
+            </if>
+            <if test="ckey != null and ckey != ''">
+                AND a.ckey = #{ckey}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findByCondition" resultType="GpsCarInfo">
+        SELECT
+        <include refid="gpsCarInfoColumns"/>
+        FROM gps_car_infos a
+        <include refid="gpsCarInfoJoins"/>
+        <where>
+
+            <if test="tid != null and tid != ''">
+                AND a.tid = #{tid}
+            </if>
+            <if test="tname != null and tname != ''">
+                AND a.tname = #{tname}
+            </if>
+            <if test="cid != null and cid != ''">
+                AND a.cid = #{cid}
+            </if>
+            <if test="cname != null and cname != ''">
+                AND a.cname = #{cname}
+            </if>
+            <if test="ckey != null and ckey != ''">
+                AND a.ckey = #{ckey}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="GpsCarInfo">
+        SELECT
+        <include refid="gpsCarInfoColumns"/>
+        FROM gps_car_infos a
+        <include refid="gpsCarInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO gps_car_infos(
+
+        <if test="tid != null and tid !='' ">
+            tid,
+        </if>
+        <if test="tname != null and tname !='' ">
+            tname,
+        </if>
+        <if test="cid != null and cid !='' ">
+            cid,
+        </if>
+        <if test="cname != null and cname !='' ">
+            cname,
+        </if>
+        <if test="ckey != null and ckey !='' ">
+            ckey,
+        </if>
+        id
+        ) VALUES (
+        <if test="tid != null and tid !='' ">
+            #{tid},
+        </if>
+        <if test="tname != null and tname !='' ">
+            #{tname},
+        </if>
+        <if test="cid != null and cid !='' ">
+            #{cid},
+        </if>
+        <if test="cname != null and cname !='' ">
+            #{cname},
+        </if>
+        <if test="ckey != null and ckey !='' ">
+            #{ckey},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE gps_car_infos SET
+        <if test="tid != null and tid !='' ">
+            tid = #{tid},
+        </if>
+        <if test="tname != null and tname !='' ">
+            tname = #{tname},
+        </if>
+        <if test="cid != null and cid !='' ">
+            cid = #{cid},
+        </if>
+        <if test="cname != null and cname !='' ">
+            cname = #{cname},
+        </if>
+        <if test="ckey != null and ckey !='' ">
+            ckey = #{ckey},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+    <!-- 查询车辆信息 -->
+    <select id="findByGroup" resultType="GpsCarInfo">
+        SELECT
+        <include refid="gpsCarInfoColumns"/>
+        FROM gps_car_infos a
+        <include refid="gpsCarInfoJoins"/>
+        where
+        a.cname in
+        <foreach item="item" index="index" collection="array" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <update id="delete">
+		DELETE FROM gps_car_infos
+		WHERE id = #{id}
+	</update>
+
+</mapper>

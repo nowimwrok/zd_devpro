@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserStatisticsDao">
+    
+	<sql id="userStatisticsColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.accruelogincount AS "accruelogincount",
+		a.continuelogincount AS "continuelogincount",
+		a.tradeordercount AS "tradeordercount",
+		a.successtrade AS "successtrade",
+		a.canceltrade AS "canceltrade",
+		a.judgetrade AS "judgetrade",
+		a.goodjudge AS "goodjudge",
+		a.middlejudge AS "middlejudge",
+		a.badjudge AS "badjudge",
+		a.rechargemoney AS "rechargemoney",
+		a.pubgodscount AS "pubgodscount",
+		a.quotecount AS "quotecount",
+		a.cancelgodscount AS "cancelgodscount",
+		a.addcarcount AS "addcarcount",
+		a.pubbidcount AS "pubbidcount",
+		a.cancelbidcount AS "cancelbidcount",
+		a.biddingcount AS "biddingcount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.daysWithoutLogin   AS "daysWithoutLogin", 
+		u2.name AS "user.name",
+		u2.login_name AS "user.loginName",
+		u2.phone AS "user.phone"
+	</sql>
+
+	<sql id="uinfoColumns">
+		  a.id                 AS "id",
+		  a.user_id            AS "user.id",
+		  a.accruelogincount   AS "accruelogincount",
+		  a.continuelogincount AS "continuelogincount",
+		  a.tradeordercount    AS "tradeordercount",
+		  a.successtrade       AS "successtrade",
+		  a.canceltrade        AS "canceltrade",
+		  a.judgetrade         AS "judgetrade",
+		  a.goodjudge          AS "goodjudge",
+		  a.middlejudge        AS "middlejudge",
+		  a.badjudge           AS "badjudge",
+		  a.rechargemoney      AS "rechargemoney",
+		  a.pubgodscount       AS "pubgodscount",
+		  a.quotecount         AS "quotecount",
+		  a.cancelgodscount    AS "cancelgodscount",
+		  a.addcarcount        AS "addcarcount",
+		  a.pubbidcount        AS "pubbidcount",
+		  a.cancelbidcount     AS "cancelbidcount",
+		  a.biddingcount       AS "biddingcount",
+		  a.create_by          AS "createBy.id",
+		  a.create_date        AS "createDate",
+		  a.update_by          AS "updateBy.id",
+		  a.update_date        AS "updateDate",
+		  a.remarks            AS "remarks",
+		  a.del_flag           AS "delFlag",
+		  a.daysWithoutLogin   AS "daysWithoutLogin", 
+		  uif.ID               AS "userinfo.id",
+		  uif.QQ               AS "userinfo.qq",
+		  uif.TELPHONE         AS "userinfo.telphone",
+		  uif.OPENID           AS "userinfo.openid",
+		  uif.SEX              AS "userinfo.sex",
+		  uif.USER_ID          AS "userinfo.user.id",
+		  uif.STATUS           AS "userinfo.status",
+		  uif.COMPANYNAME      AS "userinfo.companyname",
+		  uif.COMPANY_ID       AS "userinfo.userCompany.id",
+		  uif.COMPANY_ID       AS "user.userCompany.id",
+		  uif.COMPANYNAME      AS "user.userCompany.companyname",
+		  uif.ASSOCIATED_ID    AS "userinfo.associatedId",
+		  uif.POINT            AS "userinfo.point",
+		  uif.POINTLEVLE       AS "userinfo.pointlevle",
+		  uif.MEMBERLEVLE      AS "userinfo.memberlevle",
+		  upur.GUARANTEEMONE   AS "guaranteemone",
+		  sr.name              AS "role.name",
+		  sr.enname            AS "role.enname",
+		  u2.name              AS "user.name",
+		  u2.login_name        AS "user.loginName",
+		  u2.photo             AS "user.photo",
+		  u2.email             AS "user.email",
+		  u2.phone             AS "user.phone"
+	</sql>
+	<sql id="uinfoJoins">
+		 LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		  INNER JOIN sys_userinfo uif ON uif.USER_ID = a.USER_ID
+		  LEFT JOIN sys_user_role sur ON sur.user_id = a.user_id
+		  LEFT JOIN sys_role sr ON sr.id = sur.role_id
+		  LEFT JOIN user_purse upur ON upur.USER_ID = a.USER_ID
+	</sql>
+	<sql id="userStatisticsJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="UserStatistics">
+		SELECT
+			<include refid="userStatisticsColumns"/>
+		FROM user_statistics a
+		<include refid="userStatisticsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getConditon" resultType="UserStatistics">
+		SELECT
+			<include refid="userStatisticsColumns"/>
+		FROM user_statistics a
+		<include refid="userStatisticsJoins"/>
+		
+		WHERE a.user_id = #{user.id}
+	</select>
+
+	<select id="getLoginUsers" resultType="UserStatistics">
+		SELECT
+		<include refid="userStatisticsColumns"/>
+		FROM user_statistics a
+		<include refid="userStatisticsJoins"/>
+		WHERE datediff(a.UPDATE_DATE,NOW())=0
+	</select>
+	
+	<select id="getWithLoginUsers" resultType="UserStatistics">
+		SELECT
+		<include refid="uinfoColumns"/>
+		FROM user_statistics a
+		<include refid="uinfoJoins"/>
+		WHERE datediff(a.UPDATE_DATE,NOW())!=0
+	</select>
+
+<select id="findIntegrityinfo" resultType="UserStatistics">
+SELECT 
+	(
+		SELECT
+			IFNULL(
+				SUM(
+					CASE
+					WHEN a.SELLER_ID = #{user.id}
+					OR a.BUYER_ID = #{user.id} THEN
+						1
+					ELSE
+						0
+					END
+				),
+				0
+			) tradeordercount
+		FROM
+			trade_orderinfo a
+		WHERE
+			(
+				DATE_SUB(
+					date_sub(
+						date_sub(
+							date_format(now(), '%y-%m-%d'),
+							INTERVAL extract(DAY FROM now()) DAY
+						),
+						INTERVAL 0 MONTH
+					),
+					INTERVAL 3 MONTH
+				) &lt; date(a.UPDATE_DATE)
+				AND DATE_SUB(
+					date_sub(
+						date_sub(
+							date_format(now(), '%y-%m-%d'),
+							INTERVAL extract(DAY FROM now()) DAY
+						),
+						INTERVAL 0 MONTH
+					),
+					INTERVAL 0 MONTH
+				) &gt;= date(a.UPDATE_DATE)
+			)
+		AND a.orderstatus IN (1, 3, 4, 5, 6, 7)
+	)/3 AS tradeordercount,
+	(
+		SELECT
+			IFNULL(
+				SUM(
+					CASE
+					WHEN a.BIDUSERID = #{user.id}
+					OR a.BIDDINGUSERID = #{user.id} THEN
+						1
+					ELSE
+						0
+					END
+				),
+				0
+			) biddingcount
+		FROM
+			bid_orderinfo a
+		WHERE
+			(
+				DATE_SUB(
+					date_sub(
+						date_sub(
+							date_format(now(), '%y-%m-%d'),
+							INTERVAL extract(DAY FROM now()) DAY
+						),
+						INTERVAL 0 MONTH
+					),
+					INTERVAL 3 MONTH
+				) &lt; date(a.UPDATE_DATE)
+				AND DATE_SUB(
+					date_sub(
+						date_sub(
+							date_format(now(), '%y-%m-%d'),
+							INTERVAL extract(DAY FROM now()) DAY
+						),
+						INTERVAL 0 MONTH
+					),
+					INTERVAL 0 MONTH
+				) &gt;= date(a.UPDATE_DATE)
+			)
+	)/3 AS biddingcount,
+(select SUM(
+		CASE
+		WHEN a.CONSUMETYPE = '0801' THEN
+			a.CONSUMEMONY
+		ELSE
+			0
+		END
+	) guaranteemone 
+from user_consumerecod a where a.target_id=#{user.id} )as guaranteemone
+FROM
+	user_statistics
+LIMIT 1
+</select>
+
+
+
+	<select id="findUinfoList" resultType="UserStatistics">
+		SELECT
+		<include refid="uinfoColumns"/>
+		FROM user_statistics a
+		<include refid="uinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and sr.enname IN ('carowner','goodsowner','enterprise')
+			<if test="role != null and role.enname != null and role.enname != ''">
+				AND sr.enname = #{role.enname}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="searchinfo != null and searchinfo!='' ">
+				and (
+			 u2.login_name like
+			<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{searchinfo}, '%')</if>
+			OR u2.phone like
+			<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{searchinfo}, '%')</if>
+			OR uif.COMPANYNAME like
+			<if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{searchinfo}, '%')</if>
+				)
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findList" resultType="UserStatistics">
+		SELECT 
+			<include refid="userStatisticsColumns"/>
+		FROM user_statistics a
+		<include refid="userStatisticsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="accruelogincount != null and accruelogincount != ''">
+				AND a.accruelogincount = #{accruelogincount}
+			</if>
+			<if test="continuelogincount != null and continuelogincount != ''">
+				AND a.continuelogincount = #{continuelogincount}
+			</if>
+			<if test="tradeordercount != null and tradeordercount != ''">
+				AND a.tradeordercount = #{tradeordercount}
+			</if>
+			<if test="successtrade != null and successtrade != ''">
+				AND a.successtrade = #{successtrade}
+			</if>
+			<if test="canceltrade != null and canceltrade != ''">
+				AND a.canceltrade = #{canceltrade}
+			</if>
+			<if test="judgetrade != null and judgetrade != ''">
+				AND a.judgetrade = #{judgetrade}
+			</if>
+			<if test="goodjudge != null and goodjudge != ''">
+				AND a.goodjudge = #{goodjudge}
+			</if>
+			<if test="middlejudge != null and middlejudge != ''">
+				AND a.middlejudge = #{middlejudge}
+			</if>
+			<if test="badjudge != null and badjudge != ''">
+				AND a.badjudge = #{badjudge}
+			</if>
+			<if test="rechargemoney != null and rechargemoney != ''">
+				AND a.rechargemoney = #{rechargemoney}
+			</if>
+			<if test="pubgodscount != null and pubgodscount != ''">
+				AND a.pubgodscount = #{pubgodscount}
+			</if>
+			<if test="quotecount != null and quotecount != ''">
+				AND a.quotecount = #{quotecount}
+			</if>
+			<if test="cancelgodscount != null and cancelgodscount != ''">
+				AND a.cancelgodscount = #{cancelgodscount}
+			</if>
+			<if test="addcarcount != null and addcarcount != ''">
+				AND a.addcarcount = #{addcarcount}
+			</if>
+			<if test="pubbidcount != null and pubbidcount != ''">
+				AND a.pubbidcount = #{pubbidcount}
+			</if>
+			<if test="cancelbidcount != null and cancelbidcount != ''">
+				AND a.cancelbidcount = #{cancelbidcount}
+			</if>
+			<if test="biddingcount != null and biddingcount != ''">
+				AND a.biddingcount = #{biddingcount}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="getRecordConditon" resultType="UserStatistics">
+		SELECT
+			<include refid="userStatisticsColumns"/>
+			,a.CREATETIME AS "createtime" 
+		FROM user_statistics_record a
+		<include refid="userStatisticsJoins"/>
+		<where>
+			a.user_id = #{user.id}
+			<if test="createtime != null and createtime != ''">
+				AND  date(a.CREATETIME) =  date(#{createtime})
+			</if>
+		</where>
+		ORDER BY a.CREATETIME DESC
+		limit 1
+	</select>
+	<select id="findrecordList" resultType="UserStatistics">
+		SELECT 
+			<include refid="userStatisticsColumns"/>
+			,a.CREATETIME AS "createtime" 
+		FROM user_statistics_record a
+		<include refid="userStatisticsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="accruelogincount != null and accruelogincount != ''">
+				AND a.accruelogincount = #{accruelogincount}
+			</if>
+			<if test="continuelogincount != null and continuelogincount != ''">
+				AND a.continuelogincount = #{continuelogincount}
+			</if>
+			<if test="tradeordercount != null and tradeordercount != ''">
+				AND a.tradeordercount = #{tradeordercount}
+			</if>
+			<if test="successtrade != null and successtrade != ''">
+				AND a.successtrade = #{successtrade}
+			</if>
+			<if test="canceltrade != null and canceltrade != ''">
+				AND a.canceltrade = #{canceltrade}
+			</if>
+			<if test="judgetrade != null and judgetrade != ''">
+				AND a.judgetrade = #{judgetrade}
+			</if>
+			<if test="goodjudge != null and goodjudge != ''">
+				AND a.goodjudge = #{goodjudge}
+			</if>
+			<if test="middlejudge != null and middlejudge != ''">
+				AND a.middlejudge = #{middlejudge}
+			</if>
+			<if test="badjudge != null and badjudge != ''">
+				AND a.badjudge = #{badjudge}
+			</if>
+			<if test="rechargemoney != null and rechargemoney != ''">
+				AND a.rechargemoney = #{rechargemoney}
+			</if>
+			<if test="pubgodscount != null and pubgodscount != ''">
+				AND a.pubgodscount = #{pubgodscount}
+			</if>
+			<if test="quotecount != null and quotecount != ''">
+				AND a.quotecount = #{quotecount}
+			</if>
+			<if test="cancelgodscount != null and cancelgodscount != ''">
+				AND a.cancelgodscount = #{cancelgodscount}
+			</if>
+			<if test="addcarcount != null and addcarcount != ''">
+				AND a.addcarcount = #{addcarcount}
+			</if>
+			<if test="pubbidcount != null and pubbidcount != ''">
+				AND a.pubbidcount = #{pubbidcount}
+			</if>
+			<if test="cancelbidcount != null and cancelbidcount != ''">
+				AND a.cancelbidcount = #{cancelbidcount}
+			</if>
+			<if test="biddingcount != null and biddingcount != ''">
+				AND a.biddingcount = #{biddingcount}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserStatistics">
+		SELECT 
+			<include refid="userStatisticsColumns"/>
+		FROM user_statistics a
+		<include refid="userStatisticsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 该方法用于统计添加 -->
+	<insert id="insert">
+		INSERT INTO user_statistics(
+
+		<if test="user.id != null and user.id !='' ">
+			user_id,
+		</if>
+		<if test="accruelogincount != null and accruelogincount !='' ">
+			accruelogincount,
+		</if>
+		<if test="continuelogincount != null and continuelogincount !='' ">
+			continuelogincount,
+		</if>
+		<if test="tradeordercount != null and tradeordercount !='' ">
+			tradeordercount,
+		</if>
+		<if test="successtrade != null and successtrade !='' ">
+			successtrade,
+		</if>
+		<if test="canceltrade != null and canceltrade !='' ">
+			canceltrade,
+		</if>
+		<if test="judgetrade != null and judgetrade !='' ">
+			judgetrade,
+		</if>
+		<if test="goodjudge != null and goodjudge !='' ">
+			goodjudge,
+		</if>
+		<if test="middlejudge != null and middlejudge !='' ">
+			middlejudge,
+		</if>
+		<if test="badjudge != null and badjudge !='' ">
+			badjudge,
+		</if>
+		<if test="rechargemoney != null and rechargemoney !='' ">
+			rechargemoney,
+		</if>
+		<if test="pubgodscount != null and pubgodscount !='' ">
+			pubgodscount,
+		</if>
+		<if test="quotecount != null and quotecount !='' ">
+			quotecount,
+		</if>
+		<if test="cancelgodscount != null and cancelgodscount !='' ">
+			cancelgodscount,
+		</if>
+		<if test="addcarcount != null and addcarcount !='' ">
+			addcarcount,
+		</if>
+		<if test="pubbidcount != null and pubbidcount !='' ">
+			pubbidcount,
+		</if>
+		<if test="cancelbidcount != null and cancelbidcount !='' ">
+			cancelbidcount,
+		</if>
+		<if test="biddingcount != null and biddingcount !='' ">
+			biddingcount,
+		</if>
+		
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="daysWithoutLogin != null and daysWithoutLogin !='' ">
+			daysWithoutLogin,
+		</if>
+		
+			id
+		) VALUES (
+		<if test="user.id != null and user.id !='' ">
+			#{user.id},
+		</if>
+		<if test="accruelogincount != null and accruelogincount !='' ">
+			1,
+		</if>
+		<if test="continuelogincount != null and continuelogincount !='' ">
+			1,
+		</if>
+		<if test="tradeordercount != null and tradeordercount !='' ">
+			1,
+		</if>
+		<if test="successtrade != null and successtrade !='' ">
+			1,
+		</if>
+		<if test="canceltrade != null and canceltrade !='' ">
+			1,
+		</if>
+		<if test="judgetrade != null and judgetrade !='' ">
+			1,
+		</if>
+		<if test="goodjudge != null and goodjudge !='' ">
+			1,
+		</if>
+		<if test="middlejudge != null and middlejudge !='' ">
+			1,
+		</if>
+		<if test="badjudge != null and badjudge !='' ">
+			1,
+		</if>
+		<if test="rechargemoney != null and rechargemoney !='' ">
+			#{rechargemoney},
+		</if>
+		<if test="pubgodscount != null and pubgodscount !='' ">
+			1,
+		</if>
+		<if test="quotecount != null and quotecount !='' ">
+			1,
+		</if>
+		<if test="cancelgodscount != null and cancelgodscount !='' ">
+			1,
+		</if>
+		<if test="addcarcount != null and addcarcount !='' ">
+			1,
+		</if>
+		<if test="pubbidcount != null and pubbidcount !='' ">
+			1,
+		</if>
+		<if test="cancelbidcount != null and cancelbidcount !='' ">
+			1,
+		</if>
+		<if test="biddingcount != null and biddingcount !='' ">
+			1,
+		</if>
+		
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="daysWithoutLogin != null and daysWithoutLogin !='' ">
+			#{daysWithoutLogin},
+		</if>
+		#{id}
+		)
+	</insert>
+	<!-- 该方法用于统计修改  -->
+	<update id="update">
+		UPDATE user_statistics SET 	
+			<if test="user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<if test="accruelogincount != null and accruelogincount !='' ">
+				accruelogincount = accruelogincount+1,
+			</if>
+			<!-- 连续累计登录天数 -->
+			<choose>
+				<when test="continuelogincount != null and continuelogincount !='' and continuelogincount==2">
+					continuelogincount = continuelogincount+1,
+				</when>
+				<otherwise>
+					continuelogincount = 1,
+				</otherwise>
+			</choose>
+			<if test="tradeordercount != null and tradeordercount !='' ">
+				tradeordercount = tradeordercount+1,
+			</if>
+			<if test="successtrade != null and successtrade !='' ">
+				successtrade = successtrade+1,
+			</if>
+			<if test="canceltrade != null and canceltrade !='' ">
+				canceltrade = canceltrade+1,
+			</if>
+			<if test="judgetrade != null and judgetrade !='' ">
+				judgetrade = judgetrade+1,
+			</if>
+			<if test="goodjudge != null and goodjudge !='' ">
+				goodjudge = goodjudge+1,
+			</if>
+			<if test="middlejudge != null and middlejudge !='' ">
+				middlejudge = middlejudge+1,
+			</if>
+			<if test="badjudge != null and badjudge !='' ">
+				badjudge = badjudge+1,
+			</if>
+			<if test="rechargemoney != null and rechargemoney !='' ">
+				rechargemoney = #{rechargemoney},
+			</if>
+			<if test="pubgodscount != null and pubgodscount !='' ">
+				pubgodscount = pubgodscount+1,
+			</if>
+			<if test="quotecount != null and quotecount !='' ">
+				quotecount = quotecount+1,
+			</if>
+			<if test="cancelgodscount != null and cancelgodscount !='' ">
+				cancelgodscount = cancelgodscount+1,
+			</if>
+			<if test="addcarcount != null and addcarcount !='' ">
+				addcarcount = addcarcount+1,
+			</if>
+			<if test="pubbidcount != null and pubbidcount !='' ">
+				pubbidcount = pubbidcount+1,
+			</if>
+			<if test="cancelbidcount != null and cancelbidcount !='' ">
+				cancelbidcount = cancelbidcount+1,
+			</if>
+			<if test="biddingcount != null and biddingcount !='' ">
+				biddingcount = biddingcount+1,
+			</if>
+			<!-- <if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if> -->
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			daysWithoutLogin=0,
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 该方法用于统计不登录天数  -->
+	<update id="updateDaysWithoutLogin">
+		UPDATE user_statistics SET 	
+			<if test="user.id != null and user.id !='' ">
+				user_id = #{user.id},
+			</if>
+			<!-- 连续累计登录天数清0 -->
+			<choose>
+				<when test="continuelogincount != null and continuelogincount !='' and continuelogincount==2">
+					continuelogincount = 0,
+				</when>
+				<otherwise>
+					continuelogincount = 0,
+				</otherwise>
+			</choose>
+			
+			<if test="rechargemoney != null and rechargemoney !='' ">
+				rechargemoney = #{rechargemoney},
+			</if>
+			
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			<if test="daysWithoutLogin != null and daysWithoutLogin !='' ">
+				daysWithoutLogin=#{daysWithoutLogin},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<update id="delete">
+		UPDATE user_statistics SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="editRecord" statementType="CALLABLE">
+			{call SP_Statistics_Record()}
+	</select>
+</mapper>

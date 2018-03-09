@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.consume.ConsumeauditDao">
+
+    <sql id="consumeauditColumns">
+	  a.id                  AS "id",
+      a.user_id             AS "user.id",
+      a.consume_id          AS "consume.id",
+      recode.CONSUMEMONY    AS "consume.consumemony",
+      recode.BEFOREMONY     AS "consume.beforemony",
+      recode.AFTERMONY      AS "consume.aftermony",
+      recode.CONSUMECODE    AS "consume.consumecode",
+      recode.consumewaydesp AS "consume.consumewaydesp",
+      recode.consumeway     AS "consume.consumeway",
+      a.type                AS "type",
+      a.auditstatus         AS "auditstatus",
+      a.consume_img         AS "consumeImg",
+      a.create_by           AS "createBy.id",
+      a.create_date         AS "createDate",
+      a.update_by           AS "updateBy.id",
+      a.update_date         AS "updateDate",
+      a.remarks             AS "remarks",
+      a.del_flag            AS "delFlag",
+      u2.login_name         AS "user.loginName",
+      u2.phone              AS "user.phone",
+      u2.name               AS "user.name",
+      uper.login_name       AS "updateBy.loginName",
+      uper.phone            AS "updateBy.phone",
+      uper.name             AS "updateBy.name",
+      crter.login_name      AS "createBy.loginName",
+      crter.phone           AS "createBy.phone",
+      crter.name            AS "createBy.name",
+      ubk.BANKCARD          AS "user.bankinfo.bankcard",
+      ubk.banktype          AS "user.bankinfo.banktype",
+      ubk.bindname          AS "user.bankinfo.bindname",
+      ubk.bankname          AS "user.bankinfo.bankname",
+      ubk.accountname      AS "user.bankinfo.accountName",
+      ubk.bindphone         AS "user.bankinfo.bindphone"
+	</sql>
+
+    <sql id="consumeauditJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+  LEFT JOIN sys_user uper ON uper.id = a.update_by
+  LEFT JOIN sys_user crter ON crter.id = a.create_by
+  LEFT JOIN user_consumerecod recode ON a.CONSUME_ID = recode.ID
+  <!-- LEFT JOIN user_bankinfo ubk ON (((recode.BANK_ID IS NOT NULL) AND recode.BANK_ID=ubk.ID) OR ((recode.BANK_ID IS NULL) AND a.USER_ID=ubk.USER_ID)) -->
+  LEFT JOIN user_bankinfo ubk ON ubk.ID=recode.BANK_ID
+	</sql>
+
+    <select id="get" resultType="Consumeaudit">
+        SELECT
+        <include refid="consumeauditColumns"/>
+        FROM base_consumeaudit a
+        <include refid="consumeauditJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Consumeaudit">
+        SELECT
+        <include refid="consumeauditColumns"/>
+        FROM base_consumeaudit a
+        <include refid="consumeauditJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+
+            <if test="user!= null and user!='' and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+            <if test="type != null and type != ''">
+                AND a.type = #{type}
+            </if>
+            <if test="auditstatus != null and auditstatus !=''">
+                AND a.auditstatus = #{auditstatus}
+            </if>
+            <if test="searchinfo!= null and searchinfo!=''">
+                AND (u2.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                u2.phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                ubk.bindname  LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                recode.CONSUMECODE LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                ubk.BANKCARD LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                )
+            </if>
+            <if test="consume!= null and consume!='' and consume.consumemony != null and consume.consumemony != ''">
+                <!-- AND recode.consumemony = #{consume.consumemony} -->
+                AND (recode.consumemony between #{consume.consumemony}-10 and #{consume.consumemony}+10) 
+            </if>
+
+
+            <if test="consume!= null and consume!='' and consume.id != null and consume.id != ''">
+                AND a.consume_id = #{consume.id}
+            </if>
+
+
+            <if test="createBy != null and createBy !=''  and createBy.id != null and createBy.id != ''">
+                AND a.create_by = #{createBy.id}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+            <if test="updateBy != null and updateBy != '' and updateBy.id != null and updateBy.id != ''">
+                AND a.update_by = #{updateBy.id}
+            </if>
+            <if test="beginUpdateDate != null and endUpdateDate != null and beginUpdateDate != '' and endUpdateDate != ''">
+                AND a.update_date BETWEEN #{beginUpdateDate} AND #{endUpdateDate}
+            </if>
+        </where>
+        ${sqlMap.dsf}
+        <choose>
+            <when test="page !=null and page !='' and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Consumeaudit">
+        SELECT
+        <include refid="consumeauditColumns"/>
+        FROM base_consumeaudit a
+        <include refid="consumeauditJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page!='' and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO base_consumeaudit(
+
+        <if test="user != null and user!='' and user.id != null and user.id !='' ">
+            user_id,
+        </if>
+        <if test="consume !=null and consume!='' and consume.id != null and consume.id !='' ">
+            consume_id,
+        </if>
+        <if test="type != null and type !='' ">
+            type,
+        </if>
+        <if test="auditstatus != null and auditstatus !='' ">
+            auditstatus,
+        </if>
+        <if test="consumeImg != null and consumeImg !='' ">
+            consume_img,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        id
+        ) VALUES (
+        <if test="user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="consume.id != null and consume.id !='' ">
+            #{consume.id},
+        </if>
+        <if test="type != null and type !='' ">
+            #{type},
+        </if>
+        <if test="auditstatus != null and auditstatus !='' ">
+            #{auditstatus},
+        </if>
+        <if test="consumeImg != null and consumeImg !='' ">
+            #{consumeImg},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE base_consumeaudit SET
+       <!-- <if test="user != null and user.id != null and user.id !='' ">
+            user_id = #{user.id},
+        </if>
+        <if test="consume != null and consume.id != null and consume.id !='' ">
+            consume_id = #{consume.id},
+        </if>
+        <if test="type != null and type !='' ">
+            type = #{type},
+        </if>-->
+        <if test="auditstatus != null and auditstatus !='' ">
+            auditstatus = #{auditstatus},
+        </if>
+        <if test="consumeImg != null and consumeImg !='' ">
+            consume_img = #{consumeImg},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE base_consumeaudit SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

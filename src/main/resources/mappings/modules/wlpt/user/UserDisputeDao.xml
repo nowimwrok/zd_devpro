@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserDisputeDao">
+
+	<sql id="userDisputeColumns">
+		a.id AS "id",
+		a.disputecontent AS "disputecontent",
+		a.orderno AS "orderno",
+		a.disputemoney AS "disputemoney",
+		a.dealname AS
+		"dealname",
+		a.dealphone AS "dealphone",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.status AS "status",
+		a.del_flag AS
+		"delFlag",
+		a.goodsname AS "goodsname",
+		a.takeloadweight AS
+		"takeloadweight",
+		a.unloadweight AS "unloadweight",
+		a.disputeinfo AS
+		"disputeinfo",
+		a.create_by AS "createBy.id",
+		a.dealuser AS
+		"dealuser.id",
+		a.disputeeverconfirmed AS "disputeeverconfirmed",
+		a.disputemoneybefore
+		AS "disputemoneybefore",
+		a.disputemoneydiff AS
+		"disputemoneydiff",
+		a.update_by AS "updateBy.id",
+		a.remarks AS
+		"remarks",
+		a.orderid AS "orderinfo.id",
+		a.isreject AS "isreject",
+		a.disputetype AS "disputetype"
+	</sql>
+	<!-- 用户表 sys_user 数据 -->
+	<sql id="sys_userColumns">
+		sysuser.login_name AS "dealuser.loginName",
+		sysuser.name AS
+		"dealuser.name",
+		sysuser.phone AS "dealuser.phone",
+	</sql>
+	<!-- 运单表 trade_orderinfo 数据 -->
+	<sql id="trade_orderColumns">
+		torder.orderstatus AS "orderinfo.orderstatus",
+		torder.totalcost AS "orderinfo.totalcost",
+		torder.payway AS "orderinfo.payway",
+		torder.create_date AS "orderinfo.create_date",
+		torder.update_date AS "orderinfo.update_date",
+		torder.isonlinepay AS "orderinfo.isonlinepay",
+		torder.isprepay AS "orderinfo.isprepay",
+		torder.isprecoin AS "orderinfo.isprecoin",
+		payinfos.actualamount AS "orderinfo.payinfo.actualamount",
+		payinfos.onlineamount AS "orderinfo.payinfo.onlineamount",
+		payinfos.coinactualpay AS "orderinfo.payinfo.coinactualpay",
+		payinfos.coinamount AS "orderinfo.payinfo.coinamount",
+	</sql>
+	<!-- 货物表 gds_goods 数据 -->
+	<sql id="gds_goodsColumns">
+		goods.freightvolume AS
+		"orderinfo.quoteinfo.goods.freightvolume",
+		goods.create_date AS
+		"orderinfo.quoteinfo.goods.createDate",
+	</sql>
+	<sql id="userDisputeJoins">
+	</sql>
+
+	<!-- 内连接用户表 sys_user -->
+	<sql id="userDisputeJoinsUser">
+		INNER JOIN sys_user
+		sysuser ON sysuser.id=a.CREATE_BY
+	</sql>
+
+	<!-- 内连接运单表 trade_orderinfo -->
+	<sql id="userDisputeJoinsTrade_order">
+		INNER JOIN trade_orderinfo
+		torder ON
+		torder.id=a.orderid
+		INNER JOIN trade_payinfo payinfos ON payinfos.id=torder.pay_id
+	</sql>
+	<!-- 内连接-货物报价表-货物信息表 gds_goods -->
+	<sql id="userDisputeJoinsGoods">
+		INNER JOIN gds_quoteinfo
+		quote ON
+		quote.id=torder.quote_id
+		INNER JOIN
+		gds_goods
+		goods ON
+		goods.id=quote.goodsid
+	</sql>
+	<!-- 通过争议id获取 -->
+	<select id="get" resultType="UserDispute">
+		SELECT
+		<include refid="sys_userColumns" />
+		<include refid="trade_orderColumns" />
+		<include refid="gds_goodsColumns" />
+		<include refid="userDisputeColumns" />
+		FROM user_dispute a
+		<include refid="userDisputeJoinsUser" />
+		<include refid="userDisputeJoinsTrade_order" />
+		<include refid="userDisputeJoinsGoods" />
+		WHERE a.id = #{id}
+	</select>
+	<!-- 通过运单id获取 -->
+	<select id="getByUserDispute" resultType="UserDispute">
+		SELECT
+		<include refid="sys_userColumns" />
+		<include refid="trade_orderColumns" />
+		<include refid="userDisputeColumns" />
+		FROM user_dispute a
+		<include refid="userDisputeJoinsUser" />
+		<include refid="userDisputeJoinsTrade_order" />
+		WHERE a.orderid = #{orderid}
+		AND a.isreject =0
+	</select>
+
+	<!-- 争议列表信息 -->
+	<select id="findList" resultType="UserDispute">
+		SELECT
+		<include refid="sys_userColumns" />
+		<include refid="trade_orderColumns" />
+		<include refid="userDisputeColumns" />
+		FROM user_dispute a
+		<include refid="userDisputeJoinsUser" />
+		<include refid="userDisputeJoinsTrade_order" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderno != null and orderno != ''">
+				AND a.orderno LIKE
+				<if test="dbName == 'oracle'">'%'||#{orderno}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{orderno}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{orderno},'%')</if>
+			</if>
+			<if
+				test="begincreateDate != null and endcreateDate != null and begincreateDate != '' and endcreateDate != ''">
+				AND a.create_date BETWEEN #{begincreateDate} AND
+				#{endcreateDate}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="UserDispute">
+		SELECT
+		<include refid="userDisputeColumns" />
+		FROM user_dispute a
+		<include refid="userDisputeJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO user_dispute(
+
+		<if test="orderinfo!=null and orderinfo.id != null and orderinfo.id !='' ">
+			orderid,
+		</if>
+		<if test="disputecontent != null and disputecontent !='' ">
+			disputecontent,
+		</if>
+		<if test="orderno != null and orderno !='' ">
+			orderno,
+		</if>
+		<if test="disputemoney != null and disputemoney !='' ">
+			disputemoney,
+		</if>
+		<if test="dealname != null and dealname !='' ">
+			dealname,
+		</if>
+		<if test="dealphone != null and dealphone !='' ">
+			dealphone,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="status != null and status !='' ">
+			status,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="goodsname != null and goodsname !='' ">
+			goodsname,
+		</if>
+		<if test="takeloadweight != null and takeloadweight !='' ">
+			takeloadweight,
+		</if>
+		<if test="unloadweight != null and unloadweight !='' ">
+			unloadweight,
+		</if>
+		<if test="disputeinfo != null and disputeinfo !='' ">
+			disputeinfo,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="dealuser != null and dealuser !='' ">
+			dealuser,
+		</if>
+		<if test="disputeeverconfirmed != null and disputeeverconfirmed !='' ">
+			disputeeverconfirmed,
+		</if>
+		<if test="disputemoneybefore != null and disputemoneybefore !='' ">
+			disputemoneybefore,
+		</if>
+		<if test="disputemoneydiff != null and disputemoneydiff !='' ">
+			disputemoneydiff,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="disputetype != null and disputetype !='' ">
+			disputetype,
+		</if>
+		id
+		) VALUES (
+		<if test="orderinfo!=null and orderinfo.id != null and orderinfo.id !='' ">
+			#{orderinfo.id},
+		</if>
+		<if test="disputecontent != null and disputecontent !='' ">
+			#{disputecontent},
+		</if>
+		<if test="orderno != null and orderno !='' ">
+			#{orderno},
+		</if>
+		<if test="disputemoney != null and disputemoney !='' ">
+			#{disputemoney},
+		</if>
+		<if test="dealname != null and dealname !='' ">
+			#{dealname},
+		</if>
+		<if test="dealphone != null and dealphone !='' ">
+			#{dealphone},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="status != null and status !='' ">
+			#{status},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="goodsname != null and goodsname !='' ">
+			#{goodsname},
+		</if>
+		<if test="takeloadweight != null and takeloadweight !='' ">
+			#{takeloadweight},
+		</if>
+		<if test="unloadweight != null and unloadweight !='' ">
+			#{unloadweight},
+		</if>
+		<if test="disputeinfo != null and disputeinfo !='' ">
+			#{disputeinfo},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="dealuser != null and dealuser !='' ">
+			#{dealuser},
+		</if>
+		<if test="disputeeverconfirmed != null and disputeeverconfirmed !='' ">
+			#{disputeeverconfirmed},
+		</if>
+		<if test="disputemoneybefore != null and disputemoneybefore !='' ">
+			#{disputemoneybefore},
+		</if>
+		<if test="disputemoneydiff != null and disputemoneydiff !='' ">
+			#{disputemoneydiff},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="disputetype != null and disputetype !='' ">
+			#{disputetype},
+		</if>
+		#{id}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE user_dispute SET
+		<if test="disputecontent != null and disputecontent !='' ">
+			disputecontent = #{disputecontent},
+		</if>
+		<if test="orderno != null and orderno !='' ">
+			orderno = #{orderno},
+		</if>
+		<if test="disputemoney != null and disputemoney !='' ">
+			disputemoney = #{disputemoney},
+		</if>
+		<if test="dealname != null and dealname !='' ">
+			dealname = #{dealname},
+		</if>
+		<if test="dealphone != null and dealphone !='' ">
+			dealphone = #{dealphone},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date = #{createDate},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date = #{updateDate},
+		</if>
+		<if test="status != null and status !='' ">
+			status = #{status},
+		</if>
+		<if test="goodsname != null and goodsname !='' ">
+			goodsname = #{goodsname},
+		</if>
+		<if test="takeloadweight != null and takeloadweight !='' ">
+			takeloadweight = #{takeloadweight},
+		</if>
+		<if test="unloadweight != null and unloadweight !='' ">
+			unloadweight = #{unloadweight},
+		</if>
+		<if test="disputeinfo != null and disputeinfo !='' ">
+			disputeinfo = #{disputeinfo},
+		</if>
+		<if test="dealuser!=null and dealuser.id!= null and dealuser.id !='' ">
+			dealuser = #{dealuser.id},
+		</if>
+		<if test="disputeeverconfirmed != null and disputeeverconfirmed !='' ">
+			disputeeverconfirmed = #{disputeeverconfirmed},
+		</if>
+		<if test="disputemoneybefore != null and disputemoneybefore !='' ">
+			disputemoneybefore = #{disputemoneybefore},
+		</if>
+		<if test="disputemoneydiff != null and disputemoneydiff !='' ">
+			disputemoneydiff = #{disputemoneydiff},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by = #{updateBy.id},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks},
+		</if>
+		<if test="isreject != null and isreject !='' ">
+			isreject = #{isreject},
+		</if>
+		<if test="disputetype != null and disputetype !='' ">
+			disputetype = #{disputetype},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE user_dispute SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

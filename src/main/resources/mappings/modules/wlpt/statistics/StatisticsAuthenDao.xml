@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsAuthenDao">
+    
+	<sql id="statisticsAuthenColumns">
+		a.id AS "id",
+		a.authening AS "authening",
+		a.authened AS "authened",
+		a.authenfailed AS "authenfailed",
+		a.applyauthen AS "applyauthen",
+		a.createtime AS "createtime",
+		a.allauthen AS "allauthen",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="statisticsAuthenJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsAuthen">
+		SELECT
+			<include refid="statisticsAuthenColumns"/>
+		FROM statistics_authen a
+		<include refid="statisticsAuthenJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsAuthen">
+		SELECT 
+			<include refid="statisticsAuthenColumns"/>
+		FROM statistics_authen a
+		<include refid="statisticsAuthenJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsAuthen">
+		SELECT 
+			<include refid="statisticsAuthenColumns"/>
+		FROM statistics_authen a
+		<include refid="statisticsAuthenJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_authen(
+
+		<if test="authening != null and authening !='' ">
+			authening,
+		</if>
+		<if test="authened != null and authened !='' ">
+			authened,
+		</if>
+		<if test="authenfailed != null and authenfailed !='' ">
+			authenfailed,
+		</if>
+		<if test="applyauthen != null and applyauthen !='' ">
+			applyauthen,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="allauthen != null and allauthen !='' ">
+			allauthen,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="authening != null and authening !='' ">
+			#{authening},
+		</if>
+		<if test="authened != null and authened !='' ">
+			#{authened},
+		</if>
+		<if test="authenfailed != null and authenfailed !='' ">
+			#{authenfailed},
+		</if>
+		<if test="applyauthen != null and applyauthen !='' ">
+			#{applyauthen},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="allauthen != null and allauthen !='' ">
+			#{allauthen},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_authen SET 	
+			<if test="authening != null and authening !='' ">
+				authening = #{authening},
+			</if>
+			<if test="authened != null and authened !='' ">
+				authened = #{authened},
+			</if>
+			<if test="authenfailed != null and authenfailed !='' ">
+				authenfailed = #{authenfailed},
+			</if>
+			<if test="applyauthen != null and applyauthen !='' ">
+				applyauthen = #{applyauthen},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="allauthen != null and allauthen !='' ">
+				allauthen = #{allauthen},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE statistics_authen SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="editAuthen" statementType="CALLABLE">
+			{call SP_Statistics_Authen()}
+	</select>
+	
+	
+</mapper>

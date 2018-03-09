@@ -1,0 +1,88 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0 auto;
+	width: 100%;
+	font-family: Microsoft YaHei;
+	min-width: 320px;
+	min-height: 480px;
+}
+
+#title {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: #F74000;
+}
+
+.backhost {
+	float: left;
+	height: 50px;
+	padding-left: 10px;
+}
+
+.title {
+	font-size: 1.8em;
+	margin-left: -25px;
+	color: white;
+	line-height: 50px;
+}
+
+.authMargin {
+	margin: 0px 10px;
+}
+
+.auth {
+	height: 50px;
+	border-bottom: 1px #EBEBEB solid;
+}
+
+.bor_bot {
+	border-bottom: 1px #EBEBEB solid;
+}
+
+.authType {
+	line-height: 50px;
+}
+
+.imgTypeIcon {
+	margin-bottom: -8px;
+}
+
+.mar {
+	margin-bottom: 10px;
+}
+
+strong {
+	color: #797979;
+	line-height: 30px;
+}
+
+.moreDetail {
+	height: 14px;
+	float: right;
+	margin: 18px 0;
+}
+
+.explainMargin {
+	margin: 15px 10px;
+}
+
+.simpleRight {
+	text-align: center;
+}
+
+.imgSimple {
+	height: 150px;
+}
+
+p {
+	color: #666666;
+	line-height: 25px;
+}

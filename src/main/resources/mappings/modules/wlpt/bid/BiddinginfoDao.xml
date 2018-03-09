@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.bid.BiddinginfoDao">
+    
+	<sql id="biddinginfoColumns">
+		a.id AS "id",
+
+		a.biddingcode AS "biddingcode",
+		a.bidid AS "bidinfo.id",
+		a.biddinguserid AS "biddinguser.id",
+		a.biddingprice AS "biddingprice",
+		a.linkman AS "linkman",
+		a.linkphone AS "linkphone",
+		a.biddingstatus AS "biddingstatus",
+		a.guarantee AS "guarantee",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		date_format(a.create_date, '%Y-%m-%d') AS "formatCreateDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.isderate AS "isderate",
+		a.biddingmargin AS "biddingmargin",
+		a.isGuaAccount AS "isGuaAccount",
+		a.isLockWay    AS "isLockWay",
+
+		bid.bidcode AS "bidinfo.bidcode",
+		bid.goodsid AS "bidinfo.goods.id",
+		bid.biduserid AS "bidinfo.biduser.id",
+		bid.bidtitle AS "bidinfo.bidtitle",
+		bid.paytype AS "bidinfo.paytype",
+		bid.expectedprice AS "bidinfo.expectedprice",
+		bid.isupbl AS "bidinfo.isupbl",
+		bid.isbill AS "bidinfo.isbill",
+		bid.bidstatus AS "bidinfo.bidstatus",
+		date_format(bid.endtime, '%Y-%m-%d') AS "bidinfo.endtime",
+		date_format(bid.publishtime, '%Y-%m-%d') AS "bidinfo.publishtime",
+		bid.settlementtype AS "bidinfo.settlementtype",
+		bid.settlementtime AS "bidinfo.settlementtime",
+		bid.settlementperiod AS "bidinfo.settlementperiod",
+
+		gds.goodsname          AS "bidinfo.goods.goodsname",
+		gds.goodstype          AS "bidinfo.goods.goodstype",
+		gds.gsoddtype          AS "bidinfo.goods.gsoddtype",
+		gds.transportway       AS "bidinfo.goods.transportway",
+		gds.cartype            AS "bidinfo.goods.cartype",
+		gds.carlength          AS "bidinfo.goods.carlength",
+		gds.lengthunit         AS "bidinfo.goods.lengthunit",
+		gds.freightvolume      AS "bidinfo.goods.freightvolume",
+		gds.residualvolume     AS "bidinfo.goods.residualvolume",
+		gds.freightunit        AS "bidinfo.goods.freightunit",
+		gds.piecenumber        AS "bidinfo.goods.piecenumber",
+		gds.stevedore          AS "bidinfo.goods.stevedore",
+		gds.packageway         AS "bidinfo.goods.packageway",
+		gds.worth              AS "bidinfo.goods.worth",
+		gds.expectedprice      AS "bidinfo.goods.expectedprice",
+		gds.sendtime           AS "bidinfo.goods.sendtime",
+		date_format(gds.sendtime, '%Y-%m-%d') AS "bidinfo.goods.ymdDate",
+		gds.arrivetime         AS "bidinfo.goods.arrivetime",
+		gds.tradestatus        AS "bidinfo.goods.tradestatus",
+		gds.effectdays         AS "bidinfo.goods.effectdays",
+		gds.datasource         AS "bidinfo.goods.datasource",
+		gds.scannum            AS "bidinfo.goods.scannum",
+		gds.praisenumber       AS "bidinfo.goods.praisenumber",
+		gds.ship_id            AS "bidinfo.goods.shipAddress.id",
+		gds.consign_id         AS "bidinfo.goods.consignAddress.id",
+		gds.create_by          AS "bidinfo.goods.createBy.id",
+		gds.create_date        AS "bidinfo.goods.createDate",
+		gds.update_by          AS "bidinfo.goods.updateBy.id",
+		gds.update_date        AS "bidinfo.goods.updateDate",
+		gds.remarks            AS "bidinfo.goods.remarks",
+		gds.del_flag           AS "bidinfo.goods.delFlag",
+		gds.quotecount         AS "bidinfo.goods.quotecount",
+
+		ship.PROVINCE        AS 'bidinfo.goods.shipAddress.province',
+		ship.CITY            AS 'bidinfo.goods.shipAddress.city',
+		ship.DISTRICT        AS 'bidinfo.goods.shipAddress.district',
+		ship.ADDRESS         AS 'bidinfo.goods.shipAddress.address',
+		ship.LINKMAN         AS 'bidinfo.goods.shipAddress.linkman',
+		ship.LINKCOMPANY     AS 'bidinfo.goods.shipAddress.linkcompany',
+		ship.LINKMOBILE      AS 'bidinfo.goods.shipAddress.linkmobile',
+		ship.LINKTELPHONE    AS 'bidinfo.goods.shipAddress.linktelphone',
+		ship.LINKEMAIL       AS 'bidinfo.goods.shipAddress.linkemail',
+
+		consign.PROVINCE     AS 'bidinfo.goods.consignAddress.province',
+		consign.CITY         AS 'bidinfo.goods.consignAddress.city',
+		consign.DISTRICT     AS 'bidinfo.goods.consignAddress.district',
+		consign.ADDRESS      AS 'bidinfo.goods.consignAddress.address',
+		consign.LINKMAN      AS 'bidinfo.goods.consignAddress.linkman',
+		consign.LINKCOMPANY  AS 'bidinfo.goods.consignAddress.linkcompany',
+		consign.LINKMOBILE   AS 'bidinfo.goods.consignAddress.linkmobile',
+		consign.LINKTELPHONE AS 'bidinfo.goods.consignAddress.linktelphone',
+		consign.LINKEMAIL    AS 'bidinfo.goods.consignAddress.linkemail',
+
+		suser.login_name AS "biddinguser.loginName",
+		suser.phone AS "biddinguser.phone",
+		bidsuser.login_name AS "bidinfo.biduser.loginName",
+		bidsuser.phone AS "bidinfo.biduser.phone",
+		bidsuserinfo.status AS "bidinfo.biduser.userinfo.status",
+		bidsuserinfo.POINTLEVLE 	   AS "bidinfo.biduser.userinfo.pointlevle"
+	</sql>
+
+
+	<sql id="biddinginfoJoins">
+		INNER JOIN sys_user suser ON a.biddinguserid=suser.id
+		INNER JOIN bid_bidinfo bid ON a.bidid=bid.id
+		INNER JOIN gds_goods gds ON bid.goodsid=gds.id	
+		INNER JOIN sys_user bidsuser ON bidsuser.id=bid.biduserid
+		INNER JOIN sys_userinfo bidsuserinfo ON bidsuserinfo.user_id=bidsuser.id
+		LEFT JOIN user_address ship ON gds.SHIP_ID = ship.ID
+        LEFT JOIN user_address consign ON gds.CONSIGN_ID = consign.ID
+	</sql>
+    
+	<select id="get" resultType="biddinginfo">
+		SELECT
+			<include refid="biddinginfoColumns"/>
+		FROM bid_biddinginfo a
+		<include refid="biddinginfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="biddinginfo">
+		SELECT 
+			<include refid="biddinginfoColumns"/>
+		FROM bid_biddinginfo a
+		<include refid="biddinginfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+
+			<if test="bidinfo != null and   bidinfo.id !=null and bidinfo.id != ''">
+				AND bid.id = #{bidinfo.id}
+			</if>
+			<if test="bidinfo != null and   bidinfo.bidcode!=null and bidinfo.bidcode != ''">
+				AND bid.bidcode = #{bidinfo.bidcode}
+			</if>
+			<if test="biddinguser != null and biddinguser.id != null and biddinguser.id != ''">
+				AND a.biddinguserid LIKE 
+					<if test="dbName == 'oracle'">'%'||#{biddinguser.id}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{biddinguser.id}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{biddinguser.id},'%')</if>
+			</if>
+
+			<if test="biddingstatus != null and biddingstatus != ''">
+				AND a.biddingstatus = #{biddingstatus}
+			</if>
+
+			<if test="guarantee != null and guarantee != ''">
+				AND a.guarantee = #{guarantee}
+			</if>
+            <if test=" bidinfo != null and bidinfo.goods != null and bidinfo.goods.shipAddress != null and bidinfo.goods.shipAddress.province != null and bidinfo.goods.shipAddress.province != '' ">
+				AND ship.province LIKE
+				<if test="dbName == 'oracle'">'%'||#{bidinfo.goods.shipAddress.province}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bidinfo.goods.shipAddress.province}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bidinfo.goods.shipAddress.province},'%')</if>
+			</if>
+			<if test="bidinfo != null and bidinfo.goods != null and bidinfo.goods.consignAddress != null and bidinfo.goods.consignAddress.province != null  and bidinfo.goods.consignAddress.province != '' ">
+				AND consign.province LIKE
+				<if test="dbName == 'oracle'">'%'||#{bidinfo.goods.consignAddress.province}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bidinfo.goods.consignAddress.province}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bidinfo.goods.consignAddress.province},'%')</if>
+			</if>
+			<if test=" bidinfo != null and bidinfo.goods != null and bidinfo.goods.shipAddress != null and bidinfo.goods.shipAddress.city != null and bidinfo.goods.shipAddress.city != '' ">
+				AND ship.city LIKE
+				<if test="dbName == 'oracle'">'%'||#{bidinfo.goods.shipAddress.city}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bidinfo.goods.shipAddress.city}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bidinfo.goods.shipAddress.city},'%')</if>
+			</if>
+			<if test="bidinfo != null and bidinfo.goods != null and bidinfo.goods.consignAddress != null and bidinfo.goods.consignAddress.city != null  and bidinfo.goods.consignAddress.city != '' ">
+				AND consign.city LIKE
+				<if test="dbName == 'oracle'">'%'||#{bidinfo.goods.consignAddress.city}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bidinfo.goods.consignAddress.city}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bidinfo.goods.consignAddress.city},'%')</if>
+			</if>
+			<if test="bidinfo != null  and bidinfo.goods!=null and  bidinfo.goods.goodsname != null  and bidinfo.goods.goodsname != '' ">
+				AND gds.goodsname LIKE
+				<if test="dbName == 'oracle'">'%'||#{bidinfo.goods.goodsname}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bidinfo.goods.goodsname}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bidinfo.goods.goodsname},'%')</if>
+			</if>
+
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY  a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="biddinginfo">
+		SELECT 
+			<include refid="biddinginfoColumns"/>
+		FROM bid_biddinginfo a
+		<include refid="biddinginfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 获取最新的三条竞标信息 -->
+	<select id="findNewBiddingList" resultType="biddinginfo">
+		SELECT 
+			<include refid="biddinginfoColumns"/>
+		FROM bid_biddinginfo a
+		<include refid="biddinginfoJoins"/>
+		<where>
+			a.del_flag = '0' and a.biddinguserid = #{userid}
+		</where>		
+		ORDER BY a.update_date DESC LIMIT 3
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bid_biddinginfo(
+
+		<if test="biddingcode != null and biddingcode !='' ">
+			biddingcode,
+		</if>
+		<if test="bidinfo.id != null and bidinfo.id !='' ">
+			bidid,
+		</if>
+		<if test="biddinguser.id != null and biddinguser.id !='' ">
+			biddinguserid,
+		</if>
+		<if test="biddingprice != null and biddingprice !='' ">
+			biddingprice,
+		</if>
+		<if test="linkman != null and linkman !='' ">
+			linkman,
+		</if>
+		<if test="linkphone != null and linkphone !='' ">
+			linkphone,
+		</if>
+		<if test="biddingstatus != null and biddingstatus !='' ">
+			biddingstatus,
+		</if>
+		<if test="guarantee != null and guarantee !='' ">
+			guarantee,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="biddingmargin != null and biddingmargin !='' ">
+			biddingmargin,
+		</if>
+		<if test="isderate != null and isderate !='' ">
+			isderate,
+		</if>
+		<if test="isGuaAccount != null and isGuaAccount != '' ">
+		    isGuaAccount,
+		</if>
+		<if test="isLockWay != null and isLockWay != '' ">
+		    isLockWay,
+		</if>
+			id
+		) VALUES (
+		<if test="biddingcode != null and biddingcode !='' ">
+			#{biddingcode},
+		</if>
+		<if test="bidinfo.id != null and bidinfo.id !='' ">
+			#{bidinfo.id},
+		</if>
+		<if test="biddinguser.id != null and biddinguser.id !='' ">
+			#{biddinguser.id},
+		</if>
+		<if test="biddingprice != null and biddingprice !='' ">
+			#{biddingprice},
+		</if>
+		<if test="linkman != null and linkman !='' ">
+			#{linkman},
+		</if>
+		<if test="linkphone != null and linkphone !='' ">
+			#{linkphone},
+		</if>
+		<if test="biddingstatus != null and biddingstatus !='' ">
+			#{biddingstatus},
+		</if>
+		<if test="guarantee != null and guarantee !='' ">
+			#{guarantee},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="biddingmargin != null and biddingmargin !='' ">
+			#{biddingmargin},
+		</if>
+		<if test="isderate != null and isderate !='' ">
+			#{isderate},
+		</if>
+		<if test="isGuaAccount != null and isGuaAccount != '' ">
+		    #{isGuaAccount},
+		</if>
+		<if test="isLockWay != null and isLockWay != '' ">
+		    #{isLockWay},
+		</if>
+		
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bid_biddinginfo SET
+			<if test="biddingcode != null and biddingcode !='' ">
+				biddingcode=#{biddingcode},
+			</if>
+			<if test="bidinfo != null and bidinfo.id != null and bidinfo.id !='' ">
+				bidid = #{bidinfo.id},
+			</if>
+			<if test="biddinguser != null and biddinguser.id != null and biddinguser.id !='' ">
+				biddinguserid = #{biddinguser.id},
+			</if>
+			<if test="biddingprice != null and biddingprice !='' ">
+				biddingprice = #{biddingprice},
+			</if>
+			<if test="linkman != null and linkman !='' ">
+				linkman = #{linkman},
+			</if>
+			<if test="linkphone != null and linkphone !='' ">
+				linkphone = #{linkphone},
+			</if>
+			<if test="biddingstatus != null and biddingstatus !='' ">
+				biddingstatus = #{biddingstatus},
+			</if>
+			<if test="guarantee != null and guarantee !='' ">
+				guarantee = #{guarantee},
+			</if>
+			<if test="updateBy !=null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			<if test="isGuaAccount != null and isGuaAccount != '' ">
+		        isGuaAccount = #{isGuaAccount},
+		    </if>
+		    <if test="isLockWay != null and isLockWay != '' ">
+		        isLockWay = #{isLockWay},
+		    </if>
+		    
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bid_biddinginfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findByBidId" resultType="biddinginfo">
+		SELECT 
+			<include refid="biddinginfoColumns"/>
+		FROM bid_biddinginfo a
+		<include refid="biddinginfoJoins"/>
+		where
+		bid.id = #{bidId}
+	</select>
+	
+	<select id="findByBidIdAndUserId" resultType="biddinginfo">
+		SELECT 
+			<include refid="biddinginfoColumns"/>
+		FROM bid_biddinginfo a
+		<include refid="biddinginfoJoins"/>
+		where
+		a.bidid = #{param1}  and  a.biddinguserid = #{param2}
+	</select>
+	<!--获取每天的交易量-->
+	<select id="daynum" resultType="int">
+		SELECT count(0) num
+		FROM bid_biddinginfo
+		WHERE date_format(CREATE_DATE,"%Y-%m-%d") = DATE_FORMAT(curdate(),"%Y-%m-%d")<!--当前每天多少单-->
+	</select>
+	
+	<!--获取今天的投标的总吨数-->
+	<select id="countNum" resultType="double">
+		SELECT sum(gds.freightvolume)
+		FROM bid_biddinginfo a 
+		<include refid="biddinginfoJoins"/>
+		WHERE TO_DAYS(a.CREATE_DATE) = TO_DAYS(SYSDATE())  and a.biddinguserid=#{userid} 
+		and  a.biddingstatus = 1
+	</select>
+	
+</mapper>

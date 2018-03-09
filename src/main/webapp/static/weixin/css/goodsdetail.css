@@ -1,0 +1,59 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: Helvetica,STHeiti STXihei, Microsoft JhengHei, Microsoft YaHei, Arial;
+	margin: 0 auto;
+	min-width: 320px;
+	background-color: #EBEBEB;
+}
+
+#carDetailInfo {
+	width: 90%;
+	margin: 0 5%;
+	margin-top: 5%;
+	background: white;
+}
+
+#divInfo {
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+	padding-top: 5px;
+	padding-bottom: 5%;
+  	font-size: 1em;
+}
+
+#divInfo div {
+	margin-top: 5px;
+	border-bottom: 1px solid #E0E0E0;
+	display:table;
+	width:100%;
+}
+
+.divBorder{
+	padding-left:8px;
+}
+
+.attribute {
+	width: 80px;
+	/*text-align: left;	
+	padding-left: 10px;*/	
+	color: #F26522;	
+	display: table-cell;
+}
+
+.addremarks{
+	display: table;
+	margin-top: 5px;
+}
+
+#additional {
+	margin-top: 3px;
+	width: 80px;
+	line-height: 25px;
+}

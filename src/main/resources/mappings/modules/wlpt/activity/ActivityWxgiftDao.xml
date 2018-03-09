@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.activity.ActivityWxgiftDao">
+    
+	<sql id="activityWxgiftColumns">
+		a.gift_id AS "id",
+		a.activity_id AS "wxinfo.id",
+		a.giftname AS "giftname",
+		a.giftcontent AS "giftcontent",
+		a.giftnum AS "giftnum",
+		a.giftdaynum AS "giftdaynum",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.isdelete AS "isdelete",
+		a.giftworth AS "giftworth",
+		a.surplusnum AS "surplusnum",
+		a.gifttype AS "gifttype",
+		a.winnum AS "winnum",
+		a.chance AS "chance",
+		a.starttime AS "starttime",
+		a.endtime AS "endtime",
+		wxinfo.activity_name AS "wxinfo.activityName",
+        wxinfo.activity_content AS "wxinfo.activityContent",
+        wxinfo.starttime AS "wxinfo.starttime",
+        wxinfo.endtime AS "wxinfo.endtime",
+        wxinfo.iseffective AS "wxinfo.iseffective",
+        wxinfo.roletype AS "wxinfo.roletype",
+        wxinfo.TYPE AS "wxinfo.type"
+	</sql>
+	
+	<sql id="activityWxgiftJoins">
+	LEFT JOIN activity_wxinfo wxinfo ON a.ACTIVITY_ID = wxinfo.ACTIVITY_ID
+	</sql>
+
+	<select id="get" resultType="ActivityWxgift">
+		SELECT
+			<include refid="activityWxgiftColumns"/>
+		FROM activity_wxgift a
+		<include refid="activityWxgiftJoins"/>
+		WHERE a.gift_id = #{id}
+	</select>
+	
+	
+    <!--获取活动下的礼物信息-->
+    <select id="findGiftByActivityId" resultType="ActivityWxgift" parameterType="List">
+        SELECT
+        <include refid="activityWxgiftColumns"/>
+        FROM activity_wxgift a
+        <include refid="activityWxgiftJoins"/>
+        where
+        a.activity_id IN
+        <foreach collection="list" item="ids" index="index"
+                 open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+        ORDER BY CREATETIME ASC
+    </select>
+    
+    
+	
+
+
+ 	<!--通过奖品ID货物活动内容信息和礼品信息-->
+    <select id="findActivityGiftInfo" resultType="ActivityWxgift">
+    	SELECT 
+			<include refid="activityWxgiftColumns"/>
+		FROM activity_wxgift a
+		<include refid="activityWxgiftJoins"/>
+		<where>
+            a.gift_id = #{giftId} AND a.ISDELETE=0
+            <if test="wxinfo != null and wxinfo.id != null and wxinfo.id !='' ">
+                and a.ACTIVITY_ID= #{wxinfo.id}
+            </if>
+        </where>
+       	<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} desc
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+    </select>
+    
+	<select id="findList" resultType="ActivityWxgift">
+		SELECT 
+			<include refid="activityWxgiftColumns"/>
+		FROM activity_wxgift a
+		<include refid="activityWxgiftJoins"/>
+		<where>
+			
+            <if test="giftname != null and giftname != ''">
+				AND a.giftname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{giftname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{giftname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{giftname},'%')</if>
+				
+			</if>
+			<if test="currenttime !=null and currenttime != ''" >
+			and  wxinfo.ENDTIME  &gt;= #{currenttime}
+			and  wxinfo.STARTTIME &lt;= #{currenttime}
+			</if>
+             <if test="wxinfo !=null and wxinfo.type !=null and wxinfo.type !=''">
+                and wxinfo.TYPE = #{wxinfo.type}
+            </if>
+             <if test="wxinfo !=null and wxinfo.iseffective !=null and wxinfo.iseffective !=''">
+                and wxinfo.iseffective = #{wxinfo.iseffective}
+            </if>
+            <if test="giftcontent !=null and giftcontent !=''">
+                and a.GIFTCONTENT= #{giftcontent}
+            </if>
+            <if test="giftnum !=null and giftnum !=''">
+                and a.GIFTNUM= #{giftnum}
+            </if>
+            <if test="giftdaynum !=null and giftdaynum !=''">
+                and a.GIFTDAYNUM= #{giftdaynum}
+            </if>
+            <if test="createtime !=null and createtime !=''">
+                and a.CREATETIME= #{createtime}
+            </if>
+            <if test="timeStart !=null and timeStart !=''"><!-- 创建时间检索 -->
+                and a.createtime &gt;= #{timeStart}
+            </if>
+            <if test="timeEnd !=null and timeEnd !=''"><!-- 创建时间检索 -->
+                and a.createtime &lt;= #{timeEnd}
+            </if>
+            <if test="updatetime !=null and updatetime !=''">
+                and a.UPDATETIME= #{updatetime}
+            </if>
+            <if test="isdelete !=null and isdelete !=''">
+                and a.ISDELETE= #{isdelete}
+            </if>
+            <if test="giftworth !=null and giftworth !=''">
+                and a.GIFTWORTH= #{giftworth}
+            </if>
+            <if test="surplusnum !=null and surplusnum !=''">
+                and a.SURPLUSNUM= #{surplusnum}
+            </if>
+            <if test="gifttype !=null and gifttype !=''">
+                and a.GIFTTYPE= #{gifttype}
+            </if>
+            <if test="winnum !=null and winnum !=''">
+                and a.WINNUM= #{winnum}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActivityWxgift">
+		SELECT 
+			<include refid="activityWxgiftColumns"/>
+		FROM activity_wxgift a
+		<include refid="activityWxgiftJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO activity_wxgift(
+		<if test="wxinfo != null and wxinfo.id != null and wxinfo.id !='' ">
+			activity_id,
+		</if>
+		<if test="giftname != null and giftname !='' ">
+			giftname,
+		</if>
+		<if test="giftcontent != null and giftcontent !='' ">
+			giftcontent,
+		</if>
+		<if test="giftnum != null and giftnum !='' ">
+			giftnum,
+		</if>
+		<if test="giftdaynum != null and giftdaynum !='' ">
+			giftdaynum,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			isdelete,
+		</if>
+		<if test="giftworth != null and giftworth !='' ">
+			giftworth,
+		</if>
+		<if test="surplusnum != null and surplusnum !='' ">
+			surplusnum,
+		</if>
+		<if test="gifttype != null and gifttype !='' ">
+			gifttype,
+		</if>
+		<if test="winnum != null and winnum !='' ">
+			winnum,
+		</if>
+		<if test="chance != null and chance !='' ">
+			chance,
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			starttime,
+		</if>
+		<if test="endtime != null and endtime !='' ">
+			endtime,
+		</if>
+			gift_id
+		) VALUES (
+		<if test="wxinfo != null and wxinfo.id != null and wxinfo.id !='' ">
+			#{wxinfo.id},
+		</if>
+		<if test="giftname != null and giftname !='' ">
+			#{giftname},
+		</if>
+		<if test="giftcontent != null and giftcontent !='' ">
+			#{giftcontent},
+		</if>
+		<if test="giftnum != null and giftnum !='' ">
+			#{giftnum},
+		</if>
+		<if test="giftdaynum != null and giftdaynum !='' ">
+			#{giftdaynum},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			#{isdelete},
+		</if>
+		<if test="giftworth != null and giftworth !='' ">
+			#{giftworth},
+		</if>
+		<if test="surplusnum != null and surplusnum !='' ">
+			#{surplusnum},
+		</if>
+		<if test="gifttype != null and gifttype !='' ">
+			#{gifttype},
+		</if>
+		<if test="winnum != null and winnum !='' ">
+			#{winnum},
+		</if>
+		<if test="chance != null and chance !='' ">
+			#{chance},
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			#{starttime},
+		</if>
+		<if test="endtime != null and endtime !='' ">
+			#{endtime},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE activity_wxgift SET 	
+			<if test="wxinfo != null and wxinfo.id != null and wxinfo.id !='' ">
+				activity_id = #{wxinfo.id},
+			</if>
+			<if test="giftname != null and giftname !='' ">
+				giftname = #{giftname},
+			</if>
+			<if test="giftcontent != null and giftcontent !='' ">
+				giftcontent = #{giftcontent},
+			</if>
+			<if test="giftnum != null and giftnum !='' ">
+				giftnum = #{giftnum},
+			</if>
+			<if test="giftdaynum != null and giftdaynum !='' ">
+				giftdaynum = #{giftdaynum},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="isdelete != null and isdelete !='' ">
+				isdelete = #{isdelete},
+			</if>
+			<if test="giftworth != null and giftworth !='' ">
+				giftworth = #{giftworth},
+			</if>
+			<if test="surplusnum != null and surplusnum !='' ">
+				surplusnum = #{surplusnum},
+			</if>
+			<if test="gifttype != null and gifttype !='' ">
+				gifttype = #{gifttype},
+			</if>
+			<if test="winnum != null and winnum !='' ">
+				winnum = #{winnum},
+			</if>
+			<if test="chance != null and chance !='' ">
+				chance = #{chance},
+			</if>
+			<if test="starttime != null and starttime !='' ">
+				starttime = #{starttime},
+			</if>
+			<if test="endtime != null and endtime !='' ">
+				endtime = #{endtime},
+			</if>
+			gift_id = #{id}
+		WHERE gift_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM activity_wxgift
+		WHERE gift_id = #{id}
+	</update>
+	<!-- 更新中奖次数 相应的礼品数量减少-->
+    <update id="updateWinNum" >
+		update
+		ACTIVITY_WXGIFT
+		SET
+		WINNUM=WINNUM+1,SURPLUSNUM=SURPLUSNUM-1
+		where
+		GIFT_ID = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.bid.OrderGoodsDao">
+    
+	<sql id="orderGoodsColumns">
+		a.id AS "id",
+  a.goods_id AS "goods.id",
+  a.bidorder_id AS "bidorder.id",
+  od.BIDINFOID AS "bidorder.bidinfo.id",
+  bid.ISUPBL AS "bidorder.bidinfo.isupbl",
+  bid.GOODSID AS "bidorder.bidinfo.goods.id",
+  gd.RESIDUALVOLUME AS "bidorder.bidinfo.goods.residualvolume",
+  gd.TRADESTATUS AS "bidorder.bidinfo.goods.tradestatus",
+  a.del_flag AS "delFlag",
+  a.create_by AS "createBy.id",
+  a.create_date AS "createDate",
+  a.update_by AS "updateBy.id",
+  a.update_date AS "updateDate",
+  a.remarks AS "remarks",
+  a.freightvolume AS "freightvolume",
+  a.freightunit AS "freightunit"
+	</sql>
+	
+	<sql id="orderGoodsJoins">
+		LEFT JOIN bid_orderinfo od ON  a.BIDORDER_ID=od.ID
+		LEFT JOIN bid_bidinfo bid ON od.BIDINFOID=bid.ID
+		LEFT JOIN gds_goods gd ON bid.GOODSID=gd.ID
+	</sql>
+    
+	<select id="get" resultType="OrderGoods">
+		SELECT
+			<include refid="orderGoodsColumns"/>
+		FROM bid_order_goods a
+		<include refid="orderGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM bid_order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="goods != null and goods.id != null and goods.id != ''">
+				AND a.goods_id = #{goods.id}
+			</if>
+			<if test="bidorder != null and bidorder.id != null and bidorder.id != ''">
+				AND a.bidorder_id = #{bidorder.id}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="freightvolume != null and freightvolume != ''">
+				AND a.freightvolume = #{freightvolume}
+			</if>
+			<if test="freightunit != null and freightunit != ''">
+				AND a.freightunit = #{freightunit}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderGoods">
+		SELECT 
+			<include refid="orderGoodsColumns"/>
+		FROM bid_order_goods a
+		<include refid="orderGoodsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bid_order_goods(
+
+		<if test="goods != null and goods.id != null and goods.id !='' ">
+			goods_id,
+		</if>
+		<if test="bidorder != null and bidorder.id != null and bidorder.id !='' ">
+			bidorder_id,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="freightvolume != null and freightvolume !='' ">
+			freightvolume,
+		</if>
+		<if test="freightunit != null and freightunit !='' ">
+			freightunit,
+		</if>
+			id
+		) VALUES (
+		<if test="goods.id != null and goods.id !='' ">
+			#{goods.id},
+		</if>
+		<if test="bidorder.id != null and bidorder.id !='' ">
+			#{bidorder.id},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="freightvolume != null and freightvolume !='' ">
+			#{freightvolume},
+		</if>
+		<if test="freightunit != null and freightunit !='' ">
+			#{freightunit},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bid_order_goods SET 	
+			<if test="goods !=null and goods.id != null and goods.id !='' ">
+				goods_id = #{goods.id},
+			</if>
+			<if test="bidorder != null and bidorder.id != null and bidorder.id !='' ">
+				bidorder_id = #{bidorder.id},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			<if test="freightvolume != null and freightvolume !='' ">
+				freightvolume = #{freightvolume},
+			</if>
+			<if test="freightunit != null and freightunit !='' ">
+				freightunit = #{freightunit},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE bid_order_goods SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

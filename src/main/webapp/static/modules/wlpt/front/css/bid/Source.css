@@ -1,0 +1,102 @@
+@charset "utf-8";
+/* CSS Document */
+.mygoods{width:670px;
+	height:auto;
+	margin-top:20px;
+	font-family:Microsoft YaHei;
+	font-size:14px;}
+.mg_right{width:150px;
+	text-align:right;
+	height:}
+/*货源管理*/
+.datalist-head .title1 {
+  vertical-align: middle;
+  height: 30px;
+  float: left;
+  font-size: 16px;
+  line-height: 30px;
+  text-align:center;
+}
+/* .datalist-head {
+  height: 30px;
+  line-height: 45px;
+  background: #FAFAFA;
+  font-size: 14px;
+  border: 1px solid #dddddd;
+  border-bottom: 0px;
+  margin-left: 10px;
+} */
+.datalist-head .title1 select {
+  width: 100px;
+  margin-left: 5px;
+}
+.datalist_h {
+  height: 70px;
+  line-height: 25px;
+  min-height: 40px;
+  max-height: 70px;
+  width: 759px;
+  vertical-align: middle;
+  font-size:12px;
+  border-bottom: 1px dashed #D7D7D7;
+  margin-top:10px;
+}
+.contentlist {
+  float: left;
+  vertical-align: middle;
+  height: 70px;
+  width: 130px;
+  line-height: 70px;
+}
+.gmnavseplace{width: 190px;text-align: center;}
+.gdsname{width: 100px; text-align: center}
+.pu{width: 110px; text-align: center}
+.putdate{width: 95px; text-align: right}
+.gmoption{width: 164px;padding-left: 20px;text-align: center;}
+
+.goods-label {  
+  /* width: 33px; */
+  height: 20px;  
+  line-height: 48px;
+  padding: 0 6px;
+  text-decoration: none;
+}
+.searchtab  {
+	width: 584px;
+	margin-bottom: 20px;
+	font-size: 16px;
+	color: #666;
+}
+/*分页*/
+.pagination {width:200px;
+  height:30px;
+  float:right;
+  zoom: 1;
+  margin-top:20px;
+}
+.disabled{
+  width:50px;
+  height:30px;
+  cursor:pointer;
+  border:solid 1px #CCC;
+}
+.current{width:20px;height:30px;
+  bolder:solid 1px #CCC;}
+.pagination a{width:30px; height:30px;
+	border:solid 1px #CCC;margin-left:5px;
+	background:#CCC;
+	}
+/*发布车源*/
+#carnum{width:450px;
+	height:auto;
+	display:none;
+	color:red;
+	}	
+#carnum ul li{
+	list-style:none;
+	height:30px;
+	margin-left:2px;
+	float:left;
+	color:#F00;
+}
+.carnumborder{border:solid 1px #CCC;}

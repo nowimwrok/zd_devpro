@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.activity.ActivityWxinfoDao">
+    
+	<sql id="activityWxinfoColumns">
+		a.activity_id AS "id",
+		a.activity_name AS "activityName",
+		a.activity_content AS "activityContent",
+		a.starttime AS "starttime",
+		a.endtime AS "endtime",
+		a.iseffective AS "iseffective",
+		a.scannum AS "scannum",
+		a.isdelete AS "isdelete",
+		a.TYPE  AS "type",
+		a.winnum AS "winnum",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.roletype AS "roletype"
+	</sql>
+	
+	<sql id="activityWxinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="ActivityWxinfo">
+		SELECT
+			<include refid="activityWxinfoColumns"/>
+		FROM activity_wxinfo a
+		<include refid="activityWxinfoJoins"/>
+		WHERE a.activity_id = #{id}
+	</select>
+
+	<select id="findList" resultType="ActivityWxinfo">
+		SELECT 
+			<include refid="activityWxinfoColumns"/>
+		FROM activity_wxinfo a
+		<include refid="activityWxinfoJoins"/>
+		<where>
+			<if test="activityName != null and activityName != ''">
+				AND a.activity_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{activityName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{activityName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{activityName},'%')</if>
+				
+			</if>
+			<if test="iseffective !=null and iseffective !=''"><!-- 活动状态 -->
+                and a.iseffective = #{iseffective}
+            </if>
+			<if test="type !=null and type !=''"><!-- 活动类型 -->
+				and a.type = #{type}
+			</if>
+			<if test="starttime !=null and starttime !=''"><!-- 创建时间检索 -->
+                and a.starttime &gt;= #{starttime}
+            </if>
+            <if test="endtime !=null and endtime !=''"><!-- 创建时间检索 -->
+                and a.endtime &lt;= #{endtime}
+            </if>
+            <if test="activitytime !=null and activitytime !=''"><!-- 创建时间检索 -->
+				and a.starttime &lt;= #{activitytime} AND a.endtime &gt;= #{activitytime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActivityWxinfo">
+		SELECT 
+			<include refid="activityWxinfoColumns"/>
+		FROM activity_wxinfo a
+		<include refid="activityWxinfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO activity_wxinfo(
+		<if test="activityName != null and activityName !='' ">
+			activity_name,
+		</if>
+		<if test="activityContent != null and activityContent !='' ">
+			activity_content,
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			starttime,
+		</if>
+		<if test="endtime != null and endtime !='' ">
+			endtime,
+		</if>
+		<if test="iseffective != null and iseffective !='' ">
+			iseffective,
+		</if>
+		<if test="scannum != null and scannum !='' ">
+			scannum,
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			isdelete,
+		</if>
+		<if test="winnum != null and winnum !='' ">
+			winnum,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="roletype != null and roletype !='' ">
+			roletype,
+		</if>
+		<if test="type !=null and type !=''"><!-- 活动类型 -->
+			type,
+		</if>
+			activity_id
+		) VALUES (
+		<if test="activityName != null and activityName !='' ">
+			#{activityName},
+		</if>
+		<if test="activityContent != null and activityContent !='' ">
+			#{activityContent},
+		</if>
+		<if test="starttime != null and starttime !='' ">
+			#{starttime},
+		</if>
+		<if test="endtime != null and endtime !='' ">
+			#{endtime},
+		</if>
+		<if test="iseffective != null and iseffective !='' ">
+			#{iseffective},
+		</if>
+		<if test="scannum != null and scannum !='' ">
+			#{scannum},
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			#{isdelete},
+		</if>
+		<if test="winnum != null and winnum !='' ">
+			#{winnum},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="roletype != null and roletype !='' ">
+			#{roletype},
+		</if>
+		<if test="type !=null and type !=''"><!-- 活动类型 -->
+			#{type},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE activity_wxinfo SET 	
+			<if test="activityName != null and activityName !='' ">
+				activity_name = #{activityName},
+			</if>
+			<if test="activityContent != null and activityContent !='' ">
+				activity_content = #{activityContent},
+			</if>
+			<if test="starttime != null and starttime !='' ">
+				starttime = #{starttime},
+			</if>
+			<if test="endtime != null and endtime !='' ">
+				endtime = #{endtime},
+			</if>
+			<if test="iseffective != null and iseffective !='' ">
+				iseffective = #{iseffective},
+			</if>
+			<if test="scannum != null and scannum !='' ">
+				scannum = #{scannum},
+			</if>
+			<if test="isdelete != null and isdelete !='' ">
+				isdelete = #{isdelete},
+			</if>
+			<if test="winnum != null and winnum !='' ">
+				winnum = #{winnum},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="roletype != null and roletype !='' ">
+				roletype = #{roletype},
+			</if>
+			<if test="type !=null and type !=''"><!-- 活动类型 -->
+				 type = #{type},
+			</if>
+			activity_id = #{id}
+		WHERE activity_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM activity_wxinfo
+		WHERE activity_id = #{id}
+	</update>
+	
+	<!-- 更新中奖次数 -->
+	<update id="updateWinNum">
+		update
+		ACTIVITY_WXINFO
+		SET
+		WINNUM=WINNUM+1
+		where
+		activity_id = #{id}
+	</update>
+	<!--更新浏览次数-->
+	<update id="updateScanNum">
+		update
+		ACTIVITY_WXINFO
+		SET
+		SCANNUM=SCANNUM+1
+		where
+		activity_id = #{id}
+	</update>
+	
+</mapper>

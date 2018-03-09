@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.consume.DeallogDao">
+    
+	<sql id="deallogColumns">
+	  a.id              AS "id",
+	  a.create_by       AS "createBy.id",
+	  u.login_name      AS "createBy.loginName",
+	  u.name            AS "createBy.name",
+	  u.phone           AS "createBy.phone",
+	  a.create_date     AS "createDate",
+	  a.dealtype        AS "dealtype",
+	  a.consumeaudit_id AS "consumeaudit.id",
+	  audit.USER_ID  AS "consumeaudit.user.id",
+	  audit.auditstatus  AS "consumeaudit.auditstatus",
+	  recode.CONSUMEMONY AS "consumeaudit.consume.consumemony",
+	  recode.CONSUMECODE AS "consumeaudit.consume.consumecode",
+	  a.delstatus       AS "delstatus",
+	  a.remarks         AS "remarks"
+	</sql>
+	
+	<sql id="deallogJoins">
+	LEFT JOIN sys_user u ON u.id = a.CREATE_BY
+  	LEFT JOIN base_consumeaudit audit ON audit.ID=a.CONSUMEAUDIT_ID
+	LEFT JOIN user_consumerecod recode ON recode.ID=audit.CONSUME_ID
+	</sql>
+    
+	<select id="get" resultType="Deallog">
+		SELECT
+			<include refid="deallogColumns"/>
+		FROM base_deallog a
+		<include refid="deallogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Deallog">
+		SELECT 
+			<include refid="deallogColumns"/>
+		FROM base_deallog a
+		<include refid="deallogJoins"/>
+		<where>
+			<if test="searchinfo!= null and searchinfo!=''">
+                AND (u.login_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+                OR
+                recode.CONSUMECODE LIKE
+                <if test="dbName == 'oracle'">'%'||#{searchinfo}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{searchinfo}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{searchinfo},'%')</if>
+
+                )
+            </if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="dealtype != null and dealtype != ''">
+				AND a.dealtype = #{dealtype}
+			</if>
+			<if test="consumeaudit != null and consumeaudit.id != null and consumeaudit.id != ''">
+				AND a.consumeaudit_id = #{consumeaudit.id}
+			</if>
+			<if test="consumeaudit != null and consumeaudit.auditstatus != null and consumeaudit.auditstatus != ''">
+				AND audit.auditstatus = #{consumeaudit.auditstatus}
+			</if>
+			<if test="delstatus != null and delstatus != ''">
+				AND a.delstatus = #{delstatus}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Deallog">
+		SELECT 
+			<include refid="deallogColumns"/>
+		FROM base_deallog a
+		<include refid="deallogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_deallog(
+
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="dealtype != null and dealtype !='' ">
+			dealtype,
+		</if>
+		<if test="consumeaudit.id != null and consumeaudit.id !='' ">
+			consumeaudit_id,
+		</if>
+		<if test="delstatus != null and delstatus !='' ">
+			delstatus,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+			id
+		) VALUES (
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="dealtype != null and dealtype !='' ">
+			#{dealtype},
+		</if>
+		<if test="consumeaudit.id != null and consumeaudit.id !='' ">
+			#{consumeaudit.id},
+		</if>
+		<if test="delstatus != null and delstatus !='' ">
+			#{delstatus},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_deallog SET 	
+			<if test="dealtype != null and dealtype !='' ">
+				dealtype = #{dealtype},
+			</if>
+			<if test="consumeaudit.id != null and consumeaudit.id !='' ">
+				consumeaudit_id = #{consumeaudit.id},
+			</if>
+			<if test="delstatus != null and delstatus !='' ">
+				delstatus = #{delstatus},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_deallog
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

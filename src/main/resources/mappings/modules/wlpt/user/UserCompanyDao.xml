@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserCompanyDao">
+    
+	<sql id="userCompanyColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.logoname AS "logoname",
+		a.companyname AS "companyname",
+		a.legalperson AS "legalperson",
+		a.legalidcardnum AS "legalidcardnum",
+		a.legaladdress AS "legaladdress",
+		a.headerperson AS "headerperson",
+		a.headeridcarno AS "headeridcarno",
+		a.headeraddress AS "headeraddress",
+		a.headertel AS "headertel",
+		a.headermobile AS "headermobile",
+		a.headerexperience AS "headerexperience",
+		a.qrencoder AS "qrencoder",
+		a.companyaddress AS "companyaddress",
+		a.homepageurl AS "homepageurl",
+		a.businesslicencenum AS "businesslicencenum",
+		a.mainbusiness AS "mainbusiness",
+		a.advantagesresources AS "advantagesresources",
+		a.mainline AS "mainline",
+		a.setuptime AS "setuptime",
+		a.companyvalidtime AS "companyvalidtime",
+		a.companysummary AS "companysummary",
+		a.companyintroduction AS "companyintroduction",
+		a.qualifications AS "qualifications",
+		a.isrecommend AS "isrecommend",
+		a.status AS "status",
+		a.companyfax AS "companyfax",
+		a.companyqq AS "companyqq",
+		a.productserver AS "productserver",
+		a.companyhonor AS "companyhonor",
+		a.companytel AS "companytel",
+		a.province_city_district AS "provinceCityDistrict",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+		<sql id="userCompanypictureColumns">
+		,
+		p.id AS "usercompanypicture.id",
+		p.companyid AS "usercompanypicture.companyid.id",
+		p.headerimg AS "usercompanypicture.headerimg",
+		p.businesslicencenumimg AS "usercompanypicture.businesslicencenumimg",
+		p.idcardimg AS "usercompanypicture.idcardimg",
+		p.transportcardimg AS "usercompanypicture.transportcardimg",
+		p.taximg AS "usercompanypicture.taximg",
+		p.companysimg AS "usercompanypicture.companysimg",
+		p.transporstyleimg AS "usercompanypicture.transporstyleimg",
+		p.carteamimg AS "usercompanypicture.carteamimg",
+		p.comanycultureimg AS "usercompanypicture.comanycultureimg",
+		p.comanyhonorimg AS "usercompanypicture.comanyhonorimg",
+		p.createtime AS "usercompanypicture.createtime",
+		p.updatetime AS "usercompanypicture.updatetime",
+		p.comanyhonorimgtitle AS "usercompanypicture.comanyhonorimgtitle",
+		p.create_by AS "usercompanypicture.createBy.id",
+		p.create_date AS "usercompanypicture.createDate",
+		p.update_by AS "usercompanypicture.updateBy.id",
+		p.update_date AS "usercompanypicture.updateDate",
+		p.remarks AS "usercompanypicture.remarks",
+		p.del_flag AS "usercompanypicture.delFlag"
+	</sql>
+	
+	
+	<sql id="userCompanyJoins">
+		LEFT JOIN sys_user b ON b.id = a.userid
+	</sql>
+	
+	<sql id="userCompanyJoinsCompanypicture">
+		LEFT JOIN user_companypicture p ON p.companyid = a.id
+	</sql>
+    
+	<select id="get" resultType="UserCompany">
+		SELECT 
+			<include refid="userCompanyColumns"/>
+			<include refid="userCompanypictureColumns"/>			
+		FROM user_company a
+		<include refid="userCompanyJoins"/>
+		<include refid="userCompanyJoinsCompanypicture"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UserCompany">
+		SELECT 
+			<include refid="userCompanyColumns"/>
+		FROM user_company a
+		<include refid="userCompanyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user != null and user != ''">
+				AND a.userid = #{user}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserCompany">
+		SELECT 
+			<include refid="userCompanyColumns"/>
+		FROM user_company a
+		<include refid="userCompanyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_company(
+
+			id,
+			userid,
+			logoname,
+			companyname,
+			legalperson,
+			legalidcardnum,
+			legaladdress,
+			headerperson,
+			headeridcarno,
+			headeraddress,
+			headertel,
+			headermobile,
+			headerexperience,
+			qrencoder,
+			companyaddress,
+			homepageurl,
+			businesslicencenum,
+			mainbusiness,
+			advantagesresources,
+			mainline,
+			setuptime,
+			companyvalidtime,
+			companysummary,
+			companyintroduction,
+			qualifications,
+			isrecommend,
+			status,
+			companyfax,
+			companyqq,
+			productserver,
+			companyhonor,
+			companytel,
+			province_city_district,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{logoname},
+			#{companyname},
+			#{legalperson},
+			#{legalidcardnum},
+			#{legaladdress},
+			#{headerperson},
+			#{headeridcarno},
+			#{headeraddress},
+			#{headertel},
+			#{headermobile},
+			#{headerexperience},
+			#{qrencoder},
+			#{companyaddress},
+			#{homepageurl},
+			#{businesslicencenum},
+			#{mainbusiness},
+			#{advantagesresources},
+			#{mainline},
+			#{setuptime},
+			#{companyvalidtime},
+			#{companysummary},
+			#{companyintroduction},
+			#{qualifications},
+			#{isrecommend},
+			#{status},
+			#{companyfax},
+			#{companyqq},
+			#{productserver},
+			#{companyhonor},
+			#{companytel},
+			#{provinceCityDistrict},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_company SET 	
+			<if test="user!=null and user.id != null and user.id !='' ">
+				userid = #{user.id},
+			</if>
+			<if test="logoname != null and logoname !='' ">
+				logoname = #{logoname},
+			</if>
+			<if test="companyname != null and companyname !='' ">
+				companyname = #{companyname},
+			</if>
+			<if test="legalperson != null and legalperson !='' ">
+				legalperson = #{legalperson},
+			</if>
+			<if test="legalidcardnum != null and legalidcardnum !='' ">
+				legalidcardnum = #{legalidcardnum},
+			</if>
+			<if test="legaladdress != null and legaladdress !='' ">
+				legaladdress = #{legaladdress},
+			</if>
+			<if test="headerperson != null and headerperson !='' ">
+				headerperson = #{headerperson},
+			</if>
+			<if test="headeridcarno != null and headeridcarno !='' ">
+				headeridcarno = #{headeridcarno},
+			</if>
+			<if test="headeraddress != null and headeraddress !='' ">
+				headeraddress = #{headeraddress},
+			</if>
+			<if test="headertel != null and headertel !='' ">
+				headertel = #{headertel},
+			</if>
+			<if test="headermobile != null and headermobile !='' ">
+				headermobile = #{headermobile},
+			</if>
+			<if test="headerexperience != null and headerexperience !='' ">
+				headerexperience = #{headerexperience},
+			</if>
+			<if test="qrencoder != null and qrencoder !='' ">
+				qrencoder = #{qrencoder},
+			</if>
+			<if test="companyaddress != null and companyaddress !='' ">
+				companyaddress = #{companyaddress},
+			</if>
+			<if test="homepageurl != null and homepageurl !='' ">
+				homepageurl = #{homepageurl},
+			</if>
+			<if test="businesslicencenum != null and businesslicencenum !='' ">
+				businesslicencenum = #{businesslicencenum},
+			</if>
+			<if test="mainbusiness != null and mainbusiness !='' ">
+				mainbusiness = #{mainbusiness},
+			</if>
+			<if test="advantagesresources != null and advantagesresources !='' ">
+				advantagesresources = #{advantagesresources},
+			</if>
+			<if test="mainline != null">
+				mainline = #{mainline},
+			</if>
+			<if test="setuptime != null and setuptime !='' ">
+				setuptime = #{setuptime},
+			</if>
+			<if test="companyvalidtime != null and companyvalidtime !='' ">
+				companyvalidtime = #{companyvalidtime},
+			</if>
+			<if test="companysummary != null and companysummary !='' ">
+				companysummary = #{companysummary},
+			</if>
+			<if test="companyintroduction != null and companyintroduction !='' ">
+				companyintroduction = #{companyintroduction},
+			</if>
+			<if test="qualifications != null and qualifications !='' ">
+				qualifications = #{qualifications},
+			</if>
+			<if test="isrecommend != null and isrecommend !='' ">
+				isrecommend = #{isrecommend},
+			</if>
+			<if test="status != null and status !='' ">
+				status = #{status},
+			</if>
+			<if test="companyfax != null and companyfax !='' ">
+				companyfax = #{companyfax},
+			</if>
+			<if test="companyqq != null and companyqq !='' ">
+				companyqq = #{companyqq},
+			</if>
+			<if test="productserver != null and productserver !='' ">
+				productserver = #{productserver},
+			</if>
+			<if test="companyhonor != null and companyhonor !='' ">
+				companyhonor = #{companyhonor},
+			</if>
+			<if test="companytel != null and companytel !='' ">
+				companytel = #{companytel},
+			</if>
+			<if test="provinceCityDistrict != null and provinceCityDistrict !='' ">
+				province_city_district = #{provinceCityDistrict},
+			</if>
+			<if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_company SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE userid = #{user}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

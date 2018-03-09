@@ -1,0 +1,514 @@
+﻿@charset "utf-8";
+input[type="text"],input[type="textarea"]{
+    padding: 5px;
+}
+.glyphicon-chevron-left:before{
+    width: 20px;
+    height: 20px;
+    border: 6px solid rgba(0, 0, 0, 0);
+    border-top: 6px solid #f5f4f4;
+    border-left: 6px solid #f5f4f3;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    content: "";
+    position: absolute;
+}
+/*轮播图右边箭头--代码*/
+.glyphicon-chevron-right:before{
+    width: 20px;
+    height: 20px;
+    border: 6px solid rgba(0, 0, 0, 0);
+    border-top: 6px solid #f5f4f4;
+    border-left: 6px solid #f5f4f3;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    content: "";
+    position: absolute;
+}
+/*个人中心*/
+/*.fa-chevron-down:before {
+    -webkit-transform: rotate(-45deg);
+    width: 12px;
+    height: 12px;
+    border: 0px solid rgba(0, 0, 0, 0);
+    border-top: 5px solid #f5f4f4;
+    border-left: 5px solid #f5f4f3;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    content: "";
+    position: absolute;
+    top: -15px;
+}*/
+.accordion li.open i.fa-chevron-down {
+    -webkit-transform: rotate(89deg);
+    content: "";
+    position: absolute;
+    top: 35px;
+}
+.fa-chevron-down:before{
+    width: 12px;
+    height: 12px;
+    border: 0px solid rgba(0, 0, 0, 0);
+    border-top: 5px solid #f5f4f4;
+    border-left: 5px solid #f5f4f3;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    content: "";
+    position: absolute;
+    top: 3px;
+    right: 5px;
+}
+/*以下  车型要求选择、车长要求选择、货物重量选择等等--各个页面公共--样式*/
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    border: 1px solid #CCC!important;
+}
+/*加载*/
+.loading {
+    text-align: center;
+    height: 45px;
+    width: 100%;
+    margin-bottom:20px;
+}
+.loading_lock{
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    position: fixed;
+    background-color: rgba(165, 160, 154, 0.34);
+    top: 0px;
+    text-align: center;
+}
+.loading_lock img{
+    margin-top: 25%;
+}
+#noneData {
+    text-align: center;
+    width: 100%;
+    line-height: 25px;
+    display: none;
+}
+
+.left-css {
+    width: 100%;
+    overflow: hidden;
+}
+.all-css {
+    border: 1px solid #ccc;
+    padding-top: 15px;
+}
+.genre,.sort {
+    margin-bottom: 28px;
+    line-height: 25px;
+}
+.genre-title {
+    font-weight: bold;
+    display: block;
+    float: left;
+    margin-left: 25px;
+}
+.sort-first,.sort-second{
+    display: inline-block;
+}
+.line-wrap-first{
+    margin-bottom: -20px;
+}
+.all-ul li {
+    float: left;
+    text-align: center;
+    padding: 0px 8px;
+    cursor: pointer;
+}
+.all-ul{
+	overflow: hidden;
+}
+.hall-user{
+	width: 110px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    float: left;
+    white-space: nowrap;
+}
+img.hall-user-level{
+	float:left;
+}
+.list-l{
+/* 	width: 68%; */
+	width: 100%;
+    margin: 0 auto;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+/*列表--公共--样式*/
+.list-wrap {
+    margin-bottom: 15px;
+    width:100%;
+    overflow: hidden;
+}
+
+.logistics{
+    font-size: 1.7rem;
+    color: #01a1ea;
+    margin-right: 8px;
+}
+.list-left p{
+    text-align: left;
+    vertical-align: middle;
+    font-size: 1.5rem;
+}
+
+.list-left {
+    display: block;
+    float: left;
+    width: 20%;
+    line-height: 25px;
+    text-indent: 5%;
+}
+.city-blue{
+    color: #00A2E9;
+    font-size: 1.7rem;
+    font-weight: bold;
+}
+.list-change{
+    width: 18%;
+    float: left;
+}
+.busi-attes{
+    font-weight: bold;
+}
+.business{
+    margin-right: 5px;
+}
+.btn-grab,.list-change,.car-details{
+    line-height: 59px;
+}
+.btn-warning{
+    width: 10%;
+    background-color: #ff8e00;
+    border-color: #ff8e00;
+    border: 1px solid #ff8e00;
+}
+.btn-warning:hover{
+    width: 10%;
+    background-color: #ff8e00;
+    border-color: #ff8e00;
+    border: 1px solid #ff8e00;
+}
+.car-details{
+    width: 20%;
+    float: left;
+}
+.car-weight,.car-length{
+    padding-right: 5%;
+}
+#gjcx_span>img{
+	width: 17px;
+    position: relative;
+    top: -1px;
+    left: 3px;
+}
+
+
+
+/*分页按钮--样式*/
+.paging{
+    /* width: 68%; */
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 6%;
+}
+#pagination>li a{
+    color: #000;
+}
+#pagination>li {
+    display: inline-block;
+    margin-left: 2px;
+}
+.page_active{
+    background-color: #00A2E9;
+}
+
+#pagination li>a, #pagination li>span {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: none;
+    border-radius:0;
+}
+
+
+
+
+/*底部背景为蓝色的   “卓大物流平台，专业物流管家”--样式*/
+#bg-blue{
+    font-size: 1.8rem;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+
+
+
+/*云仓样式修改*/
+/*输入框及确定按钮*/
+.all-ul input{
+    width: 100px;
+}
+.sort-second form{
+    margin-bottom: 7px;
+}
+.ensure{
+    background-color: #00A2E9;
+    padding: 2px 10px;
+    text-align: center;
+    border: none;
+    color: #fff;
+}
+
+/*云仓列表样式修改*/
+#list-l{
+    margin-bottom: 5%;
+}
+.cloud-img{
+    float: left;
+    margin-left: 15px;
+    margin-right: 15px;
+    width: 14%;
+    height: 125px;
+}
+.vertical-line{
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 12px;
+    color: #333;
+    position: relative;
+    top: -1px;
+}
+.warehouse-detail h4{
+    color:#00A2E9;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.warehouse-detail{
+    float: left;
+    text-align: left;
+    width: 28%;
+    text-indent: 5%;
+}
+.warehouse-price{
+    float: left;
+    text-align: center;
+    /* color: #84817D; */
+    margin-top: 20px;
+    width: 24%;
+}
+.area{
+    margin-bottom: 20px;
+}
+.price-title{
+    color: red;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+#btn-grab{
+    display: block;
+    text-align: center;
+    margin-right: 20px;
+    /* line-height: 110px; */
+}
+.warehouse-list{
+    margin-bottom: 15px;
+    width: 100%;
+    overflow: hidden;
+    line-height: 15px;
+    padding-bottom: 15px;
+}
+
+
+/*物流专线--样式*/
+.logi-list-one{
+    width: 20%;
+}
+.logi-list-two{
+    width: 20%;
+}
+.span-red{
+    color: red;
+}
+.logi-list-three{
+    width: 15%;
+}
+.logi-list-four{
+    float: left;
+    width: 18%;
+}
+.logi-list-five{
+    width: 15%;
+    float: left;
+}
+.logi-list-six button{
+    width: 100%;
+}
+.logi-list-six{
+    float: left;
+    width: 9%;
+}
+.logi-list{
+    width: 70%;
+}
+
+
+
+/*找货列表页--样式*/
+.switch-list{
+    float: right;
+    margin-right: 2%;
+}
+.switch-list button{
+    width: 100%;
+}
+.map{
+    border: 1px solid #ccc;
+}
+
+
+
+
+
+/*新闻列表页--样式*/
+
+/*清除轮播图浮动--样式*/
+#slidershow{
+    clear: both;
+}
+/*新闻列表页--左列表页--样式*/
+#glyphicon-play{
+    /* -moz-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    color: #00A2E9;
+    margin-left: 27px; */
+    position: absolute;
+    top: 22px;
+    left: 50px;
+    z-index:-1;
+}
+.news-menu li{
+    float: left;
+    margin-right: 2%;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+.news-left ul{
+    margin-bottom: 0px;
+    overflow: hidden;
+    position: relative;
+}
+.media-body h4{
+    font-weight: bold;
+}
+.media-wrap button{
+    display: block;
+    margin-top: 4%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.media-wrap{
+    clear: both;
+    border-top: 3px solid #00A2E9;
+    border-left: 1px solid #E7E6E3;
+    border-bottom: 1px solid #E7E6E3;
+    border-right: 1px solid #E7E6E3;
+    padding: 2%;
+}
+.news-left{
+    width: 75%;
+    float: left;
+}
+.news-list{
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-bottom: 6%;
+    /* margin-top: 4%; */
+}
+/*新闻列表页--右列表页--样式*/
+.news-right{
+    width: 23%;
+    float: right;
+}
+/*新闻列表页--右列表页--百科热词--样式*/
+.news-right h4{
+    margin-top: 0px;
+    margin-bottom: 6px;
+    font-weight: normal;
+}
+.hot-word button:hover, .hot-word button:focus, .hot-word button:active, .hot-word button.active, .open>.dropdown-toggle.btn-default {
+    color: #fff;
+    border: #384243;
+    background: #2196F3;
+}
+.btn-active{
+    color: #fff;
+    background-color: #384243;
+    border: none;
+}
+.hot-word button{
+    border-radius: 0px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.hot-word,.hot-ency{
+    border: 1px solid #E7E6E3;
+    padding: 3%;
+    margin-bottom: 20%;
+}
+/*新闻列表页--右列表页--热门百科--样式*/
+.hotEncy-title h4{
+    float: left;
+    margin-top: 0px;
+    margin-bottom: 6px;
+    font-weight: normal;
+}
+.hotEncy-title span{
+    float: right;
+}
+.hot-ency ul{
+    list-style: inherit;
+}
+.hot-ency ul li{
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px 0px;
+}
+.hotEncy-title span{
+    float: right;
+}
+.hotEncy-title{
+    overflow: hidden;
+    padding: 0 5px;
+}
+.hot-ency ul li a,.news-menu li a{
+    color: #000;
+    text-decoration: none;
+}
+
+
+
+/*所有黄色按钮的背景色--公共样式*/
+.all_button button {
+    background-color: #fec732;
+    border: none;
+}
+.all_button button:hover,.all_button button:focus,.all_button button:active{
+    background-color:#fec732;
+    border-color:#fec732;
+}
+/*点击出现蓝色按钮的背景色--公共样式*/
+.active {
+    background-color: #01a1ea;
+    color: #fff;
+}

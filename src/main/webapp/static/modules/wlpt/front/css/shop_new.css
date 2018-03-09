@@ -1,0 +1,354 @@
+@charset "utf-8";
+
+.clearfix{
+    *zoom:1;
+}
+.clearfix:after{
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/*商城首页---注释*/
+.per_shop_info_wrap{
+    width: 100%;
+    background: #ebeef0;
+    height: 120px;
+}
+.per_shop_info{
+    width: 68%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.per_head img{
+    width: 80px;
+    height: 80px;
+    box-shadow: -7px 7px 5px #ccc;
+    margin-left: 7px;
+    border-radius: 50%;
+}
+.per_head span{
+    font-size: 18px;
+    padding-left: 5px;
+}
+.per_head{
+    float: left;
+    line-height: 120px;
+    width:30%;
+}
+li .accoumt{
+    font-size: 22px;
+    color: #fad14b;
+}
+.shop_info ul li span{
+    display: block;
+}
+.shop_info ul li{
+    display: inline-block;
+    *display:inline;
+    *zoom:1;
+    display: inline-block;
+    padding: 0 10px;
+    text-align: center;
+    width: 31%;
+}
+.shop_info ul{
+    float: right;
+    line-height: 60px;
+    width: 66%;
+}
+.shop_info{
+    overflow: hidden;
+    width: 69%;
+    height: 100%;
+    float: right;
+}
+.purchase_list{
+    margin-bottom: 40px;
+    display: none;
+}
+.bg_blue a{
+    display: block;
+    color: #fff;
+    line-height: 48px;
+    height: 100%;
+}
+.bg_blue a:focus,.bg_blue a:hover,.bg_blue a:visited,.bg_blue a:active{
+    color: #fff;
+}
+.ImView_details .zhuobi{
+    position: absolute;
+    top:61%;
+    font-size: 28px;
+    font-family: "微软雅黑";
+    font-weight: bold;
+}
+.ImView_details{
+    background-image: url("../../images/shop_img/IM_bg.png");
+    background-repeat: no-repeat;
+    background-size: 99%;
+    height: 264px;
+    position: relative;
+}
+.ImView_list button{
+    width: 100%;
+    height: 68px;
+    background-image: url("../../images/shop_img/IM_bg_btn.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border: none;
+}
+.ImView_details p{
+    width: 100%;
+    text-align: center;
+}
+.ImView_details img{
+    width: 51%;
+    position: absolute;
+    left: 26%;
+    top: 16%;
+}
+.detail_p{
+    position: absolute;
+    top: 86%;
+}
+.immediately_view .ImView_list{
+    width: 33%;
+    float: left;
+    /*padding: 0px 1%;*/
+    /*-webkit-box-shadow: #666 0px 0px 10px;*/
+    /*-moz-box-shadow: #666 0px 0px 10px;*/
+    /*box-shadow: #666 0px 0px 10px;*/
+}
+.immediately_view{
+    width: 68%;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.discount_wrap{
+    position: absolute;
+    top: 22%;
+    left: 52%;
+    text-align: right;
+    line-height: 50px;
+}
+.purchase_detail{
+    position: relative;
+    margin-bottom: 10px;
+}
+.purchase_detail h4{
+    font-weight: bold;
+}
+.discount_wrap .btn-warning{
+    background: #fcd23a;
+    border:#fcd23a;
+    width: 40%;
+}
+.discount_wrap .btn-warning a{
+    color: #fff;
+}
+.discount_wrap .btn-warning:hover,.discount_wrap .btn-warning:focus,.discount_wrap .btn-warning:visited{
+    background: #fcd23a;
+    border:#fcd23a;
+    width: 40%;
+}
+.discount_wrap .btn-warning a:hover,.discount_wrap .btn-warning a:focus,.discount_wrap .btn-warning a:visited,.discount_wrap .btn-warning a:active{
+    color: #fff;
+}
+.purchase_detail{
+    width: 100%;
+    margin-bottom: 10px;
+}
+/*End----商城首页---注释*/
+
+
+
+
+
+
+
+
+/*主题内容-- 头部 -- 公共样式*/
+.shop_content h4{
+    border-bottom: 1px solid #cccccc;
+    text-align: left;
+    height: 45px;
+    line-height: 45px;
+    color: #004da0;
+    width: 100%;
+    text-indent: 2em;
+}
+.shop_content{
+    width: 100%;
+    margin: 0 auto;
+    border-top:5px solid #00a1e8;
+    border-left: 1px solid #ccc;
+    border-right:1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top:40px;
+}/*END---主题内容-- 头部 -- 公共样式*/
+
+
+
+/*申请一卡通------注释*/
+.tab_one .tab_left{
+    width: 30%;
+    text-align: right;
+}
+.tab_one .tab_right{
+    width: 30%;
+    text-align: left;
+    text-indent: 1em;
+}
+
+
+.tab_two .tab_left{
+    text-align: right;
+    width: 30%;
+    font-weight: bold;
+}
+.tab_two .tab_right input{
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #ccc;
+    /*background: #e9f8fa;*/
+    text-indent: 0.8rem;
+    width: 175px;
+}
+.tab_two .tab_right{
+    width:70%;
+    text-align: left;
+    text-indent: 1em;
+}
+.tab_two tr{
+    line-height: 50px;
+    height: 50px;
+}
+
+.btn_blue a{
+    width: 100%;
+    height:100%;
+    color: #fff;
+    display: block;
+}
+.btn_td .btn_blue{
+    margin-top: 10px;
+    width: 21%;
+    background: #40b0fb;
+    border-radius: 8px;
+    border:1px solid #40b0fb;
+    color:white;
+}
+.btn_td{
+    text-align: center;
+}
+.shop_content table{
+    width: 90%;
+    margin: 0 auto;
+    line-height: 30px;
+    height: 30px;
+    margin-bottom: 20px;
+}
+/*End----申请一卡通------注释*/
+
+
+
+
+
+
+/*提交订单------注释*/
+.tr_b{
+    text-indent: 1em;
+    padding-left: 5px;
+}
+.tab_bg img{
+    width: 25%;
+}
+.tab_bg tr{
+    line-height: 120px;
+    height: 120px;
+    text-align: center;
+    background: #ebeef0;
+}
+.tab_bg{
+    width: 100%!important;
+    border-bottom: 1px dashed #ccc;
+    margin-bottom: 30px;
+}
+table .tr_bg_white{
+   background: #fff;
+    height: 10px;
+}
+.pur_notice p,.pur_notice h5{
+    text-align: left;
+}
+.pur_notice h5{
+    font-weight: bold;
+}
+.pur_notice p{
+    text-indent: 2em;
+}
+.pur_notice{
+    width: 90%;
+    margin-left: auto;
+    margin-right:auto;
+}
+/*End----提交订单------注释*/
+
+
+
+/*在线支付---注释*/
+.onlinePay_notice h4{
+    color: #67d078;
+    text-align: center;
+    border:none;
+    font-weight: bold;
+}
+
+.onlinePay_notice{
+    width: 90%;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 50px;
+    border-bottom: 1px dashed #ccc;
+}
+.colspan2 td{
+    text-align: center;
+}
+.pur_tab .tab_left{
+    text-align: right;
+}
+.pur_Type_li li .pur_type{
+    height: 40px;
+    width: auto;
+}
+.pur_Type_li li .pur_type_choose{
+    position: absolute;
+    right: -14px;
+    bottom: 25px;
+}
+.pur_Type_li li{
+    float: left;
+    width:33%;
+    padding: 20px 0px;
+    position: relative;
+}
+.pur_Type_li{
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+/*End-----在线支付---注释*/

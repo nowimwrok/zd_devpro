@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserPurseDao">
+
+    <sql id="userPurseColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.webbalance AS "webbalance",
+		a.availablebalance AS "availablebalance",
+		a.freezemoney AS "freezemoney",
+		a.WEBCOIN     AS "webcoin",
+        a.AVAILABLECOIN   AS "availablecoin",
+        a.FREEZECOIN      AS "freezecoin",
+		a.biddingmoney AS "biddingmoney",
+		a.guaranteemone AS "guaranteemone",
+		a.petrolbalance AS "petrolbalance",
+		a.redpacket AS "redpacket",
+		a.settlemoney AS "settlemoney",
+		a.settlestatus AS "settlestatus",
+		a.insurance AS "insurance",
+		a.creditmoney AS "creditmoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u2.name AS "user.name",
+		b.name AS "user.name"
+	</sql>
+
+    <sql id="userPurseJoins">
+		LEFT JOIN sys_user b ON b.id = a.user_id
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+
+    <select id="get" resultType="UserPurse">
+        SELECT
+        <include refid="userPurseColumns"/>
+        FROM user_purse a
+        <include refid="userPurseJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="UserPurse">
+        SELECT
+        <include refid="userPurseColumns"/>
+        FROM user_purse a
+        <include refid="userPurseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="user != null and user.id != null and user.id != ''">
+                AND a.user_id = #{user.id}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="UserPurse">
+        SELECT
+        <include refid="userPurseColumns"/>
+        FROM user_purse a
+        <include refid="userPurseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO user_purse(
+        <if test="user.id != null and user.id !='' ">
+            user_id,
+        </if>
+        <if test="webbalance != null and webbalance !='' ">
+            webbalance,
+        </if>
+        <if test="availablebalance != null and availablebalance !='' ">
+            availablebalance,
+        </if>
+        <if test="freezemoney != null and freezemoney !='' ">
+            freezemoney,
+        </if>
+        <if test="biddingmoney != null and biddingmoney !='' ">
+            biddingmoney,
+        </if>
+        <if test="guaranteemone != null and guaranteemone !='' ">
+            guaranteemone,
+        </if>
+        <if test="petrolbalance != null and petrolbalance !='' ">
+            petrolbalance,
+        </if>
+        <if test="redpacket != null and redpacket !='' ">
+            redpacket,
+        </if>
+        <if test="settlemoney != null and settlemoney !='' ">
+            settlemoney,
+        </if>
+        <if test="settlestatus != null and settlestatus !='' ">
+            settlestatus,
+        </if>
+        <if test="insurance != null and insurance !='' ">
+            insurance,
+        </if>
+        <if test="creditmoney != null and creditmoney !='' ">
+            creditmoney,
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        id
+        ) VALUES (
+        <if test="user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="webbalance != null and webbalance !='' ">
+            #{webbalance},
+        </if>
+        <if test="availablebalance != null and availablebalance !='' ">
+            #{availablebalance},
+        </if>
+        <if test="freezemoney != null and freezemoney !='' ">
+            #{freezemoney},
+        </if>
+        <if test="biddingmoney != null and biddingmoney !='' ">
+            #{biddingmoney},
+        </if>
+        <if test="guaranteemone != null and guaranteemone !='' ">
+            #{guaranteemone},
+        </if>
+        <if test="petrolbalance != null and petrolbalance !='' ">
+            #{petrolbalance},
+        </if>
+        <if test="redpacket != null and redpacket !='' ">
+            #{redpacket},
+        </if>
+        <if test="settlemoney != null and settlemoney !='' ">
+            #{settlemoney},
+        </if>
+        <if test="settlestatus != null and settlestatus !='' ">
+            #{settlestatus},
+        </if>
+        <if test="insurance != null and insurance !='' ">
+            #{insurance},
+        </if>
+        <if test="creditmoney != null and creditmoney !='' ">
+            #{creditmoney},
+        </if>
+        <if test="createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE user_purse SET
+        <if test="user!=null and user.id != null and user.id !='' ">
+            user_id = #{user.id},
+        </if>
+        <if test="webbalance != null ">
+            webbalance = #{webbalance},
+        </if>
+        <if test="availablebalance != null ">
+            availablebalance = #{availablebalance},
+        </if>
+        <if test="freezemoney != null">
+            freezemoney = #{freezemoney},
+        </if>
+        <if test="webcoin != null ">
+            webcoin = #{webcoin},
+        </if>
+        <if test="availablecoin != null ">
+            availablecoin = #{availablecoin},
+        </if>
+        <if test="freezecoin != null">
+            freezecoin = #{freezecoin},
+        </if>
+        <if test="biddingmoney != null ">
+            biddingmoney = #{biddingmoney},
+        </if>
+        <if test="guaranteemone != null  ">
+            guaranteemone = #{guaranteemone},
+        </if>
+        <if test="petrolbalance != null  ">
+            petrolbalance = #{petrolbalance},
+        </if>
+        <if test="redpacket != null  ">
+            redpacket = #{redpacket},
+        </if>
+        <if test="settlemoney != null  ">
+            settlemoney = #{settlemoney},
+        </if>
+        <if test="settlestatus != null and settlestatus !='' ">
+            settlestatus = #{settlestatus},
+        </if>
+        <if test="insurance != null ">
+            insurance = #{insurance},
+        </if>
+        <if test="creditmoney != null ">
+            creditmoney = #{creditmoney},
+        </if>
+        <if test="updateBy!=null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE user_purse SET
+        del_flag = #{DEL_FLAG_DELETE}
+        <choose>
+            <when test="id !=null and id != ''">
+                WHERE id = #{id}
+            </when>
+            <otherwise>
+                WHERE user_id = #{user.id}
+            </otherwise>
+        </choose>
+    </update>
+
+</mapper>

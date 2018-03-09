@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.GpsCarLocsDao">
+    
+	<sql id="gpsCarLocsColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.mobile AS "mobile",
+		FROM_UNIXTIME(a.recvtime/1000,'%Y-%m-%d %H:%i:%s') AS "formatrecvtime",
+		FROM_UNIXTIME(a.gpstime/1000,'%Y-%m-%d %H:%i:%s') AS "formatgpstime",
+		a.recvtime AS "recvtime",
+		a.gpstime AS "gpstime",
+		a.lat AS "lat",
+	<!--  1 coord_type, -->	
+		a.lng AS "lng",
+		a.lat_xz AS "latXz",
+		a.lng_xz AS "lngXz",
+		a.state AS "state",
+		a.speed AS "speed",
+		a.direct AS "direct",
+		a.temp AS "temp",
+		a.oil AS "oil",
+		a.oilmn1 AS "oilmn1",
+		a.oilmn2 AS "oilmn2",
+		a.distance AS "distance",
+		a.totaldis AS "totaldis",
+		a.av AS "av",
+		a.info AS "info",
+		a.vhcofflinemin AS "vhcofflinemin",
+		a.stopdefdis AS "stopdefdis",
+		a.stopdeflat AS "stopdeflat",
+		a.stopdeflng AS "stopdeflng",
+		a.temp1 AS "temp1",
+		a.temp2 AS "temp2",
+		a.temp3 AS "temp3",
+		a.temp4 AS "temp4"
+	</sql>
+	
+	<sql id="gpsCarLocsJoins">
+	</sql>
+    
+	<select id="get" resultType="GpsCarLocs">
+		SELECT
+			<include refid="gpsCarLocsColumns"/>
+		FROM gps_car_locs a
+		<include refid="gpsCarLocsJoins"/>
+		WHERE
+		1=1
+		<if test="id != null and id != ''">
+		 and a.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+
+	</select>
+
+	<select id="findList" resultType="GpsCarLocs">
+		SELECT 
+			<include refid="gpsCarLocsColumns"/>
+		FROM gps_car_locs a
+		<include refid="gpsCarLocsJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GpsCarLocs">
+		SELECT 
+			<include refid="gpsCarLocsColumns"/>
+		FROM gps_car_locs a
+		<include refid="gpsCarLocsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="maxid" resultType="String">
+	    SELECT MAX(id) FROM  gps_car_locs
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gps_car_locs(
+
+		<if test="name != null and name !='' ">
+			name,
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			mobile,
+		</if>
+		<if test="recvtime != null and recvtime !='' ">
+			recvtime,
+		</if>
+		<if test="gpstime != null and gpstime !='' ">
+			gpstime,
+		</if>
+		<if test="lat != null and lat !='' ">
+			lat,
+		</if>
+		<if test="lng != null and lng !='' ">
+			lng,
+		</if>
+		<if test="latXz != null and latXz !='' ">
+			lat_xz,
+		</if>
+		<if test="lngXz != null and lngXz !='' ">
+			lng_xz,
+		</if>
+		<if test="state != null and state !='' ">
+			state,
+		</if>
+		<if test="speed != null and speed !='' ">
+			speed,
+		</if>
+		<if test="direct != null and direct !='' ">
+			direct,
+		</if>
+		<if test="temp != null and temp !='' ">
+			temp,
+		</if>
+		<if test="oil != null and oil !='' ">
+			oil,
+		</if>
+		<if test="oilmn1 != null and oilmn1 !='' ">
+			oilmn1,
+		</if>
+		<if test="oilmn2 != null and oilmn2 !='' ">
+			oilmn2,
+		</if>
+		<if test="distance != null and distance !='' ">
+			distance,
+		</if>
+		<if test="totaldis != null and totaldis !='' ">
+			totaldis,
+		</if>
+		<if test="av != null and av !='' ">
+			av,
+		</if>
+		<if test="info != null and info !='' ">
+			info,
+		</if>
+		<if test="vhcofflinemin != null and vhcofflinemin !='' ">
+			vhcofflinemin,
+		</if>
+		<if test="stopdefdis != null and stopdefdis !='' ">
+			stopdefdis,
+		</if>
+		<if test="stopdeflat != null and stopdeflat !='' ">
+			stopdeflat,
+		</if>
+		<if test="stopdeflng != null and stopdeflng !='' ">
+			stopdeflng,
+		</if>
+		<if test="temp1 != null and temp1 !='' ">
+			temp1,
+		</if>
+		<if test="temp2 != null and temp2 !='' ">
+			temp2,
+		</if>
+		<if test="temp3 != null and temp3 !='' ">
+			temp3,
+		</if>
+		<if test="temp4 != null and temp4 !='' ">
+			temp4,
+		</if>
+			id
+		) VALUES (
+		<if test="name != null and name !='' ">
+			#{name},
+		</if>
+		<if test="mobile != null and mobile !='' ">
+			#{mobile},
+		</if>
+		<if test="recvtime != null and recvtime !='' ">
+			#{recvtime},
+		</if>
+		<if test="gpstime != null and gpstime !='' ">
+			#{gpstime},
+		</if>
+		<if test="lat != null and lat !='' ">
+			#{lat},
+		</if>
+		<if test="lng != null and lng !='' ">
+			#{lng},
+		</if>
+		<if test="latXz != null and latXz !='' ">
+			#{latXz},
+		</if>
+		<if test="lngXz != null and lngXz !='' ">
+			#{lngXz},
+		</if>
+		<if test="state != null and state !='' ">
+			#{state},
+		</if>
+		<if test="speed != null and speed !='' ">
+			#{speed},
+		</if>
+		<if test="direct != null and direct !='' ">
+			#{direct},
+		</if>
+		<if test="temp != null and temp !='' ">
+			#{temp},
+		</if>
+		<if test="oil != null and oil !='' ">
+			#{oil},
+		</if>
+		<if test="oilmn1 != null and oilmn1 !='' ">
+			#{oilmn1},
+		</if>
+		<if test="oilmn2 != null and oilmn2 !='' ">
+			#{oilmn2},
+		</if>
+		<if test="distance != null and distance !='' ">
+			#{distance},
+		</if>
+		<if test="totaldis != null and totaldis !='' ">
+			#{totaldis},
+		</if>
+		<if test="av != null and av !='' ">
+			#{av},
+		</if>
+		<if test="info != null and info !='' ">
+			#{info},
+		</if>
+		<if test="vhcofflinemin != null and vhcofflinemin !='' ">
+			#{vhcofflinemin},
+		</if>
+		<if test="stopdefdis != null and stopdefdis !='' ">
+			#{stopdefdis},
+		</if>
+		<if test="stopdeflat != null and stopdeflat !='' ">
+			#{stopdeflat},
+		</if>
+		<if test="stopdeflng != null and stopdeflng !='' ">
+			#{stopdeflng},
+		</if>
+		<if test="temp1 != null and temp1 !='' ">
+			#{temp1},
+		</if>
+		<if test="temp2 != null and temp2 !='' ">
+			#{temp2},
+		</if>
+		<if test="temp3 != null and temp3 !='' ">
+			#{temp3},
+		</if>
+		<if test="temp4 != null and temp4 !='' ">
+			#{temp4},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gps_car_locs SET 	
+			<if test="name != null and name !='' ">
+				name = #{name},
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				mobile = #{mobile},
+			</if>
+			<if test="recvtime != null and recvtime !='' ">
+				recvtime = #{recvtime},
+			</if>
+			<if test="gpstime != null and gpstime !='' ">
+				gpstime = #{gpstime},
+			</if>
+			<if test="lat != null and lat !='' ">
+				lat = #{lat},
+			</if>
+			<if test="lng != null and lng !='' ">
+				lng = #{lng},
+			</if>
+			<if test="latXz != null and latXz !='' ">
+				lat_xz = #{latXz},
+			</if>
+			<if test="lngXz != null and lngXz !='' ">
+				lng_xz = #{lngXz},
+			</if>
+			<if test="state != null and state !='' ">
+				state = #{state},
+			</if>
+			<if test="speed != null and speed !='' ">
+				speed = #{speed},
+			</if>
+			<if test="direct != null and direct !='' ">
+				direct = #{direct},
+			</if>
+			<if test="temp != null and temp !='' ">
+				temp = #{temp},
+			</if>
+			<if test="oil != null and oil !='' ">
+				oil = #{oil},
+			</if>
+			<if test="oilmn1 != null and oilmn1 !='' ">
+				oilmn1 = #{oilmn1},
+			</if>
+			<if test="oilmn2 != null and oilmn2 !='' ">
+				oilmn2 = #{oilmn2},
+			</if>
+			<if test="distance != null and distance !='' ">
+				distance = #{distance},
+			</if>
+			<if test="totaldis != null and totaldis !='' ">
+				totaldis = #{totaldis},
+			</if>
+			<if test="av != null and av !='' ">
+				av = #{av},
+			</if>
+			<if test="info != null and info !='' ">
+				info = #{info},
+			</if>
+			<if test="vhcofflinemin != null and vhcofflinemin !='' ">
+				vhcofflinemin = #{vhcofflinemin},
+			</if>
+			<if test="stopdefdis != null and stopdefdis !='' ">
+				stopdefdis = #{stopdefdis},
+			</if>
+			<if test="stopdeflat != null and stopdeflat !='' ">
+				stopdeflat = #{stopdeflat},
+			</if>
+			<if test="stopdeflng != null and stopdeflng !='' ">
+				stopdeflng = #{stopdeflng},
+			</if>
+			<if test="temp1 != null and temp1 !='' ">
+				temp1 = #{temp1},
+			</if>
+			<if test="temp2 != null and temp2 !='' ">
+				temp2 = #{temp2},
+			</if>
+			<if test="temp3 != null and temp3 !='' ">
+				temp3 = #{temp3},
+			</if>
+			<if test="temp4 != null and temp4 !='' ">
+				temp4 = #{temp4},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 查询车辆信息 -->
+	<select id="findByGroup" resultType="GpsCarLocs">
+		SELECT
+		<include refid="gpsCarLocsColumns"/>
+		FROM gps_car_locs a
+		<include refid="gpsCarLocsJoins"/>
+		where
+		a.name in
+		<foreach item="item" index="index" collection="array" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<update id="delete">
+		DELETE FROM gps_car_locs
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

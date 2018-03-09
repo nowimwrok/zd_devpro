@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BscMessageDao">
+
+    <sql id="bscMessageColumns">
+		a.id AS "id",
+		a.ttile AS "ttile",
+		a.content AS "content",
+		a.contenttype AS "contenttype",
+		a.scantype AS "scantype",
+		a.summary AS "summary",
+		a.sendtype AS "sendtype",
+		a.sourceid AS "sourceid",
+		a.sourcetype AS "sourcetype",
+		a.userid AS "user.id",
+		a.status AS "status",
+		a.is_read AS "isRead",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="bscMessageJoins">
+    </sql>
+
+    <select id="get" resultType="BscMessage">
+        SELECT
+        <include refid="bscMessageColumns"/>
+        FROM bsc_message a
+        <include refid="bscMessageJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="BscMessage">
+        SELECT
+        <include refid="bscMessageColumns"/>
+        FROM bsc_message a
+        <include refid="bscMessageJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="ttile != null and ttile != ''">
+                AND a.ttile = #{ttile}
+            </if>
+            <if test="content != null and content != ''">
+                AND a.content = #{content}
+            </if>
+            <if test="sourcetype != null and sourcetype != ''">
+                AND a.sourcetype = #{sourcetype}
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="BscMessage">
+        SELECT
+        <include refid="bscMessageColumns"/>
+        FROM bsc_message a
+        <include refid="bscMessageJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--统计未读的消息数-->
+    <select id="sumUnRead" resultType="BscMessage">
+      SELECT
+        SUM(CASE WHEN a.IS_READ=0 THEN 1 ELSE 0 END) AS "sumUnRead"
+        FROM bsc_message a
+        <where>
+            <if test="user != null and user.id != null and user.id !='' ">
+                userid=#{user.id}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO bsc_message(
+
+        <if test="ttile != null and ttile !='' ">
+            ttile,
+        </if>
+        <if test="content != null and content !='' ">
+            content,
+        </if>
+        <if test="contenttype != null and contenttype !='' ">
+            contenttype,
+        </if>
+        <if test="scantype != null and scantype !='' ">
+            scantype,
+        </if>
+        <if test="summary != null and summary !='' ">
+            summary,
+        </if>
+        <if test="sendtype != null and sendtype !='' ">
+            sendtype,
+        </if>
+        <if test="sourceid != null and sourceid !='' ">
+            sourceid,
+        </if>
+        <if test="sourcetype != null and sourcetype !='' ">
+            sourcetype,
+        </if>
+        <if test="user != null and user.id != null and user.id !='' ">
+            userid,
+        </if>
+        <if test="status != null and status !='' ">
+            status,
+        </if>
+        <if test="isRead != null and isRead !='' ">
+            is_read,
+        </if>
+        <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+            create_by,
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            create_date,
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by,
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date,
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks,
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            del_flag,
+        </if>
+        id
+        ) VALUES (
+        <if test="ttile != null and ttile !='' ">
+            #{ttile},
+        </if>
+        <if test="content != null and content !='' ">
+            #{content},
+        </if>
+        <if test="contenttype != null and contenttype !='' ">
+            #{contenttype},
+        </if>
+        <if test="scantype != null and scantype !='' ">
+            #{scantype},
+        </if>
+        <if test="summary != null and summary !='' ">
+            #{summary},
+        </if>
+        <if test="sendtype != null and sendtype !='' ">
+            #{sendtype},
+        </if>
+        <if test="sourceid != null and sourceid !='' ">
+            #{sourceid},
+        </if>
+        <if test="sourcetype != null and sourcetype !='' ">
+            #{sourcetype},
+        </if>
+        <if test="user != null and user.id != null and user.id !='' ">
+            #{user.id},
+        </if>
+        <if test="status != null and status !='' ">
+            #{status},
+        </if>
+        <if test="isRead != null and isRead !='' ">
+            #{isRead},
+        </if>
+        <if test="createBy != null and createBy.id != null and createBy.id !='' ">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !='' ">
+            #{createDate},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            #{remarks},
+        </if>
+        <if test="delFlag != null and delFlag !='' ">
+            #{delFlag},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE bsc_message SET
+        <if test="ttile != null and ttile !='' ">
+            ttile = #{ttile},
+        </if>
+        <if test="content != null and content !='' ">
+            content = #{content},
+        </if>
+        <if test="contenttype != null and contenttype !='' ">
+            contenttype = #{contenttype},
+        </if>
+        <if test="scantype != null and scantype !='' ">
+            scantype = #{scantype},
+        </if>
+        <if test="summary != null and summary !='' ">
+            summary = #{summary},
+        </if>
+        <if test="sendtype != null and sendtype !='' ">
+            sendtype = #{sendtype},
+        </if>
+        <if test="sourceid != null and sourceid !='' ">
+            sourceid = #{sourceid},
+        </if>
+        <if test="sourcetype != null and sourcetype !='' ">
+            sourcetype = #{sourcetype},
+        </if>
+        <if test="user != null and user.id != null and user.id !='' ">
+            userid = #{user.id},
+        </if>
+        <if test="status != null and status !='' ">
+            status = #{status},
+        </if>
+        <if test="isRead != null and isRead !='' ">
+            is_read = #{isRead},
+        </if>
+        <if test="updateBy != null and updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE bsc_message SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

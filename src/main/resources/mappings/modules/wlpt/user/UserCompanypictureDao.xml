@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserCompanypictureDao">
+    
+	<sql id="userCompanypictureColumns">
+		a.id AS "id",
+		a.companyid AS "companyid.id",
+		a.headerimg AS "headerimg",
+		a.businesslicencenumimg AS "businesslicencenumimg",
+		a.idcardimg AS "idcardimg",
+		a.transportcardimg AS "transportcardimg",
+		a.taximg AS "taximg",
+		a.companysimg AS "companysimg",
+		a.transporstyleimg AS "transporstyleimg",
+		a.carteamimg AS "carteamimg",
+		a.comanycultureimg AS "comanycultureimg",
+		a.comanyhonorimg AS "comanyhonorimg",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.comanyhonorimgtitle AS "comanyhonorimgtitle",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+		<sql id="userCompanyColumns">
+		,
+		b.id AS "userCompany.id",
+		b.userid AS "userCompany.user.id",
+		b.logoname AS "userCompany.logoname",
+		b.companyname AS "userCompany.companyname",
+		b.legalperson AS "userCompany.legalperson",
+		b.legalidcardnum AS "userCompany.legalidcardnum",
+		b.legaladdress AS "userCompany.legaladdress",
+		b.headerperson AS "userCompany.headerperson",
+		b.headeridcarno AS "userCompany.headeridcarno",
+		b.headeraddress AS "userCompany.headeraddress",
+		b.headertel AS "userCompany.headertel",
+		b.headermobile AS "userCompany.headermobile",
+		b.headerexperience AS "userCompany.headerexperience",
+		b.qrencoder AS "userCompany.qrencoder",
+		b.companyaddress AS "userCompany.companyaddress",
+		b.homepageurl AS "userCompany.homepageurl",
+		b.businesslicencenum AS "userCompany.businesslicencenum",
+		b.mainbusiness AS "userCompany.mainbusiness",
+		b.advantagesresources AS "userCompany.advantagesresources",
+		b.mainline AS "userCompany.mainline",
+		b.setuptime AS "userCompany.setuptime",
+		b.companyvalidtime AS "userCompany.companyvalidtime",
+		b.companysummary AS "userCompany.companysummary",
+		b.companyintroduction AS "userCompany.companyintroduction",
+		b.qualifications AS "userCompany.qualifications",
+		b.isrecommend AS "userCompany.isrecommend",
+		b.status AS "userCompany.status",
+		b.companyfax AS "userCompany.companyfax",
+		b.companyqq AS "userCompany.companyqq",
+		b.productserver AS "userCompany.productserver",
+		b.companyhonor AS "userCompany.companyhonor",
+		b.companytel AS "userCompany.companytel",
+		b.province_city_district AS "userCompany.provinceCityDistrict",
+		b.create_by AS "userCompany.createBy.id",
+		b.create_date AS "userCompany.createDate",
+		b.update_by AS "userCompany.updateBy.id",
+		b.update_date AS "userCompany.updateDate",
+		b.remarks AS "userCompany.remarks",
+		b.del_flag AS "userCompany.delFlag"
+	</sql>
+	
+	<sql id="userCompanypictureJoins">
+	</sql>
+	<sql id="userCompanyJoins">
+	INNER JOIN user_company b ON b.id = a.companyid
+	</sql>
+    
+	<select id="get" resultType="UserCompanypicture">
+		SELECT
+			<include refid="userCompanypictureColumns"/>
+		FROM user_companypicture a
+		<include refid="userCompanypictureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+		
+	<select id="findPicture" resultType="UserCompanypicture">
+		SELECT 
+			<include refid="userCompanypictureColumns"/>
+		FROM user_companypicture a
+		<include refid="userCompanypictureJoins"/>
+		<where>
+			<if test="userCompany.id != null and userCompany.id !='' ">
+			and a.companyid = #{userCompany.id}
+		</if>
+		</where>
+		limit 1
+	</select>
+	
+	
+	
+	<select id="getByUserCompanypicture" resultType="UserCompanypicture">
+		SELECT
+			<include refid="userCompanypictureColumns"/>
+			<include refid="userCompanyColumns"/>
+			
+		FROM user_companypicture a
+		<include refid="userCompanypictureJoins"/>
+		<include refid="userCompanyJoins"/>
+		<where>
+		<if test="userCompany != null and userCompany.id != null and userCompany.id !='' ">
+			a.companyid=#{userCompany.id}
+		</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="UserCompanypicture">
+		SELECT 
+			<include refid="userCompanypictureColumns"/>
+		FROM user_companypicture a
+		<include refid="userCompanypictureJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserCompanypicture">
+		SELECT 
+			<include refid="userCompanypictureColumns"/>
+		FROM user_companypicture a
+		<include refid="userCompanypictureJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_companypicture(
+		<if test="userCompany.id != null and userCompany.id !='' ">
+			companyid,
+		</if>
+		<if test="headerimg != null and headerimg !='' ">
+			headerimg,
+		</if>
+		<if test="businesslicencenumimg != null and businesslicencenumimg !='' ">
+			businesslicencenumimg,
+		</if>
+		<if test="idcardimg != null and idcardimg !='' ">
+			idcardimg,
+		</if>
+		<if test="transportcardimg != null and transportcardimg !='' ">
+			transportcardimg,
+		</if>
+		<if test="taximg != null and taximg !='' ">
+			taximg,
+		</if>
+		<if test="companysimg != null and companysimg !='' ">
+			companysimg,
+		</if>
+		<if test="transporstyleimg != null and transporstyleimg !='' ">
+			transporstyleimg,
+		</if>
+		<if test="carteamimg != null and carteamimg !='' ">
+			carteamimg,
+		</if>
+		<if test="comanycultureimg != null and comanycultureimg !='' ">
+			comanycultureimg,
+		</if>
+		<if test="comanyhonorimg != null and comanyhonorimg !='' ">
+			comanyhonorimg,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+		<if test="comanyhonorimgtitle != null and comanyhonorimgtitle !='' ">
+			comanyhonorimgtitle,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="userCompany.id != null and userCompany.id !='' ">
+			#{userCompany.id},
+		</if>
+		<if test="headerimg != null and headerimg !='' ">
+			#{headerimg},
+		</if>
+		<if test="businesslicencenumimg != null and businesslicencenumimg !='' ">
+			#{businesslicencenumimg},
+		</if>
+		<if test="idcardimg != null and idcardimg !='' ">
+			#{idcardimg},
+		</if>
+		<if test="transportcardimg != null and transportcardimg !='' ">
+			#{transportcardimg},
+		</if>
+		<if test="taximg != null and taximg !='' ">
+			#{taximg},
+		</if>
+		<if test="companysimg != null and companysimg !='' ">
+			#{companysimg},
+		</if>
+		<if test="transporstyleimg != null and transporstyleimg !='' ">
+			#{transporstyleimg},
+		</if>
+		<if test="carteamimg != null and carteamimg !='' ">
+			#{carteamimg},
+		</if>
+		<if test="comanycultureimg != null and comanycultureimg !='' ">
+			#{comanycultureimg},
+		</if>
+		<if test="comanyhonorimg != null and comanyhonorimg !='' ">
+			#{comanyhonorimg},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		<if test="comanyhonorimgtitle != null and comanyhonorimgtitle !='' ">
+			#{comanyhonorimgtitle},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_companypicture SET 	
+			<if test="id != null and id !='' ">
+				id = #{id},
+			</if>
+			<if test="headerimg != null and headerimg !='' ">
+				headerimg = #{headerimg},
+			</if>
+			<if test="businesslicencenumimg != null and businesslicencenumimg !='' ">
+				businesslicencenumimg = #{businesslicencenumimg},
+			</if>
+			<if test="idcardimg != null and idcardimg !='' ">
+				idcardimg = #{idcardimg},
+			</if>
+			<if test="transportcardimg != null and transportcardimg !='' ">
+				transportcardimg = #{transportcardimg},
+			</if>
+			<if test="taximg != null and taximg !='' ">
+				taximg = #{taximg},
+			</if>
+			<if test="companysimg != null and companysimg !='' ">
+				companysimg = #{companysimg},
+			</if>
+			<if test="transporstyleimg != null and transporstyleimg !='' ">
+				transporstyleimg = #{transporstyleimg},
+			</if>
+			<if test="carteamimg != null and carteamimg !='' ">
+				carteamimg = #{carteamimg},
+			</if>
+			<if test="comanycultureimg != null and comanycultureimg !='' ">
+				comanycultureimg = #{comanycultureimg},
+			</if>
+			<if test="comanyhonorimg != null and comanyhonorimg !='' ">
+				comanyhonorimg = #{comanyhonorimg},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			<if test="comanyhonorimgtitle != null and comanyhonorimgtitle !='' ">
+				comanyhonorimgtitle = #{comanyhonorimgtitle},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE user_companypicture SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

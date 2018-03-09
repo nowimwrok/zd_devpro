@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.user.UserBankinfoDao">
+
+    <sql id="userBankinfoColumns">
+		a.id          AS "id",
+          a.bankname    AS "bankname",
+          a.banktype    AS "banktype",
+          a.bankcard    AS "bankcard",
+          a.bindname    AS "bindname",
+          a.bindphone   AS "bindphone",
+          a.user_id     AS "user.id",
+          a.isdefault   AS "isdefault",
+          a.unionpayno  AS  "unionpayNo",
+          a.accountName  AS "accountName",
+          sy.name       AS "user.name",
+          sy.login_name AS "user.loginName",
+          sy.phone      AS "user.phone",
+          sy.login_date AS "user.loginDate",
+          a.create_by   AS "createBy.id",
+          a.create_date AS "createDate",
+          a.update_by   AS "updateBy.id",
+          a.update_date AS "updateDate",
+          a.remarks     AS "remarks",
+          a.del_flag    AS "delFlag"
+	</sql>
+
+    <sql id="userBankinfoJoins">
+      LEFT JOIN sys_user sy ON sy.id = a.USER_ID
+    </sql>
+
+    <select id="get" resultType="UserBankinfo">
+        SELECT
+        <include refid="userBankinfoColumns"/>
+        FROM user_bankinfo a
+        <include refid="userBankinfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <!--查找银行卡对象,通过唯一性主键等查询-->
+    <select id="getBankByConditon" resultType="UserBankinfo">
+        SELECT
+        <include refid="userBankinfoColumns"/>
+        FROM user_bankinfo a
+        <include refid="userBankinfoJoins"/>
+        WHERE
+        a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="user!=null and user.id !=null and user.id !='' ">
+            AND sy.id = #{user.id}
+        </if>
+        <if test="user!=null and user.phone !=null and user.phone !='' ">
+            AND sy.phone = #{user.phone}
+        </if>
+        <if test="user!=null and user.loginName !=null and user.loginName !='' ">
+            AND sy.login_name = #{user.loginName}
+        </if>
+        <if test="isdefault !=null and isdefault !='' ">
+            AND a.isdefault = #{isdefault}
+        </if>
+        <if test="id !=null and id !='' ">
+            AND a.id = #{id}
+        </if>
+		limit 1
+    </select>
+
+    <select id="findList" resultType="UserBankinfo">
+        SELECT
+        <include refid="userBankinfoColumns"/>
+        FROM user_bankinfo a
+        <include refid="userBankinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="bankcard !=null  and bankcard !='' ">
+                AND bankcard = #{bankcard}
+            </if>
+            <if test="user!=null and user.id !=null and user.id !='' ">
+                AND sy.id = #{user.id}
+            </if>
+            <if test="user!=null and user.phone !=null and user.phone !='' ">
+                AND sy.phone = #{user.phone}
+            </if>
+            <if test="user!=null and user.loginName !=null and user.loginName !='' ">
+                AND sy.login_name = #{user.loginName}
+            </if>
+            <if test="id !=null and id !='' ">
+                AND a.id = #{id}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="UserBankinfo">
+        SELECT
+        <include refid="userBankinfoColumns"/>
+        FROM user_bankinfo a
+        <include refid="userBankinfoJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO user_bankinfo(
+			id,
+			user_id,
+			bankname,
+			banktype,
+			bankcard,
+			bindname,
+			bindphone,
+			isdefault,
+			unionpayno,
+			accountName,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{bankname},
+			#{banktype},
+			#{bankcard},
+			#{bindname},
+			#{bindphone},
+			#{isdefault},
+			#{unionpayNo},
+			#{accountName},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+        UPDATE user_bankinfo SET
+        <if test="user!=null and user.id != null and user.id !='' ">
+            user_id = #{user.id},
+        </if>
+        <if test="bankname != null and bankname !='' ">
+            bankname = #{bankname},
+        </if>
+        <if test="banktype != null and banktype !='' ">
+            banktype = #{banktype},
+        </if>
+        <if test="bankcard != null and bankcard !='' ">
+            bankcard = #{bankcard},
+        </if>
+        <if test="bindname != null and bindname !='' ">
+            bindname = #{bindname},
+        </if>
+        <if test="bindphone != null and bindphone !='' ">
+            bindphone = #{bindphone},
+        </if>
+        <!-- <if test="isdefault != null and isdefault !='' ">
+            isdefault = #{isdefault},
+        </if> -->
+        <if test="unionpayNo!=null and unionpayNo !=''" >
+            unionpayno= #{unionpayNo},
+        </if>
+        <if test="accountName!=null and accountName !=''" >
+            accountName= #{accountName},
+        </if>
+        <if test="updateBy.id != null and updateBy.id !='' ">
+            update_by = #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !='' ">
+            update_date = #{updateDate},
+        </if>
+
+        <if test="remarks != null and remarks !='' ">
+            remarks = #{remarks},
+        </if>
+        isdefault = #{isdefault},
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		UPDATE user_bankinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

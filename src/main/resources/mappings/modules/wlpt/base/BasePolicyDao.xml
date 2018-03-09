@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BasePolicyDao">
+    
+	<sql id="basePolicyColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.category_id AS "categoryId",
+		a.content AS "content",
+		a.source AS "source",
+		a.source_link AS "sourceLink",
+		a.picture AS "picture",
+		a.hot AS "hot",
+		a.release_time AS "releaseTime",
+		a.keyword AS "keyword",
+		a.summary AS "summary",
+		a.attachment AS "attachment"
+	</sql>
+	
+	<sql id="basePolicyJoins">
+	</sql>
+    
+	<select id="get" resultType="BasePolicy">
+		SELECT
+			<include refid="basePolicyColumns"/>
+		FROM base_policy a
+		<include refid="basePolicyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="BasePolicy">
+		SELECT 
+			<include refid="basePolicyColumns"/>
+		FROM base_policy a
+		<include refid="basePolicyJoins"/>
+		<where>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="beginReleaseTime != null and endReleaseTime != null and beginReleaseTime != '' and endReleaseTime != ''">
+				AND a.release_time BETWEEN #{beginReleaseTime} AND #{endReleaseTime}
+			</if>
+			<if test="categoryId != null and categoryId != '' ">
+				AND a.category_id =#{categoryId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY release_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BasePolicy">
+		SELECT 
+			<include refid="basePolicyColumns"/>
+		FROM base_policy a
+		<include refid="basePolicyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_policy(
+		<if test="content != null and content !='' ">
+			content,
+		</if>
+		<if test="source != null and source !='' ">
+			source,
+		</if>
+		<if test="sourceLink != null and sourceLink !='' ">
+			source_link,
+		</if>
+		<if test="picture != null and picture !='' ">
+			picture,
+		</if>
+		<if test="hot != null and hot !='' ">
+			hot,
+		</if>
+		<if test="releaseTime != null and releaseTime !='' ">
+			release_time,
+		</if>
+		<if test="keyword != null and keyword !='' ">
+			keyword,
+		</if>
+		<if test="summary != null and summary !='' ">
+			summary,
+		</if>
+		<if test="attachment != null and attachment !='' ">
+			attachment,
+		</if>
+		title,
+		category_id
+		) VALUES (
+		<if test="content != null and content !='' ">
+			#{content},
+		</if>
+		<if test="source != null and source !='' ">
+			#{source},
+		</if>
+		<if test="sourceLink != null and sourceLink !='' ">
+			#{sourceLink},
+		</if>
+		<if test="picture != null and picture !='' ">
+			#{picture},
+		</if>
+		<if test="hot != null and hot !='' ">
+			#{hot},
+		</if>
+		<if test="releaseTime != null and releaseTime !='' ">
+			#{releaseTime},
+		</if>
+		<if test="keyword != null and keyword !='' ">
+			#{keyword},
+		</if>
+		<if test="summary != null and summary !='' ">
+			#{summary},
+		</if>
+		<if test="attachment != null and attachment !='' ">
+			#{attachment},
+		</if>
+		#{title},
+		#{categoryId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_policy SET 	
+			<if test="content != null and content !='' ">
+				content = #{content},
+			</if>
+			<if test="source != null and source !='' ">
+				source = #{source},
+			</if>
+			<if test="sourceLink != null and sourceLink !='' ">
+				source_link = #{sourceLink},
+			</if>
+			<if test="picture != null and picture !='' ">
+				picture = #{picture},
+			</if>
+			<if test="hot != null and hot !='' ">
+				hot = #{hot},
+			</if>
+			<if test="releaseTime != null and releaseTime !='' ">
+				release_time = #{releaseTime},
+			</if>
+			<if test="keyword != null and keyword !='' ">
+				keyword = #{keyword},
+			</if>
+			<if test="summary != null and summary !='' ">
+				summary = #{summary},
+			</if>
+			<if test="attachment != null and attachment !='' ">
+				attachment = #{attachment},
+			</if>
+			title = #{title},
+			category_id = #{categoryId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_policy
+		WHERE id = #{id}
+	</update>
+			<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from base_policy
+		where 
+		id in  ${delteArrayStr}
+	</delete>
+</mapper>

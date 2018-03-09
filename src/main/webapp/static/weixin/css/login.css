@@ -1,0 +1,130 @@
+@charset "utf-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0 auto;
+	width: 100%;
+	background-color: #EBEBEB;
+	font-family: Microsoft YaHei;
+}
+
+#user {
+	margin-top: 50px;
+	line-height: 35px;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+#imgUser {
+	width: 45px;
+	height: 45px;
+	margin-left: 5px;
+	margin-bottom: -15px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+#userName {
+	margin-left: 10px;
+	color: #7B7878;
+}
+
+.binding {
+	margin: 10px 11% 0px 11%;
+	color: #A09C9C;
+	font-size: 0.8em;
+}
+
+form {
+	text-align: center;
+}
+
+table {
+	text-align: center;
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+input {
+	height: 35px;
+	width: 100%;
+	padding-left: 35px;
+	border: 1px solid #E0DDDD;
+}
+
+input:focus {
+	outline: none;
+	border: 1px solid #F26522;
+}
+
+#txtPhoneOrUserName {
+	background-position: left;
+	background-repeat: no-repeat;
+	background-size: 30px auto;
+	background-position-x: 3px;
+	background-image: url('/LogisticsSystem/static/images/weixin/user_icon.png')
+}
+
+#txtPassWord {
+	margin-top: 20px;
+	background-position: left;
+	background-repeat: no-repeat;
+	background-size: 30px auto;
+	background-position-x: 3px;
+	background-image: url('/LogisticsSystem/static/images/weixin/pwd_icon.png')
+}
+
+#forgetPwd {
+	padding-top: 5px;
+}
+
+a {
+	font-size: 0.8em;
+}
+
+a:link {
+	color: #F26522;
+}
+
+a:hover {
+	color: blue;
+}
+
+.aRegister {
+	float: left;
+	margin-left: 5px;
+}
+
+.aResetPwd {
+	float: right;
+	margin-right: 5px;
+}
+
+#verifyCode {
+	width: 60%;
+	margin-right: 5%;
+}
+
+#imgCode {
+	width: 35%;
+	height: 31px;
+	vertical-align: middle;
+}
+
+#btnLogin {
+	-webkit-appearance: none;
+	margin-top: 40px;
+	text-align: center;
+	padding-left: 0;
+	font-size: 1.2em;
+	height: 40px;
+	line-height: 40px;
+	color: #fff;
+	background-color: rgb(32, 134, 226);
+	border-radius: 5px;
+}

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.integrity.IntegrityStandardDao">
+    
+	<sql id="integrityStandardColumns">
+		a.id AS "id",
+		a.membertype AS "membertype",
+		a.typename AS "typename",
+		a.priority AS "priority",
+		a.exclude AS "exclude",
+		a.standardvalue AS "standardvalue",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="integrityStandardJoins">
+	</sql>
+    
+	<select id="get" resultType="IntegrityStandard">
+		SELECT
+			<include refid="integrityStandardColumns"/>
+		FROM integrity_standard a
+		<include refid="integrityStandardJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="IntegrityStandard">
+		SELECT 
+			<include refid="integrityStandardColumns"/>
+		FROM integrity_standard a
+		<include refid="integrityStandardJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntegrityStandard">
+		SELECT 
+			<include refid="integrityStandardColumns"/>
+		FROM integrity_standard a
+		<include refid="integrityStandardJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO integrity_standard(
+
+		<if test="membertype != null and membertype !='' ">
+			membertype,
+		</if>
+		<if test="typename != null and typename !='' ">
+			typename,
+		</if>
+		<if test="priority != null and priority !='' ">
+			priority,
+		</if>
+		<if test="exclude != null and exclude !='' ">
+			exclude,
+		</if>
+		<if test="standardvalue != null and standardvalue !='' ">
+			standardvalue,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			update_by,
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			update_date,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks,
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			del_flag,
+		</if>
+			id
+		) VALUES (
+		<if test="membertype != null and membertype !='' ">
+			#{membertype},
+		</if>
+		<if test="typename != null and typename !='' ">
+			#{typename},
+		</if>
+		<if test="priority != null and priority !='' ">
+			#{priority},
+		</if>
+		<if test="exclude != null and exclude !='' ">
+			#{exclude},
+		</if>
+		<if test="standardvalue != null and standardvalue !='' ">
+			#{standardvalue},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="updateBy.id != null and updateBy.id !='' ">
+			#{updateBy.id},
+		</if>
+		<if test="updateDate != null and updateDate !='' ">
+			#{updateDate},
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			#{remarks},
+		</if>
+		<if test="delFlag != null and delFlag !='' ">
+			#{delFlag},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE integrity_standard SET 	
+			<if test="membertype != null and membertype !='' ">
+				membertype = #{membertype},
+			</if>
+			<if test="typename != null and typename !='' ">
+				typename = #{typename},
+			</if>
+			<if test="priority != null and priority !='' ">
+				priority = #{priority},
+			</if>
+			<if test="exclude != null and exclude !='' ">
+				exclude = #{exclude},
+			</if>
+			<if test="standardvalue != null and standardvalue !='' ">
+				standardvalue = #{standardvalue},
+			</if>
+			<if test="updateBy.id != null and updateBy.id !='' ">
+				update_by = #{updateBy.id},
+			</if>
+			<if test="updateDate != null and updateDate !='' ">
+				update_date = #{updateDate},
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				remarks = #{remarks},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE integrity_standard SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

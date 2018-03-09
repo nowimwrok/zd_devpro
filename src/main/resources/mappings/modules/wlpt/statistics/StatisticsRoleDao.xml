@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsRoleDao">
+    
+	<sql id="statisticsRoleColumns">
+		a.id AS "id",
+		a.entprisecount AS "entprisecount",
+		a.goodsownerscount AS "goodsownerscount",
+		a.carownercount AS "carownercount",
+		a.allcount AS "allcount",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="statisticsRoleJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsRole">
+		SELECT
+			<include refid="statisticsRoleColumns"/>
+		FROM statistics_role a
+		<include refid="statisticsRoleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsRole">
+		SELECT 
+			<include refid="statisticsRoleColumns"/>
+		FROM statistics_role a
+		<include refid="statisticsRoleJoins"/>
+		<where>
+			<if test="beginCreateDate != null and beginCreateDate != '' ">
+                AND a.createtime &gt;= #{beginCreateDate}
+            </if>
+            <if test="endCreateDate != null and endCreateDate != '' ">
+                AND a.createtime &lt;= #{endCreateDate}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsRole">
+		SELECT 
+			<include refid="statisticsRoleColumns"/>
+		FROM statistics_role a
+		<include refid="statisticsRoleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_role(
+
+		<if test="entprisecount != null and entprisecount !='' ">
+			entprisecount,
+		</if>
+		<if test="goodsownerscount != null and goodsownerscount !='' ">
+			goodsownerscount,
+		</if>
+		<if test="carownercount != null and carownercount !='' ">
+			carownercount,
+		</if>
+		<if test="allcount != null and allcount !='' ">
+			allcount,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+			id
+		) VALUES (
+		<if test="entprisecount != null and entprisecount !='' ">
+			#{entprisecount},
+		</if>
+		<if test="goodsownerscount != null and goodsownerscount !='' ">
+			#{goodsownerscount},
+		</if>
+		<if test="carownercount != null and carownercount !='' ">
+			#{carownercount},
+		</if>
+		<if test="allcount != null and allcount !='' ">
+			#{allcount},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_role SET 	
+			<if test="entprisecount != null and entprisecount !='' ">
+				entprisecount = #{entprisecount},
+			</if>
+			<if test="goodsownerscount != null and goodsownerscount !='' ">
+				goodsownerscount = #{goodsownerscount},
+			</if>
+			<if test="carownercount != null and carownercount !='' ">
+				carownercount = #{carownercount},
+			</if>
+			<if test="allcount != null and allcount !='' ">
+				allcount = #{allcount},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_role
+		WHERE id = #{id}
+	</update>
+	<select id="editRole" statementType="CALLABLE">
+			{call SP_Statistics_Role()}
+	</select>
+	
+    <select id="getEveryDayByRoleCount" resultType="StatisticsRole">
+     SELECT
+          a.CAROWNERCOUNT  AS "carownercount",
+          a.GOODSOWNERSCOUNT AS "goodsownerscount",
+          a.ENTPRISECOUNT AS "entprisecount",
+          date_format(a.createtime,'%Y-%m-%d')  AS "timeflg",
+          date_format(a.createtime, '%Y-%m-%d') AS "cretime"    
+     FROM statistics_role a
+      GROUP BY timeflg
+     ORDER BY a.CREATETIME ASC
+    </select>
+    
+    <select id="getEveryWeekByRoleCount" resultType="StatisticsRole">
+        SELECT
+          a.CAROWNERCOUNT AS "carownercount",
+          a.GOODSOWNERSCOUNT AS "goodsownerscount",
+          a.ENTPRISECOUNT AS "entprisecount",
+          week(a.createtime,'%Y-%m-%d')+1 AS "timeflg",
+          date_format(a.createtime, '%Y年') AS "cretime"
+        FROM statistics_role a
+         GROUP BY timeflg
+    ORDER BY a.CREATETIME ASC
+    </select>
+    
+    <select id="getEveryMothByRoleCount" resultType="StatisticsRole">
+        SELECT
+          a.CAROWNERCOUNT  AS "carownercount",
+          a.GOODSOWNERSCOUNT AS "goodsownerscount",
+          a.ENTPRISECOUNT AS "entprisecount",
+          month(a.CREATETIME) AS "timeflg",
+          date_format(a.CREATETIME, '%Y-%m月') AS "cretime"
+        FROM statistics_role a
+         GROUP BY timeflg
+         ORDER BY a.CREATETIME ASC
+    </select>
+    
+    <select id="getEveryYearByRoleCount" resultType="StatisticsRole">
+       SELECT
+          a.CAROWNERCOUNT  AS "carownercount",
+          a.GOODSOWNERSCOUNT AS "goodsownerscount",
+          a.ENTPRISECOUNT AS "entprisecount",
+          year(a.CREATETIME) AS "timeflg",
+          date_format(a.CREATETIME, '%Y年') AS "cretime"
+       FROM statistics_role a
+        GROUP BY timeflg
+       ORDER BY a.CREATETIME ASC
+    </select>
+</mapper>

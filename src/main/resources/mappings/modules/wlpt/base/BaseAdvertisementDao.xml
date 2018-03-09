@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseAdvertisementDao">
+    
+	<sql id="baseAdvertisementColumns">
+		a.advertisement_id AS "advertisementId",
+		a.adverttitle AS "adverttitle",
+		a.advertname AS "advertname",
+		a.advertbytes AS "advertbytes",
+		a.advertsize AS "advertsize",
+		a.positionid AS "positionid",
+		a.positionname AS "positionname",
+		a.picture AS "picture",
+		a.linkaddress AS "linkaddress",
+		a.sortcode AS "sortcode",
+		a.uploader AS "uploader",
+		a.uploadtime AS "uploadtime",
+		a.accesssystemcode AS "accesssystemcode",
+		a.isdelete AS "isdelete",
+		a.backgroundcolor AS "backgroundcolor"
+	</sql>
+	
+	<sql id="baseAdvertisementJoins">
+	</sql>
+    
+	<select id="get" resultType="BaseAdvertisement">
+		SELECT
+			<include refid="baseAdvertisementColumns"/>
+		FROM base_advertisement a
+		<include refid="baseAdvertisementJoins"/>
+		WHERE a.advertisement_id = #{advertisementId}
+	</select>
+
+	<select id="findList" resultType="BaseAdvertisement">
+		SELECT 
+			<include refid="baseAdvertisementColumns"/>
+		FROM base_advertisement a
+		<include refid="baseAdvertisementJoins"/>
+		<where>
+			
+			<if test="adverttitle != null and adverttitle != ''">
+				AND a.adverttitle LIKE 
+					<if test="dbName == 'oracle'">'%'||#{adverttitle}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{adverttitle}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{adverttitle},'%')</if>
+			</if>
+			<if test="advertname != null and advertname != ''">
+				AND a.advertname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{advertname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{advertname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{advertname},'%')</if>
+			</if>
+			<if test="accesssystemcode != null and accesssystemcode != ''">
+				AND a.accesssystemcode = #{accesssystemcode}
+			</if>
+			<if test="isdelete != null and isdelete != ''">
+				AND a.isdelete = #{isdelete}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			order by uploadtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BaseAdvertisement">
+		SELECT 
+			<include refid="baseAdvertisementColumns"/>
+		FROM base_advertisement a
+		<include refid="baseAdvertisementJoins"/>
+		<where>
+			<if test="adverttitle != null and adverttitle != ''">
+				AND a.adverttitle =#{adverttitle}
+			</if>
+			<if test="advertname != null and advertname != ''">
+				AND a.advertname =#{advertname}
+			</if>
+			<if test="isdelete != null and isdelete != ''">
+				AND a.isdelete = #{isdelete}
+			</if>
+			<if test="accesssystemcode != null and accesssystemcode != ''">
+				AND a.accesssystemcode = #{accesssystemcode}
+			</if>
+		</where>		
+		order by sortcode desc
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_advertisement(
+		<if test="adverttitle != null and adverttitle !='' ">
+			adverttitle,
+		</if>
+		<if test="advertname != null and advertname !='' ">
+			advertname,
+		</if>
+		<if test="advertbytes != null and advertbytes !='' ">
+			advertbytes,
+		</if>
+		<if test="advertsize != null and advertsize !='' ">
+			advertsize,
+		</if>
+		<if test="positionid != null and positionid !='' ">
+			positionid,
+		</if>
+		<if test="positionname != null and positionname !='' ">
+			positionname,
+		</if>
+		<if test="picture != null and picture !='' ">
+			picture,
+		</if>
+		<if test="linkaddress != null and linkaddress !='' ">
+			linkaddress,
+		</if>
+		<if test="sortcode != null and sortcode !='' ">
+			sortcode,
+		</if>
+		<if test="uploader != null and uploader !='' ">
+			uploader,
+		</if>
+		<if test="uploadtime != null and uploadtime !='' ">
+			uploadtime,
+		</if>
+		<if test="accesssystemcode != null and accesssystemcode !='' ">
+			accesssystemcode,
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			isdelete,
+		</if>
+		<if test="backgroundcolor != null and backgroundcolor !='' ">
+			backgroundcolor,
+		</if>
+            advertisement_id
+		) VALUES (
+		<if test="adverttitle != null and adverttitle !='' ">
+			#{adverttitle},
+		</if>
+		<if test="advertname != null and advertname !='' ">
+			#{advertname},
+		</if>
+		<if test="advertbytes != null and advertbytes !='' ">
+			#{advertbytes},
+		</if>
+		<if test="advertsize != null and advertsize !='' ">
+			#{advertsize},
+		</if>
+		<if test="positionid != null and positionid !='' ">
+			#{positionid},
+		</if>
+		<if test="positionname != null and positionname !='' ">
+			#{positionname},
+		</if>
+		<if test="picture != null and picture !='' ">
+			#{picture},
+		</if>
+		<if test="linkaddress != null and linkaddress !='' ">
+			#{linkaddress},
+		</if>
+		<if test="sortcode != null and sortcode !='' ">
+			#{sortcode},
+		</if>
+		<if test="uploader != null and uploader !='' ">
+			#{uploader},
+		</if>
+		<if test="uploadtime != null and uploadtime !='' ">
+			#{uploadtime},
+		</if>
+		<if test="accesssystemcode != null and accesssystemcode !='' ">
+			#{accesssystemcode},
+		</if>
+		<if test="isdelete != null and isdelete !='' ">
+			#{isdelete},
+		</if>
+		<if test="backgroundcolor != null and backgroundcolor !='' ">
+			#{backgroundcolor},
+		</if>
+		#{advertisementId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_advertisement SET 	
+			<if test="adverttitle != null and adverttitle !='' ">
+				adverttitle = #{adverttitle},
+			</if>
+			<if test="advertname != null and advertname !='' ">
+				advertname = #{advertname},
+			</if>
+			<if test="positionid != null and positionid !='' ">
+				positionid = #{positionid},
+			</if>
+			<if test="picture != null and picture !='' ">
+				picture = #{picture},
+			</if>
+			<if test="linkaddress != null and linkaddress !='' ">
+				linkaddress = #{linkaddress},
+			</if>
+			<if test="sortcode != null and sortcode !='' ">
+				sortcode = #{sortcode},
+			</if>
+			<if test="accesssystemcode != null and accesssystemcode !='' ">
+				accesssystemcode = #{accesssystemcode},
+			</if>
+			<if test="isdelete != null and isdelete !='' ">
+				isdelete = #{isdelete},
+			</if>
+			<if test="backgroundcolor != null and backgroundcolor !='' ">
+				backgroundcolor = #{backgroundcolor},
+			</if>
+			advertisement_id = #{advertisementId}
+		WHERE advertisement_id = #{advertisementId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_advertisement
+		WHERE advertisement_id = #{advertisementId}
+	</update>
+			<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from base_advertisement
+		where 
+		advertisement_id in  ${delteArrayStr}
+	</delete>
+</mapper>

@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.statistics.StatisticsTradetypeDao">
+    
+	<sql id="statisticsTradetypeColumns">
+		a.id AS "id",
+		a.ctrasportcount AS "ctrasportcount",
+		a.ctransportweight AS "ctransportweight",
+		a.ctransportmoney AS "ctransportmoney",
+		a.ytrasportcount AS "ytrasportcount",
+		a.ytransportweight AS "ytransportweight",
+		a.ytransportmoney AS "ytransportmoney",
+		a.createtime AS "createtime"
+	</sql>
+	<sql id="statisticsTradetypeColumns2">
+		a.id AS "id",
+		a.id AS "tradetypevo.id",
+		a.ctrasportcount AS "tradetypevo.ctrasportcount",
+		a.ctransportweight AS "tradetypevo.ctransportweight",
+		a.ctransportmoney AS "tradetypevo.ctransportmoney",
+		a.ytrasportcount AS "tradetypevo.ytrasportcount",
+		a.ytransportweight AS "tradetypevo.ytransportweight",
+		a.ytransportmoney AS "tradetypevo.ytransportmoney",
+		a.createtime AS "tradetypevo.createtime",
+		a.newordermoney AS "tradetypevo.newordermoney",
+		a.cancelordermoney AS "tradetypevo.cancelordermoney",
+		a.takegdordermoney AS "tradetypevo.takegdordermoney",
+		a.waitinggdordermoney AS "tradetypevo.waitinggdordermoney",
+		a.waitingpay AS "tradetypevo.waitingpay",
+		a.pay AS "tradetypevo.pay"
+	</sql>
+	
+	
+	<sql id="statisticsTradetypeJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsTradetype">
+		SELECT
+			<include refid="statisticsTradetypeColumns"/>
+		FROM statistics_tradetype a
+		<include refid="statisticsTradetypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="StatisticsTradetype">
+		SELECT 
+			<include refid="statisticsTradetypeColumns"/>
+		FROM statistics_tradetype a
+		<include refid="statisticsTradetypeJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="gettradetype" resultType="StatisticsTradetype">
+		SELECT
+			<include refid="statisticsTradetypeColumns2"/>
+		FROM statistics_tradetype a
+		<include refid="statisticsTradetypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findtradetypeList" resultType="StatisticsTradetype">
+		SELECT 
+			<include refid="statisticsTradetypeColumns2"/>
+		FROM statistics_tradetype a
+		<include refid="statisticsTradetypeJoins"/>
+		<where>
+			
+			<if test="tradetypevo!=null and tradetypevo.beginCreateDate != null and tradetypevo.beginCreateDate != '' ">
+                AND a.createtime &gt;= #{tradetypevo.beginCreateDate}
+            </if>
+            <if test="tradetypevo!=null and tradetypevo.endCreateDate != null and tradetypevo.endCreateDate != '' ">
+                AND a.createtime &lt;= #{tradetypevo.endCreateDate}
+            </if>
+			<if test="tradetypevo!=null and tradetypevo.ctrasportcount != null and tradetypevo.ctrasportcount != ''">
+				AND a.ctrasportcount = #{tradetypevo.ctrasportcount}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.ctransportweight != null and tradetypevo.ctransportweight != ''">
+				AND a.ctransportweight = #{tradetypevo.ctransportweight}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.ctransportmoney != null and tradetypevo.ctransportmoney != ''">
+				AND a.ctransportmoney = #{tradetypevo.ctransportmoney}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.ytrasportcount != null and tradetypevo.ytrasportcount != ''">
+				AND a.ytrasportcount = #{tradetypevo.ytrasportcount}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.ytransportweight != null and tradetypevo.ytransportweight != ''">
+				AND a.ytransportweight = #{tradetypevo.ytransportweight}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.ytransportmoney != null and tradetypevo.ytransportmoney != ''">
+				AND a.ytransportmoney = #{tradetypevo.ytransportmoney}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.createtime != null and tradetypevo.createtime != ''">
+				AND a.createtime = #{tradetypevo.createtime}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.newordermoney != null and tradetypevo.newordermoney != ''">
+				AND a.newordermoney = #{tradetypevo.newordermoney}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.cancelordermoney != null and tradetypevo.cancelordermoney != ''">
+				AND a.cancelordermoney = #{tradetypevo.cancelordermoney}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.takegdordermoney != null and tradetypevo.takegdordermoney != ''">
+				AND a.takegdordermoney = #{tradetypevo.takegdordermoney}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.waitinggdordermoney != null and tradetypevo.waitinggdordermoney != ''">
+				AND a.waitinggdordermoney = #{tradetypevo.waitinggdordermoney}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.waitingpay != null and tradetypevo.waitingpay != ''">
+				AND a.waitingpay = #{tradetypevo.waitingpay}
+			</if>
+			<if test="tradetypevo!=null and tradetypevo.pay != null and tradetypevo.pay != ''">
+				AND a.pay = #{tradetypevo.pay}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findAllList" resultType="StatisticsTradetype">
+		SELECT 
+			<include refid="statisticsTradetypeColumns"/>
+		FROM statistics_tradetype a
+		<include refid="statisticsTradetypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_tradetype(
+
+		<if test="ctrasportcount != null and ctrasportcount !='' ">
+			ctrasportcount,
+		</if>
+		<if test="ctransportweight != null and ctransportweight !='' ">
+			ctransportweight,
+		</if>
+		<if test="ctransportmoney != null and ctransportmoney !='' ">
+			ctransportmoney,
+		</if>
+		<if test="ytrasportcount != null and ytrasportcount !='' ">
+			ytrasportcount,
+		</if>
+		<if test="ytransportweight != null and ytransportweight !='' ">
+			ytransportweight,
+		</if>
+		<if test="ytransportmoney != null and ytransportmoney !='' ">
+			ytransportmoney,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+			id
+		) VALUES (
+		<if test="ctrasportcount != null and ctrasportcount !='' ">
+			#{ctrasportcount},
+		</if>
+		<if test="ctransportweight != null and ctransportweight !='' ">
+			#{ctransportweight},
+		</if>
+		<if test="ctransportmoney != null and ctransportmoney !='' ">
+			#{ctransportmoney},
+		</if>
+		<if test="ytrasportcount != null and ytrasportcount !='' ">
+			#{ytrasportcount},
+		</if>
+		<if test="ytransportweight != null and ytransportweight !='' ">
+			#{ytransportweight},
+		</if>
+		<if test="ytransportmoney != null and ytransportmoney !='' ">
+			#{ytransportmoney},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_tradetype SET 	
+			<if test="ctrasportcount != null and ctrasportcount !='' ">
+				ctrasportcount = #{ctrasportcount},
+			</if>
+			<if test="ctransportweight != null and ctransportweight !='' ">
+				ctransportweight = #{ctransportweight},
+			</if>
+			<if test="ctransportmoney != null and ctransportmoney !='' ">
+				ctransportmoney = #{ctransportmoney},
+			</if>
+			<if test="ytrasportcount != null and ytrasportcount !='' ">
+				ytrasportcount = #{ytrasportcount},
+			</if>
+			<if test="ytransportweight != null and ytransportweight !='' ">
+				ytransportweight = #{ytransportweight},
+			</if>
+			<if test="ytransportmoney != null and ytransportmoney !='' ">
+				ytransportmoney = #{ytransportmoney},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_tradetype
+		WHERE id = #{id}
+	</update>
+	<select id="editTradetype" statementType="CALLABLE">
+			{call SP_Statistics_Tradetype()}
+	</select>
+	
+	<select id="getEveryDayCount" resultType="StatisticsTradetype">
+	SELECT
+        count(*) AS "evercout",
+        date_format(trod.CREATE_DATE, '%Y-%m-%d') AS "cretime",
+        sum(trod.TotalCost) AS "alltradmy",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "newordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 2
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "cancelordermoney",
+
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "getgdordermoney",/*已提货*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "upordermoney",/*已上传提货*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "payordermoney",/*已支付*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        OR trod.OrderStatus = -1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "nieordermoney" /*新建单*/
+        FROM trade_orderinfo trod
+        INNER JOIN gds_quoteinfo quo ON trod.QUOTE_ID=quo.ID
+        INNER JOIN gds_goods gs ON quo.GOODSID=gs.ID
+        <where>
+            <if test="gsType !=null and gsType !=''">
+                and gs.GSODDTYPE= #{gsType}
+            </if>
+        </where>
+        GROUP BY date_format(trod.CREATE_DATE, '%Y-%m-%d')
+        ORDER BY trod.CREATE_DATE ASC
+	</select>
+	
+	<select id="getEveryWeekCount" resultType="StatisticsTradetype">
+	SELECT
+        count(*) AS "evercout",
+        week(trod.CREATE_DATE)+1 AS "timeflg",
+        date_format(trod.CREATE_DATE, '%Y年') AS "cretime",
+        sum(trod.TotalCost) AS "alltradmy",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "newordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 2
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "cancelordermoney",
+
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "getgdordermoney",/*已提货*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "upordermoney",/*已上传提货*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "payordermoney",/*已支付*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        OR trod.OrderStatus = -1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "nieordermoney" /*新建单*/
+        FROM trade_orderinfo trod
+        INNER JOIN gds_quoteinfo quo ON trod.QUOTE_ID=quo.ID
+        INNER JOIN gds_goods gs ON quo.GOODSID=gs.ID
+        <where>
+            <if test="gsType !=null and gsType !=''">
+                and gs.GSODDTYPE= #{gsType}
+            </if>
+        </where>
+        GROUP BY timeflg
+        ORDER BY trod.CREATE_DATE ASC
+	</select>
+	
+	<select id="getEveryMothCount" resultType="StatisticsTradetype">
+	SELECT
+        count(*) AS "evercout",
+        MONTH(trod.CREATE_DATE) AS "timeflg",
+        date_format(trod.CREATE_DATE, '%Y-%m月') AS "cretime",
+        sum(trod.TotalCost) AS "alltradmy",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "newordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 2
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "cancelordermoney",
+
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "getgdordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "upordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "payordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        OR trod.OrderStatus = -1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "nieordermoney" 
+        FROM trade_orderinfo trod
+        INNER JOIN gds_quoteinfo quo ON trod.QUOTE_ID=quo.ID
+        INNER JOIN gds_goods gs ON quo.GOODSID=gs.ID
+        <where>
+        	<if test="userid !=null and userid !=''">
+                and ( trod.BUYER_ID= #{userid} OR trod.SELLER_ID= #{userid} )
+            </if>
+            <if test="gsType !=null and gsType !=''">
+                and gs.GSODDTYPE= #{gsType}
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and trod.CREATE_DATE &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and trod.CREATE_DATE &lt;= #{endDate}
+            </if>
+            
+        </where>
+        GROUP BY timeflg
+        ORDER BY trod.CREATE_DATE ASC
+	</select>
+	
+	<select id="getEveryYearCount" resultType="StatisticsTradetype">
+	SELECT
+        count(*) AS "evercout",
+        YEAR(trod.CREATE_DATE) AS "timeflg",
+        date_format(trod.CREATE_DATE, '%Y年') AS "cretime",
+        sum(trod.TotalCost) AS "alltradmy",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "newordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 2
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "cancelordermoney",
+
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "getgdordermoney",/*已提货*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "upordermoney",/*已上传提货*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "payordermoney",/*已支付*/
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        OR trod.OrderStatus = -1
+        THEN
+        trod.TotalCost
+        ELSE
+        0
+        END
+        ) AS "nieordermoney" /*新建单*/
+        FROM trade_orderinfo trod
+        INNER JOIN gds_quoteinfo quo ON trod.QUOTE_ID=quo.ID
+        INNER JOIN gds_goods gs ON quo.GOODSID=gs.ID
+        <where>
+            <if test="gsType !=null and gsType !=''">
+                and gs.GSODDTYPE= #{gsType}
+            </if>
+        </where>
+        GROUP BY timeflg
+        ORDER BY trod.CREATE_DATE ASC
+	</select>
+	
+	<select id="getTradeKindDay" resultType="StatisticsTradetype">
+	    SELECT
+		    a.ctrasportcount AS "ctrasportcount",
+		    a.ctransportweight AS "ctransportweight",
+		    a.ctransportmoney AS "ctransportmoney",
+		    a.ytrasportcount AS "ytrasportcount",
+		    a.ytransportweight AS "ytransportweight",
+		    a.ytransportmoney AS "ytransportmoney",
+            date_format(a.CREATETIME, '%Y-%m-%d') AS "timeflg",
+            date_format(a.CREATETIME, '%Y-%m-%d') AS "cretime"
+        FROM statistics_tradetype a
+         GROUP BY timeflg
+	</select>
+	
+	<select id="getTradeKindWeek" resultType="StatisticsTradetype">
+	    SELECT
+		    a.ctrasportcount AS "ctrasportcount",
+		    a.ctransportweight AS "ctransportweight",
+		    a.ctransportmoney AS "ctransportmoney",
+		    a.ytrasportcount AS "ytrasportcount",
+		    a.ytransportweight AS "ytransportweight",
+		    a.ytransportmoney AS "ytransportmoney",
+            week(a.CREATETIME)+1 AS "timeflg",
+            date_format(a.CREATETIME, '%Y年') AS "cretime"
+        FROM statistics_tradetype a
+         GROUP BY timeflg
+	</select>
+	
+	<select id="getTradeKindMonth" resultType="StatisticsTradetype">
+	    SELECT
+		    a.ctrasportcount AS "ctrasportcount",
+		    a.ctransportweight AS "ctransportweight",
+		    a.ctransportmoney AS "ctransportmoney",
+		    a.ytrasportcount AS "ytrasportcount",
+		    a.ytransportweight AS "ytransportweight",
+		    a.ytransportmoney AS "ytransportmoney",
+            MONTH (a.CREATETIME) AS "timeflg",
+            date_format(a.CREATETIME, '%Y年-%m月') AS "cretime"
+        FROM statistics_tradetype a
+         GROUP BY timeflg
+	</select>
+	
+	<select id="getTradeKindYear" resultType="StatisticsTradetype">
+	    SELECT
+		    a.ctrasportcount AS "ctrasportcount",
+		    a.ctransportweight AS "ctransportweight",
+		    a.ctransportmoney AS "ctransportmoney",
+		    a.ytrasportcount AS "ytrasportcount",
+		    a.ytransportweight AS "ytransportweight",
+		    a.ytransportmoney AS "ytransportmoney",     
+            YEAR (a.CREATETIME) AS "timeflg",
+            date_format(a.CREATETIME, '%Y年') AS "cretime"
+        FROM statistics_tradetype a
+         GROUP BY timeflg
+	</select>
+	
+		<select id="getGoodsCountMonth" resultType="StatisticsTradetype">
+	SELECT
+        SUM(
+        CASE
+        WHEN gs.SENDTIME &lt; NOW()
+        THEN
+        gs.RESIDUALVOLUME
+        ELSE
+        0
+        END
+        ) AS "invalidweight",
+        SUM(
+        CASE
+        WHEN quo.QUOTESTATUS = 1
+        THEN
+        quo.ACTLOAD
+        ELSE
+        0
+        END
+        ) AS "quoteweight",
+        
+        SUM(
+        CASE
+        WHEN quo.QUOTESTATUS = 2
+        THEN
+        quo.ACTLOAD
+        ELSE
+        0
+        END
+        ) AS "singleweight",
+				MONTH(gs.CREATE_DATE) AS "timeflg",
+        date_format(gs.CREATE_DATE, '%Y-%m月') AS "cretime"
+        FROM gds_goods gs
+        left JOIN gds_quoteinfo quo ON quo.GOODSID=gs.ID
+        <where>
+        	<if test="userid !=null and userid !=''">
+                and gs.USER_ID= #{userid}
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and gs.CREATE_DATE &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and gs.CREATE_DATE &lt;= #{endDate}
+            </if>
+            
+        </where>
+        GROUP BY timeflg
+        ORDER BY gs.CREATE_DATE ASC
+	</select>
+	
+		<select id="getOrderNumCount" resultType="StatisticsTradetype">
+	SELECT
+        count(*) AS "evercout",
+        MONTH(trod.CREATE_DATE) AS "timeflg",
+        date_format(trod.CREATE_DATE, '%Y-%m月') AS "cretime",
+        sum(trod.TotalCost) AS "alltradmy",
+        sum(IFNULL(quo.ACTLOAD,quo.ODDLOADWEIGHT)) AS "allweight",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 1
+        THEN
+        1
+        ELSE
+        0
+        END
+        ) AS "newordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 2
+        THEN
+        1
+        ELSE
+        0
+        END
+        ) AS "cancelordermoney",
+
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 3
+        THEN
+        1
+        ELSE
+        0
+        END
+        ) AS "getgdordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 4
+        THEN
+        1
+        ELSE
+        0
+        END
+        ) AS "upordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 5
+        THEN
+        1
+        ELSE
+        0
+        END
+        ) AS "payordermoney",
+        SUM(
+        CASE
+        WHEN trod.OrderStatus = 0
+        OR trod.OrderStatus = -1
+        THEN
+        1
+        ELSE
+        0
+        END
+        ) AS "nieordermoney" 
+        FROM trade_orderinfo trod
+        INNER JOIN gds_quoteinfo quo ON trod.QUOTE_ID=quo.ID
+        INNER JOIN gds_goods gs ON quo.GOODSID=gs.ID
+        <where>
+        	<if test="userid !=null and userid !=''">
+                and ( trod.BUYER_ID= #{userid} OR trod.SELLER_ID= #{userid} )
+            </if>
+            <if test="gsType !=null and gsType !=''">
+                and gs.GSODDTYPE= #{gsType}
+            </if>
+            <if test="beginDate !=null and beginDate !=''">
+                and trod.CREATE_DATE &gt;= #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                and trod.CREATE_DATE &lt;= #{endDate}
+            </if>
+            
+        </where>
+        ORDER BY trod.CREATE_DATE ASC
+	</select>
+	
+</mapper>

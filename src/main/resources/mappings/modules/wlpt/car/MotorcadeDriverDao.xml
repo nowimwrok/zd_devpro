@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.car.MotorcadeDriverDao">
+
+    <sql id="motorcadeDriverColumns">
+		a.id AS "id",
+		a.driverid AS "driverId",
+		a.motorcadeid AS "motorcadeId"
+	</sql>
+
+    <sql id="motorcadeDriverJoins">
+    </sql>
+
+    <select id="get" resultType="MotorcadeDriver">
+        SELECT
+        <include refid="motorcadeDriverColumns"/>
+        FROM cs_motorcade_driver a
+        <include refid="motorcadeDriverJoins"/>
+        <where>
+            <if test="id != null and id !='' ">
+                AND id=#{id}
+            </if>
+            <if test="motorcadeId != null and motorcadeId !='' ">
+                AND motorcadeid=#{motorcadeId}
+            </if>
+            <if test="driverId != null and driverId !='' ">
+                AND driverid=#{driverId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findList" resultType="MotorcadeDriver">
+        SELECT
+        <include refid="motorcadeDriverColumns"/>
+        FROM cs_motorcade_driver a
+        <include refid="motorcadeDriverJoins"/>
+        <where>
+            <if test="motorcadeId != null and motorcadeId !='' ">
+                AND a.motorcadeid=#{motorcadeId}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="MotorcadeDriver">
+        SELECT
+        <include refid="motorcadeDriverColumns"/>
+        FROM cs_motorcade_driver a
+        <include refid="motorcadeDriverJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO cs_motorcade_driver(
+
+        <if test="driverId != null and driverId !='' ">
+            driverid,
+        </if>
+        <if test="motorcadeId != null and motorcadeId !='' ">
+            motorcadeid,
+        </if>
+        id
+        ) VALUES (
+        <if test="driverId != null and driverId !='' ">
+            #{driverId},
+        </if>
+        <if test="motorcadeId != null and motorcadeId !='' ">
+            #{motorcadeId},
+        </if>
+        #{id}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE cs_motorcade_driver SET
+        <if test="driverId != null and driverId !='' ">
+            driverid = #{driverId},
+        </if>
+        <if test="motorcadeId != null and motorcadeId !='' ">
+            motorcadeid = #{motorcadeId},
+        </if>
+        id = #{id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+		DELETE FROM cs_motorcade_driver
+		WHERE id = #{id}
+	</update>
+
+    <update id="deleteMotorcadeDriver">
+        DELETE FROM cs_motorcade_driver
+        WHERE id = #{motorcadeDriverId}
+    </update>
+
+    <select id="getBindingDriverNum" resultType="Integer">
+        SELECT
+        COUNT(a.id)
+        FROM cs_motorcade_driver a
+        <where>
+            AND motorcadeid = #{motorcadeId}
+        </where>
+    </select>
+
+</mapper>

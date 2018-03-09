@@ -1,0 +1,113 @@
+*{font-family:"微软雅黑";margin:0;font-size:14px;}
+ul{list-style:none;display: block;padding:0px;margin:0px;}
+li{display: block;}
+a{text-decoration: none;}
+a:hover{text-decoration: none;cursor:pointer;}
+img{border: none;}
+
+/* 搜索表格样式 */
+.search_table{
+	margin: 15px 0px;padding:0px;
+	border:none;
+	width:785px;
+}
+/* 数据表格 */
+.data_table{
+	width:785px;
+}
+
+.data_table th{
+	border-top: 2px solid #f74000;
+	color: #555;
+	font-size: 14px;
+	background:#eee;
+}
+
+.data_table td{
+	border-bottom: 1px solid #eee;
+	height: 95px;
+	line-height:28px;
+}
+.td_first{
+	border-left: 1px solid #eee;
+}
+.td_last{
+	border-right: 1px solid #eee;
+}
+.bid-detail td{
+	border-bottom: 1px dashed #eee;
+	height: 30px;
+	line-height:28px;
+}
+.bid-detail tr{
+    color:#555;
+    background:#F5F5F5;
+}
+.bidcount{
+   color:red;
+   font-size:20px;
+}
+.bid-detail {
+    height: 30px;
+    line-height: 30px;
+    margin-top: 2px;
+    background: #F5F5F5;
+}
+/* 表格列表文本对齐方式 */
+.td_txt_right{
+	text-align:right;
+}
+.td_txt_left{
+	text-align:left;
+}
+.td_txt_center{
+	text-align:center;	
+}
+/* 表单列表宽100px左边列表名称： */
+.td_one{
+	width:100px;
+}
+/* 表单列表宽250px */
+.td_two{
+	width:250px;
+}
+/* 表单列表宽70px */
+.td_half{
+	width:70px;
+}
+.txt_short{
+	width:100px;
+}
+.txt_long{
+	width:200px;
+}
+/* 字体名称 */
+.font_name{
+	font-size:16px;
+}
+/* 用户认证状态 */
+.user_checked {
+    background: rgb(44, 198, 249);;
+    color: white;
+    padding: 2px 5px 2px 5px;
+    font-size: 14px;
+    cursor: pointer;
+/* border:1px dashed #000; */   
+}
+.user_uncheck {
+    background: rgb(123,199,13);
+    color: white;
+    width: 70px;
+    line-height:35px;
+    padding: 2px;
+    font-size: 12px;
+    cursor: pointer;
+     border:1px dashed #000;
+}
+/* 左右外边距20px */
+.mg_left_20{
+	margin-left:20px;	
+}
+.mg_right_10{
+	margin-right:10px;	
+}

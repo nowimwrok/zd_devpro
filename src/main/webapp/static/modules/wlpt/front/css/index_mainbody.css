@@ -1,0 +1,173 @@
+@charset "utf-8";
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: "微软雅黑";
+}
+body {
+    font-size: 1.4rem;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+    font-family: "微软雅黑";
+}
+#noneData {
+	text-align: center;
+	width: 100%;
+	line-height: 25px;
+	display: none;
+}
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px white inset;
+	border: 1px solid #CCC!important;
+}
+.loading {
+	text-align: center;
+	height: 45px;
+	width: 100%;
+	margin-bottom:20px;
+}
+.loading_lock{
+	display: none;
+	width: 100%;
+	height: 100%;
+	z-index: 999;
+	position: fixed;
+	background-color: rgba(165, 160, 154, 0.34);
+	top: 0px;
+	text-align: center;
+}
+.loading_lock img{
+	margin-top: 25%;
+}
+a{
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: none;
+}
+ul,ol{
+	list-style: none;
+}
+.white{
+	color: #fff;
+}
+
+
+/*轮播图清楚浮动*/
+.carousel {
+	clear: both;
+    position: relative;
+}
+.carousel-inner {
+    height: 280px;
+}
+
+
+
+/*company-intr*/
+.company-intr img{
+	display: inline-block;
+}
+.intr-title{
+	display: inline-block;
+	width: 15%;
+	padding-left: 1%;
+	padding-right: 1%;
+}
+.intr-top img{
+	width: 23%;
+}
+.intr-top{
+    text-align: center;
+    width: 100%;
+    color: #00A1E8;
+    overflow: hidden;
+    margin-bottom: 1%;
+}
+.orange{
+	color: #FFC52E;
+}
+.intr-Ch{
+	font-size: 2rem;
+}
+.intr-Elgish{
+	font-size: 1rem;
+}
+.company-intr{
+	width: 80%;
+    margin-top: 2%;
+    margin-left: 9%;
+    margin-right: 16%;
+}
+.car-messege img{
+	display: block;
+    float: left;
+    padding-top: 12%;
+    padding-right: 2%;
+}
+.message-l{
+	float: left;
+}
+.message-r{
+	float: right;
+}
+.message-c{
+	float: left;
+    margin: 0 11%;
+}
+.car-messege{
+	width: 26%;
+    overflow: hidden;
+}
+.col-1{
+	overflow: hidden;
+	margin-bottom: 4%;
+}
+.description h3{
+	font-size: 1.8rem;
+    font-weight: bold;
+}
+.description{
+	display: block;
+    float: left;
+    padding-left: 4%;
+    width: 70%;
+}
+.division img{
+	width: 100%;
+}
+.division{
+	width: 100%;
+	margin-bottom: 2%;
+}
+.advantage-list img{
+	width: 100%;
+}
+.platform-advantage{
+	margin-bottom: 10%;
+	overflow: hidden;
+}
+
+
+@media screen and (max-width: 900px) {
+    body {
+        font-size: 1rem;
+    }
+    .menu{
+    	width: 70%;
+    }
+    .intr-title{
+	    width: 37%;
+    }
+    .intr-Ch {
+    font-size: 1rem;
+	}
+	.description h3{
+	font-size: 1rem;
+    font-weight: bold;
+	}
+	.foot-title {
+    font-size: 1rem;
+	}
+}

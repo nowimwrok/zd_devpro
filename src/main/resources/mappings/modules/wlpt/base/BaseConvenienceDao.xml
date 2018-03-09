@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.base.BaseConvenienceDao">
+    
+	<sql id="baseConvenienceColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.link AS "link",
+		a.category_id AS "categoryId",
+		a.description AS "description",
+		a.picture AS "picture"
+	</sql>
+	
+	<sql id="baseConvenienceJoins">
+	</sql>
+    
+	<select id="get" resultType="BaseConvenience">
+		SELECT
+			<include refid="baseConvenienceColumns"/>
+		FROM base_convenience a
+		<include refid="baseConvenienceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="BaseConvenience">
+		SELECT 
+			<include refid="baseConvenienceColumns"/>
+		FROM base_convenience a
+		<include refid="baseConvenienceJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BaseConvenience">
+		SELECT 
+			<include refid="baseConvenienceColumns"/>
+		FROM base_convenience a
+		<include refid="baseConvenienceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_convenience(
+		<if test="link != null and link !='' ">
+			link,
+		</if>
+		<if test="categoryId != null and categoryId !='' ">
+			category_id,
+		</if>
+		<if test="description != null and description !='' ">
+			description,
+		</if>
+		<if test="picture != null and picture !='' ">
+			picture,
+		</if>
+		<if test="title != null and title !='' ">
+			title
+		</if>	
+		) VALUES (
+		<if test="link != null and link !='' ">
+			#{link},
+		</if>
+		<if test="categoryId != null and categoryId !='' ">
+			#{categoryId},
+		</if>
+		<if test="description != null and description !='' ">
+			#{description},
+		</if>
+		<if test="picture != null and picture !='' ">
+			#{picture},
+		</if>
+		<if test="title != null and title !='' ">
+			#{title}
+		</if>
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_convenience SET 	
+			<if test="title != null and title !='' ">
+				title = #{title},
+			</if>
+			<if test="link != null and link !='' ">
+				link = #{link},
+			</if>
+			<if test="categoryId != null and categoryId !='' ">
+				category_id = #{categoryId},
+			</if>
+			<if test="description != null and description !='' ">
+				description = #{description},
+			</if>
+			<if test="picture != null and picture !='' ">
+				picture = #{picture},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM base_convenience
+		WHERE id = #{id}
+	</update>
+			<!-- 批量删除 -->
+	<delete id="deleteAll">
+		delete from base_convenience
+		where 
+		id in  ${delteArrayStr}
+	</delete>
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.trade.TradeReceiptDao">
+    
+	<sql id="tradereceiptColumns">
+		a.id AS "id",
+		a.order_id AS "orderinfo.id",
+		a.receiptimg AS "receiptimg",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.type AS "type",
+		a.oddloadweight AS "oddloadweight",
+		a.updatecount AS "updatecount"
+	</sql>
+	
+	<sql id="tradereceiptJoins">
+	</sql>
+    
+	<select id="get" resultType="Tradereceipt">
+		SELECT
+			<include refid="tradereceiptColumns"/>
+		FROM trade_tradereceipt a
+		<include refid="tradereceiptJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Tradereceipt">
+		SELECT 
+			<include refid="tradereceiptColumns"/>
+		FROM trade_tradereceipt a
+		<include refid="tradereceiptJoins"/>
+		<where>
+			
+			<if test="orderinfo != null and orderinfo.id != null and orderinfo.id != ''">
+				AND a.order_id = #{orderinfo.id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="beginOddloadweight != null and endOddloadweight != null and beginOddloadweight != '' and endOddloadweight != ''">
+				AND a.oddloadweight BETWEEN #{beginOddloadweight} AND #{endOddloadweight}
+			</if>
+			<if test="updatecount != null and updatecount != ''">
+				AND a.updatecount = #{updatecount}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Tradereceipt">
+		SELECT 
+			<include refid="tradereceiptColumns"/>
+		FROM trade_tradereceipt a
+		<include refid="tradereceiptJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO trade_tradereceipt(
+
+		<if test="orderinfo.id != null and orderinfo.id !='' ">
+			order_id,
+		</if>
+		<if test="receiptimg != null and receiptimg !='' ">
+			receiptimg,
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			create_by,
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			create_date,
+		</if>
+		<if test="type != null and type !='' ">
+			type,
+		</if>
+		<if test="oddloadweight != null and oddloadweight !='' ">
+			oddloadweight,
+		</if>
+		<if test="updatecount != null and updatecount !='' ">
+			updatecount,
+		</if>
+			id
+		) VALUES (
+		<if test="orderinfo.id != null and orderinfo.id !='' ">
+			#{orderinfo.id},
+		</if>
+		<if test="receiptimg != null and receiptimg !='' ">
+			#{receiptimg},
+		</if>
+		<if test="createBy.id != null and createBy.id !='' ">
+			#{createBy.id},
+		</if>
+		<if test="createDate != null and createDate !='' ">
+			#{createDate},
+		</if>
+		<if test="type != null and type !='' ">
+			#{type},
+		</if>
+		<if test="oddloadweight != null and oddloadweight !='' ">
+			#{oddloadweight},
+		</if>
+		<if test="updatecount != null and updatecount !='' ">
+			#{updatecount},
+		</if>
+		#{id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trade_tradereceipt SET 	
+			<if test="orderinfo.id != null and orderinfo.id !='' ">
+				order_id = #{orderinfo.id},
+			</if>
+			<if test="receiptimg != null and receiptimg !='' ">
+				receiptimg = #{receiptimg},
+			</if>
+			<if test="type != null and type !='' ">
+				type = #{type},
+			</if>
+			<if test="oddloadweight != null and oddloadweight !='' ">
+				oddloadweight = #{oddloadweight},
+			</if>
+			<if test="updatecount != null and updatecount !='' ">
+				updatecount = #{updatecount},
+			</if>
+			id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM trade_tradereceipt
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="getByorderidAndtype" resultType="Tradereceipt">
+		SELECT
+			<include refid="tradereceiptColumns"/>
+		FROM trade_tradereceipt a
+		<include refid="tradereceiptJoins"/>
+		<where>
+			<if test="orderinfo.id != null and orderinfo.id !='' ">
+				AND order_id = #{orderinfo.id}
+			</if>
+			<if test="type != null and type !='' ">
+				AND type = #{type}
+			</if>
+		</where>
+		limit 1	
+	</select>
+</mapper>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wlpt.dao.freightrate.FreightrateLineDao">
+    
+	<sql id="freightrateLineColumns">
+		a.frline_id AS "frlineId",
+		a.startaddress AS "startaddress",
+		a.startaremarks AS "startaremarks",
+		a.endaddress AS "endaddress",
+		a.endremarks AS "endremarks",
+		a.newprice_id AS "newpriceId",
+		a.CREATETIME AS "createtime",
+		a.updatetime AS "updatetime",
+		frprice.averageprice AS "priceinfo.averageprice",
+        frprice.goodstype AS "priceinfo.goodstype",
+        frprice.modetranspor AS "priceinfo.modetranspor",
+        frprice.carlength AS "priceinfo.carlength",
+        frprice.newprice AS "priceinfo.newprice"
+	</sql>
+	
+	<sql id="freightrateLineJoins">
+		LEFT JOIN freightrate_priceinfo frprice on a.newprice_id=frprice.frprice_id
+	</sql>
+    
+	<select id="get" resultType="FreightrateLine">
+		SELECT
+			<include refid="freightrateLineColumns"/>
+		FROM freightrate_line a
+		<include refid="freightrateLineJoins"/>
+		WHERE a.frline_id = #{frlineId}
+	</select>
+
+	<select id="getLineInfo" resultType="FreightrateLine">
+		SELECT 
+			<include refid="freightrateLineColumns"/>
+		FROM freightrate_line a
+		<include refid="freightrateLineJoins"/>
+		<where>
+			<if test="startaddress !=null and startaddress !=''">
+                and a.startaddress= #{startaddress}
+            </if>
+            <if test="endaddress !=null and endaddress !=''">
+                and a.endaddress= #{endaddress}
+            </if>
+		</where>
+		ORDER BY a.updatetime
+		limit 1
+	</select>
+	<select id="findList" resultType="FreightrateLine">
+		SELECT 
+			<include refid="freightrateLineColumns"/>
+		FROM freightrate_line a
+		<include refid="freightrateLineJoins"/>
+		<where>
+			<if test="priceinfo != null and priceinfo.newprice != null and priceinfo.newprice != ''">
+				AND frprice.newprice LIKE 
+					<if test="dbName == 'oracle'">'%'||#{priceinfo.newprice}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{priceinfo.newprice}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{priceinfo.newprice},'%')</if>
+			</if>
+            <if test="priceinfo != null and priceinfo.goodstype != null and priceinfo.goodstype != ''">
+				AND frprice.goodstype LIKE 
+					<if test="dbName == 'oracle'">'%'||#{priceinfo.goodstype}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{priceinfo.goodstype}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{priceinfo.goodstype},'%')</if>
+			</if>
+			<if test="createtime !=null and createtime !=''">
+				and createtime= #{createtime}
+			</if>
+			<if test="updatetime !=null and updatetime !=''">
+				and updatetime= #{updatetime}
+			</if>
+            <if test="startaddress !=null and startaddress !=''">
+                and startaddress= #{startaddress}
+            </if>
+            <if test="endaddress !=null and endaddress !=''">
+                and endaddress= #{endaddress}
+            </if>
+            <if test="timeStart !=null and timeStart !=''"><!-- 创建时间检索 -->
+                and a.updatetime &gt;= #{timeStart}
+            </if>
+            <if test="timeEnd !=null and timeEnd !=''"><!-- 创建时间检索 -->
+                and a.updatetime &lt;= #{timeEnd}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} desc
+			</when>
+			<otherwise>
+				ORDER BY a.updatetime
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="FreightrateLine">
+		SELECT 
+			<include refid="freightrateLineColumns"/>
+		FROM freightrate_line a
+		<include refid="freightrateLineJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO freightrate_line(
+		<if test="startaddress != null and startaddress !='' ">
+			startaddress,
+		</if>
+		<if test="startaremarks != null and startaremarks !='' ">
+			startaremarks,
+		</if>
+		<if test="endaddress != null and endaddress !='' ">
+			endaddress,
+		</if>
+		<if test="endremarks != null and endremarks !='' ">
+			endremarks,
+		</if>
+		<if test="newpriceId != null and newpriceId !='' ">
+			newprice_id,
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			createtime,
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			updatetime,
+		</if>
+			frline_id
+		) VALUES (
+		<if test="startaddress != null and startaddress !='' ">
+			#{startaddress},
+		</if>
+		<if test="startaremarks != null and startaremarks !='' ">
+			#{startaremarks},
+		</if>
+		<if test="endaddress != null and endaddress !='' ">
+			#{endaddress},
+		</if>
+		<if test="endremarks != null and endremarks !='' ">
+			#{endremarks},
+		</if>
+		<if test="newpriceId != null and newpriceId !='' ">
+			#{newpriceId},
+		</if>
+		<if test="createtime != null and createtime !='' ">
+			#{createtime},
+		</if>
+		<if test="updatetime != null and updatetime !='' ">
+			#{updatetime},
+		</if>
+		#{frlineId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE freightrate_line SET 	
+			<if test="startaddress != null and startaddress !='' ">
+				startaddress = #{startaddress},
+			</if>
+			<if test="startaremarks != null and startaremarks !='' ">
+				startaremarks = #{startaremarks},
+			</if>
+			<if test="endaddress != null and endaddress !='' ">
+				endaddress = #{endaddress},
+			</if>
+			<if test="endremarks != null and endremarks !='' ">
+				endremarks = #{endremarks},
+			</if>
+			<if test="newpriceId != null and newpriceId !='' ">
+				newprice_id = #{newpriceId},
+			</if>
+			<if test="createtime != null and createtime !='' ">
+				createtime = #{createtime},
+			</if>
+			<if test="updatetime != null and updatetime !='' ">
+				updatetime = #{updatetime},
+			</if>
+			frline_id = #{frlineId}
+		WHERE frline_id = #{frlineId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM freightrate_line
+		WHERE frline_id = #{frlineId}
+	</update>
+	
+</mapper>
